@@ -203,6 +203,7 @@
   top: calc(100% + 10px);
   right: 0;
   min-width: 220px;
+  max-width: min(320px, calc(100vw - 32px));
   display: grid;
   gap: 6px;
   padding: 10px;
@@ -1058,8 +1059,13 @@
 
 /* Responsive */
 @media (max-width: 920px) {
+  .container {
+    padding: 0 18px;
+  }
+
   .headerInner {
     flex-wrap: wrap;
+    align-items: flex-start;
   }
 
   .brandSearch {
@@ -1071,6 +1077,7 @@
 
   .searchWrapper {
     flex: 1;
+    min-width: 0;
     justify-content: flex-end;
     position: relative;
   }
@@ -1087,22 +1094,102 @@
   .searchWrapper.searchOpen .searchBox {
     display: flex;
   }
+
+  .actions {
+    order: 2;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navLink,
+  .navTrigger,
+  .navDropdown {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 640px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .headerInner {
+    gap: 14px;
+  }
+
+  .logo {
+    height: 54px;
+  }
+
   .searchBox {
     min-width: auto;
   }
 
+  .actions {
+    gap: 10px;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+
+  .langToggle {
+    padding: 6px 10px;
+  }
+
+  .header .primaryBtn {
+    min-width: 120px;
+    padding-inline: 14px;
+  }
+
   .nav {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    order: 3;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .navLink,
+  .navTrigger {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 14px;
+  }
+
+  .navDropdown {
     width: 100%;
   }
 
-  .actions {
-    order: 2;
+  .navMenu,
+  .navMenuHelp,
+  .profileDropdown .profileMenu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+    border-radius: 14px;
+  }
+
+  .navMenuButton {
+    text-align: center;
   }
 
   .heroWrap {
@@ -1129,8 +1216,39 @@
     align-items: stretch;
   }
 
+  .hero {
+    min-height: auto;
+    padding: 28px 0 18px;
+  }
+
+  .heroTitle,
+  .heroTitleCenter {
+    font-size: clamp(28px, 9vw, 38px);
+  }
+
+  .heroText,
+  .heroTextCenter {
+    font-size: 0.98rem;
+  }
+
+  .destScroll {
+    grid-auto-columns: min(84vw, 290px);
+    gap: 14px;
+    padding-inline: 2px;
+  }
+
+  .destBody {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
   .footerInner {
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .footerBottom {
@@ -1166,6 +1284,19 @@
 
   .testimonials .section-head {
     margin-bottom: 12px;
+  }
+
+  .scrollBtn {
+    display: none;
+  }
+
+  .hero .container.heroWrap.heroWrapCenter {
+    padding: 0;
+  }
+
+  .planePathImg {
+    width: 150px;
+    bottom: -40px;
   }
 }
 
@@ -1303,6 +1434,59 @@
   .smallFix{
     width: 200px;
     height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+  }
+
+  .brandSearch {
+    gap: 10px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    width: 100%;
+  }
+
+  .langToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .heroCenter {
+    min-height: auto;
+  }
+
+  .heroCenterRel {
+    min-height: 0;
+  }
+
+  .collageRefFix {
+    gap: 12px;
+  }
+
+  .bigFix,
+  .card.big {
+    height: 260px;
+    max-width: 100%;
+  }
+
+  .smallFix,
+  .card.small {
+    width: 100%;
+    max-width: 100%;
+    height: 130px;
+  }
+
+  .planeDotFix {
+    width: 44px;
+    height: 44px;
+    right: -8px;
   }
 }
 

@@ -354,6 +354,20 @@
 }
 
 @media (max-width: 900px) {
+  .bookingMain {
+    padding: 24px 20px 56px;
+  }
+
+  .bookingCard {
+    padding: 24px;
+    border-radius: 24px;
+  }
+
+  .bookingTripInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .bookingSteps {
     grid-template-columns: 1fr;
   }
@@ -372,7 +386,112 @@
     padding: 24px 16px 48px;
   }
 
+  .bookingIntro {
+    display: grid;
+    gap: 8px;
+  }
+
+  .bookingIntro h1 {
+    font-size: 1.45rem;
+    line-height: 1.4;
+  }
+
+  .bookingCard {
+    padding: 18px;
+    border-radius: 20px;
+    gap: 20px;
+  }
+
+  .bookingStep,
+  .timeStep,
+  .peopleStep,
+  .calendarStep {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .calendarHeader {
+    padding: 14px 14px 10px;
+  }
+
+  .calendarWeekdays {
+    padding: 0 10px 6px;
+    font-size: 0.75rem;
+  }
+
+  .calendarGrid {
+    gap: 6px;
+    padding: 8px 10px 12px;
+  }
+
+  .calendarDay {
+    height: 52px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+
+  .calendarLabel {
+    font-size: 0.96rem;
+    text-align: center;
+  }
+
   .bookingChip {
     grid-template-columns: 1fr;
+  }
+
+  .bookingChips {
+    grid-template-columns: 1fr;
+  }
+
+  .bookingPeopleControl {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .peopleBtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .bookingMain {
+    padding-inline: 12px;
+  }
+
+  .bookingStepHeader {
+    align-items: flex-start;
+  }
+
+  .bookingStepHeader > div {
+    min-width: 0;
+  }
+
+  .bookingStepHint {
+    line-height: 1.5;
+  }
+
+  .bookingTripTitle {
+    font-size: 1.1rem;
+  }
+
+  .bookingTripPrice {
+    width: 100%;
+    text-align: center;
+  }
+
+  .calendarNavBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+  }
+
+  .calendarDay {
+    height: 44px;
+    font-size: 0.88rem;
+  }
+
+  .bookingSubmit {
+    font-size: 0.98rem;
   }
 }
