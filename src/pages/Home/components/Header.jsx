@@ -224,6 +224,16 @@ function Header() {
               </div>
             )}
           </div>
+          {isMobileNavOpen && (
+            <>
+              <Link className="navLink" to="/how-to-start" onClick={handleNavLinkClick}>
+                {t('header.helpMenu.howToStart')}
+              </Link>
+              <Link className="navLink" to="/faq" onClick={handleNavLinkClick}>
+                {t('header.helpMenu.faq')}
+              </Link>
+            </>
+          )}
         </nav>
 
         <div className="actions">
@@ -247,7 +257,7 @@ function Header() {
             </button>
           </div>
 
-          <div className="navDropdown" ref={helpMenuRef}>
+          <div className="navDropdown headerHelpDropdown" ref={helpMenuRef}>
             <button
               type="button"
               className="helpBtn"
