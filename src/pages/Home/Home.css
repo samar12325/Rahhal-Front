@@ -1881,4 +1881,79 @@
     flex-direction: column;
     gap: 18px;
   }
+
+  .hero,
+  .hero * {
+    max-width: 100%;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 28px 18px 32px;
+    overflow-x: hidden;
+  }
+
+  .hero .container.heroWrap.heroWrapCenter {
+    padding: 0;
+    width: 100%;
+    gap: 0;
+  }
+
+  .heroCenter,
+  .heroCenterRel {
+    width: 100%;
+    min-height: 0;
+    text-align: center;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .heroCenter {
+    gap: 0;
+  }
+
+  .heroTitle,
+  .heroTitleCenter {
+    font-size: clamp(34px, 9vw, 46px);
+    line-height: 1.25;
+    max-width: 100%;
+    margin: 0 auto 14px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .heroText,
+  .heroTextCenter {
+    font-size: 16px;
+    line-height: 1.9;
+    max-width: 340px;
+    margin: 0 auto 22px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-actions button,
+  .hero-actions a {
+    width: 100%;
+    min-height: 56px;
+    justify-content: center;
+  }
+
+  .hero-gallery {
+    width: 100%;
+    margin-top: 28px;
+  }
+
+  .planePathImg,
+  .heroCenterRel .planePathImg {
+    opacity: 0.75;
+    transform: scale(0.85);
+    pointer-events: none;
+  }
 }

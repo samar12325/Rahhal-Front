@@ -21,7 +21,7 @@ function Hero() {
             {t('home.hero.description')}
           </p>
 
-          <div className="heroCtas heroCtasCenter">
+          <div className="heroCtas heroCtasCenter hero-actions">
             <Link className="primaryBtn big" to="/ai-trips">
               {t('home.hero.ctaPlan')}
             </Link>
@@ -33,7 +33,7 @@ function Hero() {
           <img className="planePathImg" src={planePath} alt="" aria-hidden="true" />
         </div>
 
-        <div className="heroRight heroRightFix">
+        <div className="heroRight heroRightFix hero-gallery">
           <div className="collage collageRefFix">
             <div className="card big bigFix">
               <img src={alula} alt={t('destinationNames.alula')} />
