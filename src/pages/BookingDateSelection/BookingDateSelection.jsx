@@ -225,7 +225,7 @@ function BookingDateSelection() {
             ) : (
               <div className="bookingEmpty">
                 <p>لم يتم العثور على الرحلة المطلوبة.</p>
-                <Link className="secondaryBtn" to="/trips">
+                <Link className="secondaryBtn" to="/events">
                   العودة للرحلات
                 </Link>
               </div>

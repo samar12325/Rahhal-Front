@@ -17,7 +17,6 @@ function Header() {
   const navigate = useNavigate()
   const navLinks = [
     { to: '/home#destinations', label: t('header.links.destinations') },
-    { to: '/offers', label: t('header.links.offers') },
     { to: '/contact', label: t('header.links.contact') },
   ]
 
@@ -184,7 +183,7 @@ function Header() {
             </button>
             {isTripsOpen && (
               <div className="navMenu" role="menu">
-                <Link className="navMenuItem" role="menuitem" to="/trips">
+                <Link className="navMenuItem" role="menuitem" to="/events">
                   {t('header.tripsMenu.available')}
                 </Link>
                 <Link className="navMenuItem" role="menuitem" to="/ai-trips">

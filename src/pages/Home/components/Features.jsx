@@ -23,8 +23,6 @@ function Features() {
             </article>
           ))}
         </div>
-
-        <div id="offers" style={{ marginTop: 26 }} />
       </div>
     </section>
   )

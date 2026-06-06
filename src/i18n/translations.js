@@ -9,12 +9,11 @@
       navLabel: 'روابط التنقل',
       links: {
         destinations: 'وجهات المملكة',
-        offers: 'أفضل العروض',
         contact: 'تواصل معنا',
       },
       trips: 'الرحلات',
       tripsMenu: {
-        available: 'الرحلات المتاحة',
+        available: 'الفعاليات',
         ai: 'الرحلات بالذكاء الاصطناعي',
         school: 'رحلات مدرسية',
         group: 'رحلات جماعية',
@@ -71,7 +70,6 @@
         contact: 'تواصل معنا',
         links: {
           destinations: 'وجهات المملكة',
-          offers: 'أفضل العروض',
           tripTypes: 'أنواع الرحلات',
           how: 'كيف أبدأ؟',
           faq: 'الأسئلة الشائعة',
@@ -84,7 +82,7 @@
     },
     offers: {
       hero: {
-        title: 'أفضل العروض',
+        title: 'رحلات مميزة',
         subtitle: 'عروض مختارة لوجهات داخل المملكة بأسعار مميزة وتجارب متنوعة.',
       },
       filters: {
@@ -108,7 +106,7 @@
       },
       listAria: 'قائمة العروض',
       empty: {
-        title: 'لا توجد عروض مطابقة',
+        title: 'لا توجد نتائج مطابقة',
         description: 'حاول تعديل الفلاتر أو كلمات البحث لرؤية المزيد من العروض.',
       },
       actions: {
@@ -366,7 +364,7 @@
     },
     trips: {
       hero: {
-        title: 'الرحلات المتوفرة',
+        title: 'الفعاليات',
         subtitle: 'اختر الوجهة، حدد الميزانية والمدة، وابدأ رحلتك.',
         countLabel: '{{count}} رحلة متاحة',
       },
@@ -1069,12 +1067,11 @@
       navLabel: 'Primary navigation',
       links: {
         destinations: 'Saudi destinations',
-        offers: 'Top offers',
         contact: 'Contact us',
       },
       trips: 'Trips',
       tripsMenu: {
-        available: 'Available trips',
+        available: 'Events',
         ai: 'AI trips',
         school: 'School trips',
         group: 'Group trips',
@@ -1131,7 +1128,6 @@
         contact: 'Contact us',
         links: {
           destinations: 'Saudi destinations',
-          offers: 'Top offers',
           tripTypes: 'Trip types',
           how: 'How to start?',
           faq: 'FAQ',
@@ -1144,7 +1140,7 @@
     },
     offers: {
       hero: {
-        title: 'Top offers',
+        title: 'Featured trips',
         subtitle: 'Handpicked deals for destinations across the Kingdom with great value and variety.',
       },
       filters: {
@@ -1168,8 +1164,8 @@
       },
       listAria: 'Offers list',
       empty: {
-        title: 'No matching offers',
-        description: 'Try adjusting filters or search keywords to see more offers.',
+        title: 'No matching results',
+        description: 'Try adjusting filters or search keywords to see more trips.',
       },
       actions: {
         bookNow: 'Book now',
@@ -1426,7 +1422,7 @@
     },
     trips: {
       hero: {
-        title: 'Available trips',
+        title: 'Events',
         subtitle: 'Pick a destination, set your budget and duration, and start your journey.',
         countLabel: '{{count}} trips available',
       },

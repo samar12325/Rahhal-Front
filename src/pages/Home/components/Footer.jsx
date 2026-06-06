@@ -18,7 +18,6 @@ function Footer() {
           <strong className="footerTitle">{t('home.footer.quickLinks')}</strong>
           <div className="footerLinks">
             <a href="#destinations">{t('home.footer.links.destinations')}</a>
-            <a href="#offers">{t('home.footer.links.offers')}</a>
             <a href="#trip-types">{t('home.footer.links.tripTypes')}</a>
           </div>
         </div>

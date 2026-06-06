@@ -180,7 +180,7 @@ function Checkout() {
             />
             <Link
               className="backLink"
-              to={offer ? '/offers' : destination ? `/destinations/${destination.id}` : '/home'}
+              to={offer ? '/events' : destination ? `/destinations/${destination.id}` : '/home'}
             >
               {t('checkout.back')}
             </Link>
