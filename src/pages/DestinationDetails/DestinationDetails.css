@@ -1,0 +1,383 @@
+.destinationDetails {
+  --bg: #f7fbfa;
+  --card: #ffffff;
+  --ink: #1f3d3a;
+  --muted: #4f6f69;
+  --accent: #4fb3a6;
+  --accent-strong: #9b7653;
+  --stroke: rgba(31, 61, 58, 0.12);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.destinationDetails .container {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.destinationHero {
+  position: relative;
+  min-height: 420px;
+  display: flex;
+  align-items: flex-end;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.destinationHeroMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.destinationHeroMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.destinationHeroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(11, 35, 33, 0.65), rgba(11, 35, 33, 0.25));
+}
+
+.destinationHeroContent {
+  position: relative;
+  z-index: 1;
+  padding: 70px 0 52px;
+  max-width: 640px;
+  display: grid;
+  gap: 14px;
+}
+
+.destinationRegion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+  width: fit-content;
+}
+
+.destinationName {
+  margin: 0;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+}
+
+.destinationIntro {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.destinationCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--accent-strong);
+  color: #ffffff;
+  font-weight: 700;
+  width: fit-content;
+  box-shadow: 0 10px 28px rgba(155, 118, 83, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.destinationCta:hover,
+.destinationCta:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 32px rgba(155, 118, 83, 0.4);
+  outline: none;
+}
+
+.destinationSection {
+  padding: 42px 0;
+}
+
+.sectionHeading {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  font-size: 1.45rem;
+}
+
+.sectionText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.infoCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.infoCard {
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--stroke);
+  padding: 14px 16px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.05);
+}
+
+.infoLabel {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.infoValue {
+  margin: 6px 0 0;
+  font-weight: 700;
+}
+
+.highlightChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.highlightChip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(79, 179, 166, 0.12);
+  border: 1px solid var(--stroke);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.activitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.activitiesEmpty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.activityCard {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.activityImage {
+  height: 170px;
+  background: #f6e7d1;
+}
+
+.activityImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activityBody {
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  flex: 1;
+}
+
+.activityHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.activityTitle {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.activityType {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.activityDescription {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.activityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.activityAction {
+  margin-top: auto;
+}
+
+.activityBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--ink);
+  font-weight: 700;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.activityBtn:hover,
+.activityBtn:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.activityBtn.disabled {
+  background: #f2f2f2;
+  color: #9a9a9a;
+  border-color: #e2e2e2;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mapEmbed {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+}
+
+.mapEmbed iframe {
+  width: 100%;
+  height: 340px;
+  border: 0;
+  display: block;
+}
+
+.mapPlaceholder {
+  border-radius: 18px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
+  padding: 46px 24px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.galleryItem {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  aspect-ratio: 4 / 3;
+}
+
+.galleryItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destinationEmpty {
+  padding: 90px 0;
+  text-align: center;
+  display: grid;
+  gap: 14px;
+}
+
+.destinationEmptyTitle {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.destinationEmptyText {
+  margin: 0;
+  color: var(--muted);
+}
+
+.destinationBackBtn {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: var(--accent-strong);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(155, 118, 83, 0.25);
+}
+
+.destinationBackBtn:hover,
+.destinationBackBtn:focus-visible {
+  transform: translateY(-1px);
+  outline: none;
+}
+
+@media (max-width: 780px) {
+  .destinationHero {
+    min-height: 360px;
+  }
+
+  .destinationHeroContent {
+    padding: 60px 0 42px;
+  }
+
+  .destinationSection {
+    padding: 34px 0;
+  }
+
+  .activityHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .destinationHeroContent {
+    padding: 52px 0 36px;
+  }
+
+  .destinationCta,
+  .destinationBackBtn {
+    width: 100%;
+  }
+}

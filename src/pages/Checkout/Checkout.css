@@ -1,0 +1,351 @@
+﻿.checkoutPage {
+  --bg: #f7fbfa;
+  --card: #ffffff;
+  --ink: #1f3d3a;
+  --muted: #4f6f69;
+  --accent: #4fb3a6;
+  --accent-strong: #9b7653;
+  --stroke: rgba(31, 61, 58, 0.12);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 40px 0 70px;
+}
+
+.checkoutPage .container {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.checkoutHeader {
+  display: grid;
+  gap: 12px;
+  max-width: 720px;
+  margin-bottom: 24px;
+}
+
+.checkoutEyebrow {
+  margin: 0;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.checkoutHeader h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 44px);
+}
+
+.checkoutSubtitle {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.checkoutSuccess {
+  margin-bottom: 24px;
+  background: #fffaf2;
+  border: 1px solid rgba(155, 118, 83, 0.3);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+}
+
+.checkoutSuccess h2 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.checkoutSuccess p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.checkoutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.checkoutCard {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.checkoutForm {
+  display: grid;
+  gap: 18px;
+}
+
+.paymentTabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.paymentTab {
+  border-radius: 14px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  padding: 12px 14px;
+  text-align: start;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.paymentTab.active {
+  border-color: var(--accent);
+  background: rgba(79, 179, 166, 0.12);
+  transform: translateY(-1px);
+}
+
+.paymentLabel {
+  font-weight: 700;
+}
+
+.paymentHint {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.cardForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.formField {
+  display: grid;
+  gap: 6px;
+}
+
+.formField.full {
+  grid-column: 1 / -1;
+}
+
+.formField label {
+  font-weight: 600;
+}
+
+.formInput {
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.12);
+}
+
+.fieldError {
+  color: #c65f3c;
+  font-size: 0.85rem;
+}
+
+.applePayPanel {
+  display: grid;
+  gap: 12px;
+  background: #0f0f0f;
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.applePayButton {
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.applePayNote {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.checkoutActions {
+  display: grid;
+  gap: 10px;
+}
+
+.payButton {
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 700;
+  background: var(--accent-strong);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(155, 118, 83, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payButton:hover,
+.payButton:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(155, 118, 83, 0.4);
+  outline: none;
+}
+
+.payButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.checkoutNote {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.orderSummary {
+  display: grid;
+  gap: 16px;
+}
+
+.orderSummary h3 {
+  margin: 0;
+}
+
+.summaryHeader {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.summaryHeader img {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--stroke);
+}
+
+.summaryDestination {
+  margin: 0;
+  font-weight: 700;
+}
+
+.summaryActivity {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.summaryMeta {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.summaryEmpty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.summaryList {
+  border-top: 1px solid var(--stroke);
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.summaryBooking {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  background: #fffaf2;
+  padding: 12px 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.summaryBookingRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.summaryBookingLabel {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.summaryBookingValue {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.summaryRow.total {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--ink);
+  font-weight: 700;
+  margin-top: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .checkoutGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .checkoutPage {
+    padding: 32px 0 50px;
+  }
+
+  .checkoutCard {
+    padding: 16px;
+  }
+
+  .cardForm {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryHeader {
+    grid-template-columns: 1fr;
+    text-align: start;
+  }
+}

@@ -1,0 +1,448 @@
+.adminTripsPage {
+  min-height: 100vh;
+}
+
+.adminTripsPage .adminTripsMain {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.adminHero {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.adminHeroText h1 {
+  margin: 6px 0;
+  font-size: 1.7rem;
+  color: var(--ink);
+}
+
+.adminEyebrow {
+  margin: 0;
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+.adminSubtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.adminHeroActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.adminStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  width: min(520px, 100%);
+}
+
+.adminStat {
+  display: grid;
+  gap: 2px;
+  align-items: center;
+  justify-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  font-weight: 800;
+}
+
+.adminStat span {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.adminLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.adminColumn {
+  display: grid;
+  gap: 14px;
+}
+
+.adminToolbar {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.adminFilters {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 12px;
+}
+
+.adminToolbarActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminToolbarHint {
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.adminTripsGrid {
+  margin-top: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.adminTripCard {
+  position: relative;
+}
+
+.adminTripMeta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.tripMenuWrapper {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: grid;
+  gap: 6px;
+  z-index: 4;
+}
+
+.tripMenuBtn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--ink);
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.tripMenuBtn:hover,
+.tripMenuBtn:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.tripMenu {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  min-width: 170px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  display: none;
+  gap: 4px;
+}
+
+.tripMenu.open {
+  display: grid;
+}
+
+.tripMenu button {
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: right;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.tripMenu button:hover,
+.tripMenu button:focus-visible {
+  background: var(--pill);
+  color: var(--ink);
+  outline: none;
+}
+
+.tripMenu button.danger {
+  color: #b42318;
+}
+
+.adminFormCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+  position: sticky;
+  top: 96px;
+}
+
+.adminFormHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adminFormHeader h2 {
+  margin: 6px 0;
+  font-size: 1.3rem;
+}
+
+.adminFormMeta {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.adminForm {
+  display: grid;
+  gap: 14px;
+}
+
+.adminFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.adminFormGrid .full {
+  grid-column: span 2;
+}
+
+.fieldError {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: #b42318;
+  font-weight: 700;
+}
+
+.adminFormActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.adminFormNote {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.adminEmptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+}
+
+.adminEmptyState .tripBody {
+  gap: 12px;
+}
+
+.adminModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 200;
+}
+
+.adminModalCard {
+  position: relative;
+  width: min(560px, 92vw);
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid var(--stroke);
+  padding: 20px;
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.18);
+  display: grid;
+  gap: 14px;
+}
+
+.adminModalCard.previewCard {
+  width: min(720px, 92vw);
+  padding: 0;
+  overflow: hidden;
+}
+
+.previewMedia {
+  height: 260px;
+  background: #f6e7d1;
+}
+
+.previewMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.previewContent {
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.previewContent h2 {
+  margin: 0;
+}
+
+.previewCity {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.previewMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.adminModalActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.modalDescription {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.primaryBtn.danger {
+  background: #b42318;
+  box-shadow: 0 10px 24px rgba(180, 35, 24, 0.22);
+}
+
+.primaryBtn.danger:hover {
+  box-shadow: 0 14px 32px rgba(180, 35, 24, 0.32);
+}
+
+@media (max-width: 1024px) {
+  .adminLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .adminFormCard {
+    position: static;
+  }
+
+  .adminEmptyState {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminFilters {
+    grid-template-columns: 1fr;
+  }
+
+  .adminTripsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminFormGrid .full {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .adminTripsPage .adminTripsMain {
+    padding: 18px 16px 48px;
+  }
+
+  .adminHero {
+    padding: 14px;
+  }
+
+  .adminHeroText h1 {
+    font-size: 1.35rem;
+  }
+
+  .adminStatsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .adminStat {
+    padding: 8px 10px;
+  }
+
+  .adminToolbar {
+    padding: 12px;
+  }
+
+  .adminFormCard {
+    padding: 14px;
+  }
+
+  .adminFormHeader h2 {
+    font-size: 1.1rem;
+  }
+
+  .tripImg {
+    height: 150px;
+  }
+}

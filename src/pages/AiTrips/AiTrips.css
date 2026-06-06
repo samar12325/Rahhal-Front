@@ -1,0 +1,325 @@
+.aiTripsPage {
+  min-height: 100vh;
+}
+
+.aiTripsMain {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.aiTripsGrid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.aiTripsPanel {
+  display: grid;
+  gap: 12px;
+}
+
+.aiCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+}
+
+.aiCardPad {
+  padding: 14px;
+}
+
+.aiHero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.aiHeroTitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.6rem;
+}
+
+.aiHeroText {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.countBadge {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.aiFormTitle {
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.input,
+.select,
+.textarea {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #fff;
+  outline: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: var(--pill);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.tag:hover,
+.tag:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.tag.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+  background: #fffaf2;
+}
+
+.aiActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.aiResultHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.aiResultEmpty,
+.aiResultLoading {
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.8;
+}
+
+.aiError {
+  color: #b00020;
+  margin-top: 10px;
+}
+
+.summaryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dayCard {
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.dayHead {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.dayTitle {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.daySubtitle {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.dayBody {
+  padding: 12px 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.activity {
+  display: grid;
+  gap: 6px;
+}
+
+.activityRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.activityTitle {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.activityCost {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.activityNote {
+  color: var(--muted);
+}
+
+.activityActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.aiResultActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.aiTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chatPanel {
+  min-height: 520px;
+  display: grid;
+  gap: 12px;
+}
+
+.chatHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.chatLog {
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 12px;
+  background: #fff;
+  overflow: auto;
+  height: 320px;
+  display: grid;
+  gap: 10px;
+}
+
+.chatMessage {
+  display: flex;
+}
+
+.chatMessage.user {
+  justify-content: flex-start;
+}
+
+.chatMessage.assistant {
+  justify-content: flex-end;
+}
+
+.chatBubble {
+  max-width: 78%;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid var(--stroke);
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 650;
+}
+
+.chatBubble.user {
+  background: #fff;
+}
+
+.chatBubble.assistant {
+  background: #fffaf2;
+}
+
+.chatInputRow {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 980px) {
+  .aiTripsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .aiHero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .twoCols {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,16 @@
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.feature-chip {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(217, 109, 41, 0.15);
+  color: var(--dune-700);
+  box-shadow: 0 10px 22px rgba(60, 42, 28, 0.08);
+  opacity: 0.85;
+}

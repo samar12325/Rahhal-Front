@@ -1,0 +1,291 @@
+/* Trips page inherits theme from .home in Home.css */
+.tripsPage {
+  min-height: 100vh;
+}
+
+.tripsMain {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tripsHero {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.tripsHero h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+
+.tripsHero p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.countBadge {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.filtersCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.filtersTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filtersTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.filtersReset {
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.filtersReset:hover,
+.filtersReset:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.chipsRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filtersRow {
+  display: grid;
+  grid-template-columns: 1.2fr repeat(4, 1fr);
+  gap: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.input,
+.select {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #fff;
+  outline: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
+.budgetRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.tripsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.tripCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  display: grid;
+}
+
+.tripImg {
+  height: 170px;
+  background: #f6e7d1;
+}
+
+.tripImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tripBody {
+  padding: 12px 12px 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.tripHeader {
+  display: grid;
+  gap: 4px;
+}
+
+.tripTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.tripLocation {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.94rem;
+}
+
+.tripMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.tripMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: var(--pill);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.tripActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tripsPagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.tripsPagination .secondaryBtn {
+  padding: 12px 20px;
+  border-radius: 16px;
+}
+
+@media (max-width: 980px) {
+  .filtersRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tripsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .tripsMain {
+    padding: 18px 16px 48px;
+  }
+
+  .tripsHero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tripsHero h1 {
+    font-size: 1.35rem;
+  }
+
+  .filtersCard {
+    padding: 12px;
+  }
+
+  .filtersRow {
+    grid-template-columns: 1fr;
+  }
+
+  .budgetRow {
+    grid-template-columns: 1fr;
+  }
+
+  .tripsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tripImg {
+    height: 150px;
+  }
+
+  .tripTitle {
+    font-size: 1rem;
+  }
+
+  .tripMeta {
+    font-size: 0.88rem;
+  }
+
+  .tag {
+    font-size: 0.8rem;
+  }
+}

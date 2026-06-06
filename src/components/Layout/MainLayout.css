@@ -1,0 +1,14 @@
+.rahhalLayout {
+  --bg: #f7fbfa;
+  --card: #ffffff;
+  --ink: #1f3d3a;
+  --muted: #4f6f69;
+  --accent: #4fb3a6;
+  --accent-strong: #9b7653;
+  --pill: rgba(79, 179, 166, 0.16);
+  --stroke: rgba(31, 61, 58, 0.12);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}

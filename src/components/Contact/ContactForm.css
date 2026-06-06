@@ -1,0 +1,55 @@
+﻿.contactForm {
+  display: grid;
+  gap: 14px;
+}
+
+.contactForm .formField {
+  display: grid;
+  gap: 6px;
+}
+
+.contactForm label {
+  font-weight: 600;
+}
+
+.contactForm .formInput {
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contactForm .formInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.12);
+}
+
+.contactSubmit {
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 700;
+  background: var(--accent-strong);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(155, 118, 83, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contactSubmit:hover,
+.contactSubmit:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(155, 118, 83, 0.4);
+  outline: none;
+}
+
+.contactSuccess {
+  margin: 0;
+  background: #fffaf2;
+  border: 1px solid rgba(155, 118, 83, 0.25);
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}

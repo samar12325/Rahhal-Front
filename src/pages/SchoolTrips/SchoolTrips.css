@@ -1,0 +1,565 @@
+.schoolTripsPage {
+  min-height: 100vh;
+}
+
+.schoolTripsMain {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.schoolCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+}
+
+.schoolTripsHero {
+  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(79, 179, 166, 0.08), rgba(255, 250, 242, 0.9));
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+}
+
+.schoolTripsHeroMain {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.schoolTripsHeroTitle {
+  margin: 0;
+  font-size: 1.7rem;
+  color: var(--ink);
+}
+
+.schoolTripsHeroText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.schoolTripsHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolTripsStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.schoolTripsStat {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 12px;
+  display: grid;
+  gap: 4px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+}
+
+.schoolTripsStatValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.schoolTripsStatLabel {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.schoolTripForm {
+  padding: 20px;
+}
+
+.schoolCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolCardHeader h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolCardHeader p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.schoolForm {
+  margin-top: 16px;
+  display: grid;
+  gap: 16px;
+}
+
+.schoolFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.schoolField {
+  display: grid;
+  gap: 6px;
+}
+
+.schoolField label {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.schoolInput,
+.schoolSelect,
+.schoolTextarea {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #ffffff;
+  outline: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.schoolFileInput {
+  border: 1px dashed var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  font: inherit;
+}
+
+.schoolFileInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+  outline: none;
+}
+
+.schoolFileName,
+.schoolFileHint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.schoolInput:focus,
+.schoolSelect:focus,
+.schoolTextarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
+.schoolTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.schoolFormActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.schoolFormMessage {
+  margin-top: 12px;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.schoolTripsTimeline {
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.schoolTripsTimelineHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolTripsTimelineHead h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolTripsTimelineHead p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.schoolTripsTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.schoolTab {
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: #ffffff;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.schoolTab:hover,
+.schoolTab:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 4px 10px rgba(79, 179, 166, 0.12);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.schoolTab.active {
+  border-color: var(--accent);
+  background: #fffaf2;
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
+.schoolTripsList {
+  display: grid;
+  gap: 16px;
+}
+
+.schoolTripEmpty {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  text-align: center;
+}
+
+.schoolTripCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.schoolTripCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolTripHeadText {
+  display: grid;
+  gap: 4px;
+}
+
+.schoolTripStatus {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.schoolTripStatus.upcoming {
+  background: rgba(79, 179, 166, 0.15);
+  color: var(--accent);
+}
+
+.schoolTripStatus.past {
+  background: rgba(155, 118, 83, 0.16);
+  color: var(--accent-strong);
+}
+
+.schoolTripTitle {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.schoolTripDestination {
+  margin: 0;
+  color: var(--muted);
+}
+
+.schoolTripDate {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  min-width: 160px;
+}
+
+.schoolTripInfo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.schoolTripInfoItem {
+  background: #fdf8f1;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.schoolTripLabel {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.schoolTripValue {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.schoolTripAgenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.schoolTripAgenda span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--pill);
+  border: 1px solid var(--stroke);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.schoolTripProgress {
+  display: grid;
+  gap: 6px;
+}
+
+.schoolTripProgressHeader {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.schoolTripProgressBar {
+  height: 10px;
+  border-radius: 999px;
+  background: #eef6f4;
+  border: 1px solid var(--stroke);
+  overflow: hidden;
+}
+
+.schoolTripProgressBar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
+.schoolTripReportStatus {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.schoolTripActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolTripsReport {
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.schoolTripsReportHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolTripsReportHead h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolTripsReportHead p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.schoolTripsReportSelect {
+  display: grid;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.schoolTripsLabel {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.schoolTripsReportBody {
+  display: grid;
+  gap: 16px;
+}
+
+.schoolReportSummary {
+  background: #fffaf2;
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.schoolReportSummaryHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.schoolReportSummary h3 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolReportSummary p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.schoolReportBadge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: rgba(79, 179, 166, 0.16);
+  color: var(--accent);
+  border: 1px solid rgba(79, 179, 166, 0.3);
+}
+
+.schoolReportMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.schoolReportGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.schoolReportCard {
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 14px;
+  background: #ffffff;
+  display: grid;
+  gap: 8px;
+}
+
+.schoolReportCard h4 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolReportList {
+  margin: 0;
+  padding: 0 18px 0 0;
+  color: var(--muted);
+  display: grid;
+  gap: 6px;
+}
+
+.schoolReportActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolReportEmpty {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .schoolTripsHero {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolTripInfo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .schoolFormGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolReportGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolTripDate {
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .schoolTripsStats {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,98 @@
+﻿.helpPage {
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.helpStepsSection {
+  padding: 18px 0 32px;
+}
+
+.helpStepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.helpStepCard {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--stroke);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.helpStepNumber {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(79, 179, 166, 0.15);
+  font-weight: 700;
+}
+
+.helpStepCard h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.helpStepCard p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.helpStepLink {
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #fffaf2;
+  border: 1px solid var(--stroke);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.helpCtaSection {
+  padding: 10px 0 60px;
+}
+
+.helpCtaBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+}
+
+.helpCtaBox h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+
+.helpCtaBox p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.helpCtaBtn {
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .helpCtaBox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .helpCtaBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

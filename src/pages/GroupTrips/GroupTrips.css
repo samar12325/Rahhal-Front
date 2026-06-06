@@ -1,0 +1,541 @@
+/* Group Trips page inherits theme from .home in Home.css */
+.groupTripsPage {
+  min-height: 100vh;
+}
+
+.groupTripsMain {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 22px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.groupTripsHero {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 2px;
+}
+
+.groupTripsHero h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+
+.groupTripsHero p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.countBadge {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.groupTripsBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupTripsBadge svg {
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.groupTripsSearchBar {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin-bottom: 2px;
+}
+
+.groupTripsSearchForm {
+  width: 100%;
+}
+
+.groupTripsSearchWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.groupTripsSearchInput {
+  flex: 1;
+  border: 2px solid var(--stroke);
+  border-radius: 16px;
+  padding: 14px 50px 14px 50px;
+  background: #fff;
+  outline: none;
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.groupTripsSearchInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(79, 179, 166, 0.1);
+}
+
+.groupTripsSearchInput::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.groupTripsSearchIcon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.groupTripsSearchInput:focus + .groupTripsSearchSubmitBtn + .groupTripsSearchIcon,
+.groupTripsSearchWrapper:focus-within .groupTripsSearchIcon {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.groupTripsSearchSubmitBtn {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0;
+}
+
+.groupTripsSearchSubmitBtn:hover {
+  background: var(--accent-strong);
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 4px 12px rgba(79, 179, 166, 0.3);
+}
+
+.groupTripsSearchSubmitBtn:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+.groupTripsSearchSubmitBtn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5;
+}
+
+.groupTripsTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  margin-bottom: 2px;
+}
+
+.groupTripsTab {
+  flex: 1;
+  min-width: fit-content;
+  padding: 12px 20px;
+  border-radius: 16px;
+  border: 2px solid var(--stroke);
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.groupTripsTab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--pill);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.groupTripsTab:hover::before,
+.groupTripsTab:focus-visible::before {
+  opacity: 1;
+}
+
+.groupTripsTab:hover,
+.groupTripsTab:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  outline: none;
+  box-shadow: 0 4px 12px rgba(79, 179, 166, 0.15);
+}
+
+.groupTripsTab.active {
+  border-color: var(--accent);
+  background: #fffaf2;
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.12), 0 4px 16px rgba(79, 179, 166, 0.2);
+  transform: translateY(-1px);
+  color: var(--ink);
+}
+
+.groupTripsTab.active::before {
+  opacity: 0;
+}
+
+.groupTripCard {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  display: grid;
+}
+
+.groupTripImg {
+  height: 170px;
+  background: #f6e7d1;
+  position: relative;
+}
+
+.groupTripImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.groupTripImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f6e7d1 0%, #e8d5c0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.groupTripImgPlaceholder::before {
+  content: '🕌';
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.groupTripStatusBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 16px rgba(79, 179, 166, 0.3), 0 2px 6px rgba(79, 179, 166, 0.2);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.groupTripStatusBadge.upcoming {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 16px rgba(79, 179, 166, 0.3), 0 2px 6px rgba(79, 179, 166, 0.2);
+}
+
+.groupTripBody {
+  padding: 12px 12px 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.groupTripTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.groupTripMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.groupTripParticipants {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.groupTripDetails {
+  padding: 12px;
+  background: #fffaf2;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  margin-top: 4px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.groupTripDescription {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.groupTripActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.groupTripActions .secondaryBtn.active {
+  background: var(--pill);
+  border-color: var(--accent);
+}
+
+.groupTripsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 0;
+}
+
+.groupTripsEmpty {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.groupTripsEmpty h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+.groupTripsEmpty p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.createTripForm {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.createTripFormTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.createTripFormFields {
+  display: grid;
+  gap: 14px;
+}
+
+.createTripFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.createTripFormField {
+  display: grid;
+  gap: 6px;
+}
+
+.createTripFormField label {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.createTripFormField input,
+.createTripFormField select,
+.createTripFormField textarea {
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #fff;
+  outline: none;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: inherit;
+}
+
+.createTripFormField textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.createTripFormField input:focus,
+.createTripFormField select:focus,
+.createTripFormField textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
+.createTripFormField input[type="file"] {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.imagePreview {
+  margin-top: 8px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  max-width: 300px;
+}
+
+.imagePreview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.createTripFormActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.createTripFormError {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: -4px;
+}
+
+@media (max-width: 980px) {
+  .groupTripsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .createTripFormRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .groupTripsHero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .groupTripsSearchBar {
+    padding: 12px;
+  }
+
+  .groupTripsSearchInput {
+    padding: 12px 48px 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  .groupTripsSearchSubmitBtn {
+    width: 32px;
+    height: 32px;
+    left: 6px;
+  }
+
+  .groupTripsSearchSubmitBtn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .groupTripsSearchIcon {
+    right: 14px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .groupTripsTabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .groupTripsTab {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  .groupTripsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
