@@ -1815,7 +1815,19 @@
     width: 100%;
     max-width: 100%;
     justify-content: center;
-    flex-direction: row-reverse;
+    direction: ltr;
+  }
+
+  .language-switcher .langBtn:first-of-type {
+    order: 3;
+  }
+
+  .language-switcher .langDivider {
+    order: 2;
+  }
+
+  .language-switcher .langBtn:last-of-type {
+    order: 1;
   }
 
   .headerAccountRow {
