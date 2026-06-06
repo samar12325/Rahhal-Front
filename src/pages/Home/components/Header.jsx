@@ -5,6 +5,7 @@ import { useLanguage } from '../../../i18n/LanguageContext'
 
 function Header() {
   const { language, setLanguage, t } = useLanguage()
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [isTripsOpen, setIsTripsOpen] = useState(false)
   const [isHelpOpen, setIsHelpOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -36,7 +37,7 @@ function Header() {
   }, [])
 
   useEffect(() => {
-    if (!isHelpOpen && !isProfileOpen) return
+    if (!isHelpOpen && !isProfileOpen && !isMobileNavOpen) return
 
     const handleClickOutside = (event) => {
       if (isHelpOpen && helpMenuRef.current && !helpMenuRef.current.contains(event.target)) {
@@ -50,12 +51,19 @@ function Header() {
       ) {
         setIsProfileOpen(false)
       }
+
+      const clickedMenuToggle = event.target.closest('.mobileMenuToggle')
+      const clickedInsideNav = event.target.closest('.nav')
+      if (isMobileNavOpen && !clickedMenuToggle && !clickedInsideNav) {
+        setIsMobileNavOpen(false)
+      }
     }
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setIsHelpOpen(false)
         setIsProfileOpen(false)
+        setIsMobileNavOpen(false)
       }
     }
 
@@ -68,7 +76,7 @@ function Header() {
       document.removeEventListener('touchstart', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [isHelpOpen, isProfileOpen])
+  }, [isHelpOpen, isMobileNavOpen, isProfileOpen])
 
   useEffect(() => {
     if (!isSearchOpen) return
@@ -99,13 +107,31 @@ function Header() {
     window.dispatchEvent(new Event('rahhal-user-change'))
     setIsAuthenticated(false)
     setIsProfileOpen(false)
+    setIsMobileNavOpen(false)
     navigate('/home')
+  }
+
+  const handleNavLinkClick = () => {
+    setIsMobileNavOpen(false)
+    setIsTripsOpen(false)
+    setIsHelpOpen(false)
   }
 
   return (
     <header className="header">
       <div className="container headerInner">
         <div className="brandSearch">
+          <button
+            type="button"
+            className={`mobileMenuToggle ${isMobileNavOpen ? 'isActive' : ''}`}
+            aria-label={t('header.navLabel')}
+            aria-expanded={isMobileNavOpen}
+            onClick={() => setIsMobileNavOpen((prev) => !prev)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
           <Link className="brand" to="/home" aria-label={t('header.brandLabel')}>
             <img className="logo" src={logo} alt={t('header.logoAlt')} />
           </Link>
@@ -166,9 +192,9 @@ function Header() {
           </div>
         </div>
 
-        <nav className="nav" aria-label={t('header.navLabel')}>
+        <nav className={`nav ${isMobileNavOpen ? 'mobileOpen' : ''}`} aria-label={t('header.navLabel')}>
           {navLinks.map((link) => (
-            <Link className="navLink" to={link.to} key={link.to}>
+            <Link className="navLink" to={link.to} key={link.to} onClick={handleNavLinkClick}>
               {link.label}
             </Link>
           ))}
@@ -183,16 +209,16 @@ function Header() {
             </button>
             {isTripsOpen && (
               <div className="navMenu" role="menu">
-                <Link className="navMenuItem" role="menuitem" to="/events">
+                <Link className="navMenuItem" role="menuitem" to="/events" onClick={handleNavLinkClick}>
                   {t('header.tripsMenu.available')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/ai-trips">
+                <Link className="navMenuItem" role="menuitem" to="/ai-trips" onClick={handleNavLinkClick}>
                   {t('header.tripsMenu.ai')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/school-trips">
+                <Link className="navMenuItem" role="menuitem" to="/school-trips" onClick={handleNavLinkClick}>
                   {t('header.tripsMenu.school')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/group-trips">
+                <Link className="navMenuItem" role="menuitem" to="/group-trips" onClick={handleNavLinkClick}>
                   {t('header.tripsMenu.group')}
                 </Link>
               </div>
@@ -233,13 +259,13 @@ function Header() {
             </button>
             {isHelpOpen && (
               <div className="navMenu navMenuHelp" role="menu">
-                <Link className="navMenuItem" role="menuitem" to="/how-to-start">
+                <Link className="navMenuItem" role="menuitem" to="/how-to-start" onClick={handleNavLinkClick}>
                   {t('header.helpMenu.howToStart')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/faq">
+                <Link className="navMenuItem" role="menuitem" to="/faq" onClick={handleNavLinkClick}>
                   {t('header.helpMenu.faq')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/contact">
+                <Link className="navMenuItem" role="menuitem" to="/contact" onClick={handleNavLinkClick}>
                   {t('header.helpMenu.contact')}
                 </Link>
               </div>
@@ -278,7 +304,10 @@ function Header() {
                     className="navMenuItem"
                     role="menuitem"
                     to="/profile"
-                    onClick={() => setIsProfileOpen(false)}
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      setIsMobileNavOpen(false)
+                    }}
                   >
                     {t('header.profile.label')}
                   </Link>
@@ -286,7 +315,10 @@ function Header() {
                     className="navMenuItem"
                     role="menuitem"
                     to="/profile#bookings"
-                    onClick={() => setIsProfileOpen(false)}
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      setIsMobileNavOpen(false)
+                    }}
                   >
                     {t('header.profile.bookings')}
                   </Link>
@@ -294,7 +326,10 @@ function Header() {
                     className="navMenuItem"
                     role="menuitem"
                     to="/stats"
-                    onClick={() => setIsProfileOpen(false)}
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      setIsMobileNavOpen(false)
+                    }}
                   >
                     {t('header.profile.stats')}
                   </Link>
@@ -302,7 +337,10 @@ function Header() {
                     className="navMenuItem"
                     role="menuitem"
                     to="/admin/approvals"
-                    onClick={() => setIsProfileOpen(false)}
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      setIsMobileNavOpen(false)
+                    }}
                   >
                     {t('header.profile.approvals')}
                   </Link>
@@ -310,7 +348,10 @@ function Header() {
                     className="navMenuItem"
                     role="menuitem"
                     to="/admin/trips"
-                    onClick={() => setIsProfileOpen(false)}
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      setIsMobileNavOpen(false)
+                    }}
                   >
                     {t('header.profile.manage')}
                   </Link>
