@@ -10,14 +10,14 @@ function Hero() {
 
   return (
     <section className="hero" id="home-top">
-      <div className="container heroWrap heroWrapCenter">
-        <div className="heroCenter heroCenterRel">
-          <h1 className="heroTitle heroTitleCenter">
+      <div className="container heroWrap heroWrapCenter hero-container hero-layout">
+        <div className="heroCenter heroCenterRel hero-content">
+          <h1 className="heroTitle heroTitleCenter hero-title">
             {t('home.hero.titlePrefix')} <span className="accent">{t('home.hero.titleAccent')}</span>{' '}
             {t('home.hero.titleSuffix')}
           </h1>
 
-          <p className="heroText heroTextCenter">
+          <p className="heroText heroTextCenter hero-description">
             {t('home.hero.description')}
           </p>
 
@@ -30,16 +30,21 @@ function Hero() {
             </a>
           </div>
 
-          <img className="planePathImg" src={planePath} alt="" aria-hidden="true" />
+          <img
+            className="planePathImg hero-decoration plane-decoration flight-path"
+            src={planePath}
+            alt=""
+            aria-hidden="true"
+          />
         </div>
 
-        <div className="heroRight heroRightFix hero-gallery">
-          <div className="collage collageRefFix">
-            <div className="card big bigFix">
+        <div className="heroRight heroRightFix hero-gallery hero-images">
+          <div className="collage collageRefFix hero-gallery-layout">
+            <div className="card big bigFix hero-main-image">
               <img src={alula} alt={t('destinationNames.alula')} />
             </div>
 
-            <div className="stack stackFix">
+            <div className="stack stackFix hero-gallery-small hero-image-stack">
               <div className="card small smallFix">
                 <img src={riyadh} alt={t('destinationNames.riyadh')} />
               </div>

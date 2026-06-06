@@ -1889,14 +1889,24 @@
 
   .hero {
     min-height: auto;
-    padding: 28px 18px 32px;
+    padding: 36px 24px 40px !important;
     overflow-x: hidden;
+    overflow: hidden !important;
+  }
+
+  .hero-content,
+  .hero-container,
+  .hero-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
   }
 
   .hero .container.heroWrap.heroWrapCenter {
     padding: 0;
     width: 100%;
     gap: 0;
+    align-items: stretch;
   }
 
   .heroCenter,
@@ -1912,48 +1922,99 @@
     gap: 0;
   }
 
+  .hero-title,
   .heroTitle,
   .heroTitleCenter {
-    font-size: clamp(34px, 9vw, 46px);
-    line-height: 1.25;
+    font-size: clamp(34px, 8vw, 44px) !important;
+    line-height: 1.25 !important;
     max-width: 100%;
-    margin: 0 auto 14px;
+    text-align: center !important;
+    margin: 0 auto 14px !important;
     white-space: normal;
     overflow-wrap: break-word;
     word-break: normal;
   }
 
+  .hero-description,
   .heroText,
   .heroTextCenter {
-    font-size: 16px;
-    line-height: 1.9;
-    max-width: 340px;
-    margin: 0 auto 22px;
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+    text-align: center !important;
+    max-width: 340px !important;
+    margin: 0 auto 24px !important;
   }
 
   .hero-actions {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
   }
 
   .hero-actions button,
   .hero-actions a {
-    width: 100%;
-    min-height: 56px;
+    width: 100% !important;
+    min-height: 58px !important;
     justify-content: center;
   }
 
   .hero-gallery {
-    width: 100%;
-    margin-top: 28px;
+    order: 4;
   }
 
-  .planePathImg,
-  .heroCenterRel .planePathImg {
-    opacity: 0.75;
-    transform: scale(0.85);
+  .hero-gallery,
+  .hero-images {
+    width: 100% !important;
+    margin-top: 28px !important;
+    display: block !important;
+  }
+
+  .hero-gallery-layout {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+  }
+
+  .hero-gallery-small,
+  .hero-side-images,
+  .hero-image-stack {
+    display: none !important;
+  }
+
+  .hero-main-image {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 260px !important;
+    border-radius: 28px !important;
+  }
+
+  .hero-main-image img {
+    width: 100% !important;
+    height: 260px !important;
+    object-fit: cover !important;
+    border-radius: 28px !important;
+    display: block;
+  }
+
+  .hero-decoration,
+  .flight-path,
+  .plane-decoration {
+    position: static !important;
+    margin: 12px auto 18px !important;
+    transform: scale(0.8) !important;
+    opacity: 0.6 !important;
     pointer-events: none;
+  }
+
+  .planeDot,
+  .planeDotFix {
+    display: none !important;
+  }
+
+  .hero-divider,
+  .vertical-line,
+  .divider {
+    display: none !important;
   }
 }
