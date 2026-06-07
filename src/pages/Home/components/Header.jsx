@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logo from '../../../assets/images/rahhal-logo.png'
 import { useLanguage } from '../../../i18n/LanguageContext'
 import { apiRequest } from '../../../api/client'
@@ -17,12 +17,15 @@ function Header() {
   const [isHelpOpen, setIsHelpOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [currentUser, setCurrentUser] = useState(null)
   const [unreadInboxCount, setUnreadInboxCount] = useState(0)
   const helpMenuRef = useRef(null)
   const profileMenuRef = useRef(null)
   const searchWrapperRef = useRef(null)
+  const mobileMenuRef = useRef(null)
+  const location = useLocation()
   const navigate = useNavigate()
   const isAuthenticated = Boolean(currentUser)
   const isAdmin = isAdminUser(currentUser)
@@ -30,6 +33,23 @@ function Header() {
     { to: '/home#destinations', label: t('header.links.destinations') },
     { to: '/contact', label: t('header.links.contact') },
   ]
+  const tripLinks = [
+    { to: '/events', label: t('header.tripsMenu.available') },
+    { to: '/ai-trips', label: t('header.tripsMenu.ai') },
+    { to: '/school-trips', label: t('header.tripsMenu.school') },
+    { to: '/group-trips', label: t('header.tripsMenu.group') },
+  ]
+  const helpLinks = [
+    { to: '/how-to-start', label: t('header.helpMenu.howToStart') },
+    { to: '/faq', label: t('header.helpMenu.faq') },
+    { to: '/contact', label: t('header.helpMenu.contact') },
+  ]
+  const isTripsSectionActive = [
+    '/events',
+    '/ai-trips',
+    '/school-trips',
+    '/group-trips',
+  ].some((path) => location.pathname.startsWith(path))
 
   useEffect(() => {
     const handleAuthChange = () => {
@@ -128,6 +148,40 @@ function Header() {
     }
   }, [isSearchOpen])
 
+  useEffect(() => {
+    setIsTripsOpen(false)
+    setIsHelpOpen(false)
+    setIsProfileOpen(false)
+    setIsSearchOpen(false)
+    setIsMobileMenuOpen(false)
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false)
+    }
+
+    document.body.classList.add('mobileMenuOpen')
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    document.addEventListener('keydown', handleEscape)
+
+    return () => {
+      document.body.classList.remove('mobileMenuOpen')
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isMobileMenuOpen])
+
   const handleSignOut = async () => {
     try {
       await apiRequest('/auth/logout', { method: 'POST' })
@@ -139,6 +193,14 @@ function Header() {
     setCurrentUser(null)
     setIsProfileOpen(false)
     navigate('/home')
+  }
+
+  const isLinkActive = (to) => {
+    const path = to.split('#')[0]
+    const hash = to.includes('#') ? to.slice(to.indexOf('#')) : ''
+    const pathMatches = location.pathname === path
+    const hashMatches = !hash || location.hash === hash
+    return pathMatches && hashMatches
   }
 
   return (
@@ -205,16 +267,32 @@ function Header() {
           </div>
         </div>
 
+        <button
+          type="button"
+          className={`hamburgerBtn ${isMobileMenuOpen ? 'isOpen' : ''}`}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+          onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
         <nav className="nav" aria-label={t('header.navLabel')}>
           {navLinks.map((link) => (
-            <Link className="navLink" to={link.to} key={link.to}>
+            <Link
+              className={`navLink ${isLinkActive(link.to) ? 'isActive' : ''}`}
+              to={link.to}
+              key={link.to}
+            >
               {link.label}
             </Link>
           ))}
           <div className="navDropdown">
             <button
               type="button"
-              className="navLink navTrigger"
+              className={`navLink navTrigger ${isTripsSectionActive ? 'isActive' : ''}`}
               aria-expanded={isTripsOpen}
               onClick={() => setIsTripsOpen((prev) => !prev)}
             >
@@ -222,18 +300,11 @@ function Header() {
             </button>
             {isTripsOpen && (
               <div className="navMenu" role="menu">
-                <Link className="navMenuItem" role="menuitem" to="/events">
-                  {t('header.tripsMenu.available')}
-                </Link>
-                <Link className="navMenuItem" role="menuitem" to="/ai-trips">
-                  {t('header.tripsMenu.ai')}
-                </Link>
-                <Link className="navMenuItem" role="menuitem" to="/school-trips">
-                  {t('header.tripsMenu.school')}
-                </Link>
-                <Link className="navMenuItem" role="menuitem" to="/group-trips">
-                  {t('header.tripsMenu.group')}
-                </Link>
+                {tripLinks.map((link) => (
+                  <Link className="navMenuItem" role="menuitem" to={link.to} key={link.to}>
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             )}
           </div>
@@ -391,12 +462,128 @@ function Header() {
               )}
             </div>
           ) : (
-            <Link className="primaryBtn" to="/login">
-              {t('header.signIn')}
+            <Link className="primaryBtn headerSignIn" to="/login" aria-label={t('header.signIn')}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 12a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5ZM5.25 20a6.75 6.75 0 0 1 13.5 0"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="headerSignInText">{t('header.signIn')}</span>
             </Link>
           )}
         </div>
       </div>
+
+      <div className={`mobileMenuBackdrop ${isMobileMenuOpen ? 'isVisible' : ''}`} aria-hidden="true" />
+      <aside
+        ref={mobileMenuRef}
+        className={`mobileMenu ${isMobileMenuOpen ? 'isOpen' : ''}`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        <div className="mobileMenuHeader">
+          <div>
+            <strong className="mobileMenuTitle">{t('header.navLabel')}</strong>
+          </div>
+          <button
+            type="button"
+            className="mobileMenuClose"
+            aria-label="Close menu"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="mobileMenuSection">
+          <div className="mobileSearchBox">
+            <svg
+              className="searchIcon"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.333 12.667A5.333 5.333 0 1 0 7.333 2a5.333 5.333 0 0 0 0 10.667ZM14 14l-2.9-2.9"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <input
+              type="search"
+              className="searchInput"
+              placeholder={t('header.search.placeholder')}
+              aria-label={t('header.search.aria')}
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
+          </div>
+
+          <div className="langToggle mobileLangToggle" role="group" aria-label={t('header.languageToggle')}>
+            <button
+              type="button"
+              className={`langBtn ${language === 'en' ? 'active' : ''}`}
+              aria-pressed={language === 'en'}
+              onClick={() => setLanguage('en')}
+            >
+              EN
+            </button>
+            <span className="langDivider" aria-hidden="true">|</span>
+            <button
+              type="button"
+              className={`langBtn ${language === 'ar' ? 'active' : ''}`}
+              aria-pressed={language === 'ar'}
+              onClick={() => setLanguage('ar')}
+            >
+              AR
+            </button>
+          </div>
+        </div>
+
+        <nav className="mobileNav" aria-label={t('header.navLabel')}>
+          {navLinks.map((link) => (
+            <Link
+              className={`mobileNavLink ${isLinkActive(link.to) ? 'isActive' : ''}`}
+              to={link.to}
+              key={link.to}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <div className="mobileNavGroup">
+            <span className="mobileNavGroupLabel">{t('header.trips')}</span>
+            {tripLinks.map((link) => (
+              <Link className="mobileNavLink" to={link.to} key={link.to}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mobileNavGroup">
+            <span className="mobileNavGroupLabel">{t('header.help')}</span>
+            {helpLinks.map((link) => (
+              <Link className="mobileNavLink" to={link.to} key={link.to}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </aside>
     </header>
   )
 }
