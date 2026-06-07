@@ -1,4 +1,4 @@
-﻿import './PageHero.css'
+import './PageHero.css'
 
 import { useLanguage } from '../../i18n/LanguageContext'
 

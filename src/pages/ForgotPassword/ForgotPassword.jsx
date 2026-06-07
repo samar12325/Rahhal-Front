@@ -1,10 +1,32 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { apiRequest } from '../../api/client'
 import AuthHeader from '../../components/AuthHeader/AuthHeader'
+import Footer from '../Home/components/Footer'
 import './Auth.css'
 import { useLanguage } from '../../i18n/LanguageContext'
 
 function ForgotPassword() {
   const { t, dir } = useLanguage()
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    if (!email || isSubmitting) return
+
+    try {
+      setIsSubmitting(true)
+      await apiRequest('/auth/forgot-password', {
+        method: 'POST',
+        body: { email: email.trim().toLowerCase() },
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="authPage" dir={dir}>
@@ -16,7 +38,7 @@ function ForgotPassword() {
             <p className="authSubtitle">{t('forgotPassword.subtitle')}</p>
           </div>
 
-          <form className="authForm">
+          <form className="authForm" onSubmit={handleSubmit}>
             <div className="formGroup">
               <label htmlFor="email" className="formLabel">
                 {t('forgotPassword.emailLabel')}
@@ -26,6 +48,8 @@ function ForgotPassword() {
                 id="email"
                 className="formInput"
                 placeholder={t('forgotPassword.emailPlaceholder')}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 required
               />
             </div>
@@ -42,6 +66,7 @@ function ForgotPassword() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

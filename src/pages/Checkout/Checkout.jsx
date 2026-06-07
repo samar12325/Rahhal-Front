@@ -1,7 +1,6 @@
-﻿import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import destinations from '../../data/destinations'
-import offers from '../../data/offers'
 import { loadTrips } from '../../data/trips.store'
 import PaymentMethodTabs from '../../components/Checkout/PaymentMethodTabs'
 import CardPaymentForm from '../../components/Checkout/CardPaymentForm'
@@ -9,6 +8,9 @@ import ApplePayPanel from '../../components/Checkout/ApplePayPanel'
 import OrderSummary from '../../components/Checkout/OrderSummary'
 import './Checkout.css'
 import { useLanguage } from '../../i18n/LanguageContext'
+import { apiRequest } from '../../api/client'
+import { buildLoginRedirectPath, isAuthenticated } from '../../auth/session'
+import { checkoutBooking } from '../../services/bookings'
 
 const VAT_RATE = 0.15
 
@@ -23,9 +25,10 @@ function Checkout() {
   const { t, dir } = useLanguage()
   const [trips] = useState(() => loadTrips())
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const search = searchParams.toString()
   const destinationId = searchParams.get('destinationId')
   const activityId = searchParams.get('activityId')
-  const offerId = searchParams.get('offerId')
   const tripId = searchParams.get('tripId')
   const tripDate = searchParams.get('date')
   const tripTime = searchParams.get('time')
@@ -33,13 +36,61 @@ function Checkout() {
 
   const destination = destinations.find((item) => item.id === destinationId)
   const activity = destination?.activities.find((item) => item.id === activityId)
-  const offer = offers.find((item) => item.id === offerId)
-  const selectedTrip = useMemo(() => trips.find((item) => item.id === tripId), [trips, tripId])
+  const localTrip = useMemo(
+    () => trips.find((item) => String(item.id) === String(tripId)),
+    [trips, tripId]
+  )
+  const [apiTrip, setApiTrip] = useState(null)
+  const selectedTrip = localTrip || apiTrip
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!tripId || localTrip || !/^\d+$/.test(String(tripId))) {
+      setApiTrip(null)
+      return () => {
+        isMounted = false
+      }
+    }
+
+    const loadTrip = async () => {
+      try {
+        const payload = await apiRequest(`/api/trips/${tripId}`)
+        if (!isMounted) return
+        setApiTrip({
+          id: payload.id,
+          destinationId: payload.destination_id,
+          activityId: null,
+          title: payload.title,
+          city: payload.destination?.name || '',
+          price: Number(payload.price_per_person || 0),
+          image: payload.image_url || payload.destination?.image_url || '',
+        })
+      } catch {
+        if (isMounted) setApiTrip(null)
+      }
+    }
+
+    loadTrip()
+
+    return () => {
+      isMounted = false
+    }
+  }, [localTrip, tripId])
 
   const [paymentMethod, setPaymentMethod] = useState('card')
   const [formValues, setFormValues] = useState(initialFormValues)
   const [formErrors, setFormErrors] = useState({})
   const [isSuccess, setIsSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isAuthenticated()) return
+
+    const checkoutPath = search ? `/checkout?${search}` : '/checkout'
+    navigate(buildLoginRedirectPath(checkoutPath), { replace: true })
+  }, [navigate, search])
 
   const bookingDetails = useMemo(
     () => ({
@@ -51,22 +102,24 @@ function Checkout() {
   )
 
   const pricing = useMemo(() => {
-    const basePrice = selectedTrip?.price ?? offer?.newPrice ?? activity?.priceFrom ?? 0
+    const basePrice = selectedTrip?.price ?? activity?.priceFrom ?? 0
     const tax = basePrice ? Math.round(basePrice * VAT_RATE) : 0
     const total = basePrice ? basePrice + tax : 0
     return { basePrice, tax, total }
-  }, [activity, offer, selectedTrip])
+  }, [activity, selectedTrip])
 
-  const hasProduct = Boolean(offer || (destination && activity) || selectedTrip)
+  const hasProduct = Boolean((destination && activity) || selectedTrip)
 
   const handleMethodChange = (method) => {
     setPaymentMethod(method)
     setFormErrors({})
     setIsSuccess(false)
+    setSubmitError('')
   }
 
   const handleFieldChange = (field, value) => {
     setIsSuccess(false)
+    setSubmitError('')
     setFormErrors((prev) => ({ ...prev, [field]: '' }))
 
     if (field === 'number') {
@@ -115,7 +168,7 @@ function Checkout() {
     return errors
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event?.preventDefault()
 
     if (!hasProduct) return
@@ -126,7 +179,33 @@ function Checkout() {
       if (Object.keys(errors).length > 0) return
     }
 
-    setIsSuccess(true)
+    if (!tripId || !destinationId || !tripDate || !tripTime || !tripPeople) {
+      setSubmitError('بيانات الحجز غير مكتملة.')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      setSubmitError('')
+      const normalizedMethod = paymentMethod === 'applePay' ? 'applepay' : 'card'
+
+      await checkoutBooking({
+        tripId,
+        destinationId,
+        date: tripDate,
+        time: tripTime,
+        people: tripPeople,
+        paymentMethod: normalizedMethod,
+        amount: pricing.total,
+      })
+
+      setIsSuccess(true)
+      navigate('/booking-success')
+    } catch (error) {
+      setSubmitError(error?.message || 'تعذر إكمال الدفع حالياً.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -161,10 +240,11 @@ function Checkout() {
               )}
 
               <div className="checkoutActions">
-                <button className="payButton" type="submit" disabled={!hasProduct}>
+                <button className="payButton" type="submit" disabled={!hasProduct || isSubmitting}>
                   {t('checkout.actions.pay')}
                 </button>
                 <p className="checkoutNote">{t('checkout.actions.note')}</p>
+                {submitError ? <p className="bookingError">{submitError}</p> : null}
               </div>
             </form>
           </div>
@@ -173,14 +253,13 @@ function Checkout() {
             <OrderSummary
               destination={destination}
               activity={activity}
-              offer={offer}
               pricing={pricing}
               trip={selectedTrip}
               bookingDetails={bookingDetails}
             />
             <Link
               className="backLink"
-              to={offer ? '/events' : destination ? `/destinations/${destination.id}` : '/home'}
+              to={destination ? `/destinations/${destination.id}` : '/home'}
             >
               {t('checkout.back')}
             </Link>

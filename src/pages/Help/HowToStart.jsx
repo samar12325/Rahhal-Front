@@ -9,7 +9,7 @@ function HowToStart() {
     { key: 'choose' },
     { key: 'explore' },
     { key: 'plan' },
-    { key: 'book', action: { label: t('howToStart.steps.book.action'), to: '/checkout' } },
+    { key: 'book', action: { label: t('howToStart.steps.book.action'), to: '/ai-trips' } },
     { key: 'share' },
   ]
 
@@ -31,18 +31,6 @@ function HowToStart() {
               ) : null}
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="helpCtaSection">
-        <div className="container helpCtaBox">
-          <div>
-            <h2>{t('howToStart.cta.title')}</h2>
-            <p>{t('howToStart.cta.subtitle')}</p>
-          </div>
-          <Link className="primaryBtn helpCtaBtn" to="/home#destinations">
-            {t('howToStart.cta.action')}
-          </Link>
         </div>
       </section>
     </div>

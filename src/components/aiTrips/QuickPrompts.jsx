@@ -9,9 +9,14 @@ const DEFAULT_PROMPTS = [
 
 function QuickPrompts({ prompts = DEFAULT_PROMPTS, onPick }) {
   return (
-    <div className="chipRow">
+    <div className="chipRow quickPromptRow">
       {prompts.map((prompt) => (
-        <button key={prompt} type="button" className="tag" onClick={() => onPick(prompt)}>
+        <button
+          key={prompt}
+          type="button"
+          className="tag quickPromptButton"
+          onClick={() => onPick(prompt)}
+        >
           {prompt}
         </button>
       ))}

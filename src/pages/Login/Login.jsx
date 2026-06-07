@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiRequest } from '../../api/client'
+import { persistUser } from '../../auth/session'
 import AuthHeader from '../../components/AuthHeader/AuthHeader'
+import Footer from '../Home/components/Footer'
 import './Auth.css'
 import { useLanguage } from '../../i18n/LanguageContext'
 
@@ -34,9 +36,9 @@ function Login() {
         fullName: payload.user?.name ?? '',
         phone: payload.user?.phone ?? '',
       }
-      localStorage.setItem('rahhalUser', JSON.stringify(normalizedUser))
-      window.dispatchEvent(new Event('rahhal-user-change'))
-      navigate('/home')
+      persistUser(normalizedUser)
+      const params = new URLSearchParams(window.location.search)
+      navigate(params.get('redirect') || '/home')
     } catch (err) {
       if (!err?.status) {
         setError(t('login.errorNetwork'))
@@ -109,6 +111,7 @@ function Login() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

@@ -317,6 +317,19 @@
   font-size: 0.9rem;
 }
 
+.groupTripParticipantsIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.groupTripParticipantsIcon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
 .groupTripDetails {
   padding: 12px;
   background: #fffaf2;
@@ -398,6 +411,28 @@
   color: var(--ink);
 }
 
+.createTripAuthGate {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px dashed var(--stroke);
+  border-radius: 18px;
+  background: #fffaf2;
+}
+
+.createTripAuthText {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+  font-weight: 600;
+}
+
+.createTripAuthActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .createTripFormFields {
   display: grid;
   gap: 14px;
@@ -438,6 +473,29 @@
   min-height: 90px;
 }
 
+.createTripDateField {
+  position: relative;
+}
+
+.createTripDateInput {
+  width: 100%;
+}
+
+.createTripDateInput.is-empty {
+  color: transparent;
+}
+
+.createTripDatePlaceholder {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-weight: 600;
+  pointer-events: none;
+  direction: ltr;
+}
+
 .createTripFormField input:focus,
 .createTripFormField select:focus,
 .createTripFormField textarea:focus {
@@ -450,18 +508,68 @@
   cursor: pointer;
 }
 
+.createTripFileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.createTripFilePicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.createTripFileButton {
+  flex-shrink: 0;
+}
+
+.createTripFileName {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.createTripFormHint,
+.createTripFormFileMeta,
+.imagePreviewLabel {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.createTripFormFileMeta {
+  margin-top: -2px;
+}
+
 .imagePreview {
   margin-top: 8px;
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--stroke);
-  max-width: 300px;
+  max-width: 420px;
+  background: #fffaf2;
+  padding: 12px;
 }
 
 .imagePreview img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
   display: block;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fff9f1 0%, #f4ebe0 100%);
 }
 
 .createTripFormActions {
@@ -538,4 +646,3 @@
     grid-template-columns: 1fr;
   }
 }
-

@@ -1,4 +1,4 @@
-﻿import alula from '../assets/images/alula.jpg'
+import alula from '../assets/images/alula.jpg'
 import riyadh from '../assets/images/riyadh.jpg'
 import jeddah from '../assets/images/jeddah.jpg'
 import abha from '../assets/images/abha.jpg'

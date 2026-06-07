@@ -1,4 +1,4 @@
-﻿.contactForm {
+.contactForm {
   display: grid;
   gap: 14px;
 }
@@ -37,6 +37,13 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.contactSubmit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
 .contactSubmit:hover,
 .contactSubmit:focus-visible {
   transform: translateY(-1px);
@@ -51,5 +58,15 @@
   padding: 10px 12px;
   border-radius: 12px;
   color: var(--muted);
+  font-weight: 600;
+}
+
+.contactError {
+  margin: 0;
+  background: #fff1f0;
+  border: 1px solid rgba(231, 76, 60, 0.35);
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #b0412b;
   font-weight: 600;
 }

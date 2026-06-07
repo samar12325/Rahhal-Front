@@ -11,7 +11,7 @@ function TripCard({ trip }) {
   if (trip.activityId) bookingParams.set('activityId', trip.activityId)
 
   const bookingUrl = `/booking?${bookingParams.toString()}`
-  const detailsUrl = trip.destinationId ? `/destinations/${trip.destinationId}` : '/events'
+  const detailsUrl = trip.destinationId ? `/destinations/${trip.destinationId}` : '/trips'
   const title = t(`trips.data.${trip.id}.title`, { fallback: trip.title })
   const cityKey = getTripCityKey(trip.city)
   const cityLabel = t(`trips.cities.${cityKey}`, { fallback: trip.city })

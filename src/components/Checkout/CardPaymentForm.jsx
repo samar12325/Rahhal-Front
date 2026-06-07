@@ -1,4 +1,4 @@
-﻿import { useLanguage } from '../../i18n/LanguageContext'
+import { useLanguage } from '../../i18n/LanguageContext'
 
 function CardPaymentForm({ values, errors, onChange }) {
   const { t } = useLanguage()

@@ -1,7 +1,11 @@
-﻿import PageHero from '../../components/Common/PageHero'
+import PageHero from '../../components/Common/PageHero'
 import ContactForm from '../../components/Contact/ContactForm'
 import './Contact.css'
 import { useLanguage } from '../../i18n/LanguageContext'
+
+const X_URL = 'https://x.com/rahhalweb?s=11&t=HpviNSILl07UsXDxa6vWTA'
+const LINKEDIN_URL =
+  'https://www.linkedin.com/in/rahal-website-108160406'
 
 function Contact() {
   const { t, dir } = useLanguage()
@@ -26,7 +30,11 @@ function Contact() {
             <div className="contactInfoList">
               <div>
                 <span className="contactLabel">{t('contact.info.emailLabel')}</span>
-                <p>{t('contact.info.emailValue')}</p>
+                <p>
+                  <a href={`mailto:${t('contact.info.emailValue')}`}>
+                    {t('contact.info.emailValue')}
+                  </a>
+                </p>
               </div>
               <div>
                 <span className="contactLabel">{t('contact.info.hoursLabel')}</span>
@@ -35,13 +43,10 @@ function Contact() {
               <div>
                 <span className="contactLabel">{t('contact.info.followLabel')}</span>
                 <div className="contactSocial">
-                  <a href="https://x.com" target="_blank" rel="noreferrer">
+                  <a href={X_URL} target="_blank" rel="noreferrer">
                     {t('contact.info.socials.x')}
                   </a>
-                  <a href="https://instagram.com" target="_blank" rel="noreferrer">
-                    {t('contact.info.socials.instagram')}
-                  </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+                  <a href={LINKEDIN_URL} target="_blank" rel="noreferrer">
                     {t('contact.info.socials.linkedin')}
                   </a>
                 </div>

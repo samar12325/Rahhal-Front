@@ -1,4 +1,5 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
+import { apiRequest } from '../../api/client'
 import { useLanguage } from '../../i18n/LanguageContext'
 import './ContactForm.css'
 
@@ -9,10 +10,19 @@ const getInitialState = () => ({
   message: '',
 })
 
+const normalizePayload = (values) => ({
+  name: values.name.trim(),
+  email: values.email.trim().toLowerCase(),
+  type: values.type,
+  message: values.message.trim(),
+})
+
 function ContactForm() {
   const { t } = useLanguage()
   const [formValues, setFormValues] = useState(getInitialState)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const typeOptions = [
     { value: 'suggestion', label: t('contact.form.types.suggestion') },
@@ -24,12 +34,45 @@ function ContactForm() {
   const handleChange = (field) => (event) => {
     setFormValues((prev) => ({ ...prev, [field]: event.target.value }))
     setIsSuccess(false)
+    setErrorMessage('')
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    setIsSuccess(true)
-    setFormValues(getInitialState())
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+    setIsSuccess(false)
+    setErrorMessage('')
+
+    try {
+      const payload = normalizePayload(formValues)
+
+      if (!payload.name || !payload.email || !payload.message || payload.message.length < 6) {
+        setErrorMessage(t('contact.form.validation'))
+        return
+      }
+
+      const response = await apiRequest('/contact', {
+        method: 'POST',
+        body: payload,
+      })
+
+      if (!response?.ok) {
+        setErrorMessage(t('contact.form.error'))
+        setIsSuccess(false)
+        return
+      }
+
+      setIsSuccess(true)
+      setFormValues(getInitialState())
+    } catch (error) {
+      const message = error?.message || t('contact.form.error')
+      setErrorMessage(message)
+      setIsSuccess(false)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -85,14 +128,17 @@ function ContactForm() {
           value={formValues.message}
           onChange={handleChange('message')}
           required
+          minLength={6}
+          maxLength={2000}
           placeholder={t('contact.form.messagePlaceholder')}
         />
       </div>
 
-      <button className="contactSubmit" type="submit">
-        {t('contact.form.submit')}
+      <button className="contactSubmit" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? t('contact.form.sending') : t('contact.form.submit')}
       </button>
 
+      {errorMessage ? <p className="contactError">{errorMessage}</p> : null}
       {isSuccess ? <p className="contactSuccess">{t('contact.form.success')}</p> : null}
     </form>
   )

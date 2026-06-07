@@ -4,7 +4,7 @@ function GroupTripsTabs({ activeTab, setActiveTab }) {
   const { t } = useLanguage()
   const tabs = [
     { id: 'available', label: t('groupTrips.tabs.available') },
-    { id: 'upcoming', label: t('groupTrips.tabs.upcoming') },
+    { id: 'past', label: t('groupTrips.tabs.past') },
     { id: 'create', label: t('groupTrips.tabs.create') },
   ]
 

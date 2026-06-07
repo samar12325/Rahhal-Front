@@ -37,6 +37,7 @@
         stats: 'إحصائيات الرحلات',
         approvals: 'موافقة الرحلات',
         manage: 'إدارة الرحلات',
+        manageEvents: 'إدارة الفعاليات',
         signOut: 'تسجيل الخروج',
       },
       signIn: 'تسجيل الدخول',
@@ -54,6 +55,8 @@
         title: 'وجهات المملكة',
         scrollAria: 'تمرير الوجهات',
         cardCta: 'استعرض',
+        eventsAvailable: 'فعاليات متاحة',
+        eventsUnavailable: 'لا توجد فعاليات حالياً',
       },
       testimonials: {
         title: 'تقييمات حقيقية',
@@ -80,142 +83,93 @@
         legal: 'سياسة الخصوصية · شروط الاستخدام',
       },
     },
-    offers: {
+    destinationDetails: {
+      events: {
+        title: 'فعاليات وتجارب في المكان',
+        subtitle:
+          'استعرض الفعاليات النشطة المرتبطة بهذه الوجهة واحجز من الموقع الرسمي للجهة المنظمة.',
+        empty: 'لا توجد فعاليات متاحة حاليًا في هذه الوجهة.',
+        book: 'احجز من الموقع الرسمي',
+        priceFallback: 'السعر يحدد من الجهة المنظمة',
+        notFoundTitle: 'الوجهة غير موجودة',
+        notFoundFallback: 'تأكد من الرابط أو استعرض وجهاتنا لاختيار تجربة جديدة.',
+        backHome: 'العودة للصفحة الرئيسية',
+        overviewTitle: 'نبذة عن المكان',
+        overviewFallback: 'تعرف على أفضل ما يميز هذه الوجهة الفريدة.',
+        highlightsTitle: 'أبرز المعالم',
+        highlightsSubtitle: 'مزيج من الثقافة والطبيعة والتجارب الأصيلة.',
+        mapTitle: 'الخريطة',
+        mapSubtitle: 'تعرف على موقع الوجهة وأقرب النقاط المهمة.',
+        galleryTitle: 'معرض الصور',
+        gallerySubtitle: 'لقطات تلخص جمال المكان وروح الرحلة.',
+        heroCta: 'خطط رحلتك',
+        heroIntro: 'تجارب مختارة بعناية لتخطط رحلة لا تنسى في قلب {{name}}.',
+      },
+    },
+    statsPage: {
       hero: {
-        title: 'رحلات مميزة',
-        subtitle: 'عروض مختارة لوجهات داخل المملكة بأسعار مميزة وتجارب متنوعة.',
+        eyebrow: 'لوحة الإدارة',
+        title: 'إحصائيات الرحلات',
       },
       filters: {
-        searchLabel: 'بحث سريع',
-        searchPlaceholder: 'ابحث بالوجهة أو اسم العرض',
-        regionLabel: 'المنطقة',
-        sortLabel: 'ترتيب النتائج',
+        periodAriaLabel: 'تصفية الفترة الزمنية',
       },
-      tags: {
-        all: 'الكل',
-        families: 'عائلات',
-        adventure: 'مغامرة',
-        culture: 'ثقافة',
-        sea: 'بحر',
-        shopping: 'تسوق',
+      periods: {
+        month: 'شهر',
+        sixMonths: '6 شهور',
+        year: 'سنة',
       },
-      sorts: {
-        mostDiscount: 'الأكثر خصماً',
-        lowestPrice: 'الأقل سعراً',
-        highestRated: 'الأعلى تقييماً',
-      },
-      listAria: 'قائمة العروض',
-      empty: {
-        title: 'لا توجد نتائج مطابقة',
-        description: 'حاول تعديل الفلاتر أو كلمات البحث لرؤية المزيد من العروض.',
+      states: {
+        loading: 'جارٍ تحميل البيانات...',
+        errorPrefix: 'تعذر تحميل إحصائيات الرحلات',
       },
       actions: {
-        bookNow: 'احجز الآن',
-        comingSoon: 'قريباً',
+        retry: 'أعد المحاولة',
       },
-      badge: 'خصم {{percent}}%',
-      currency: 'ر.س',
-      data: {
-        'offer-riyadh-weekend': {
-          title: 'ويكند الرياض',
-          destination: 'الرياض',
-          duration: '2 أيام',
-          includes: {
-            0: 'فندق 4 نجوم',
-            1: 'جولة الدرعية',
-            2: 'تجربة بوليفارد',
-          },
-        },
-        'offer-alula-discovery': {
-          title: 'اكتشف العلا',
-          destination: 'العلا',
-          duration: '3 أيام',
-          includes: {
-            0: 'زيارة مدائن صالح',
-            1: 'جلسة تحت النجوم',
-            2: 'تنقلات داخلية',
-          },
-        },
-        'offer-jeddah-coast': {
-          title: 'سحر جدة البحري',
-          destination: 'جدة',
-          duration: '3 أيام',
-          includes: {
-            0: 'جولة البلد',
-            1: 'رحلة بحرية',
-            2: 'وجبات بحرية',
-          },
-        },
-        'offer-abha-clouds': {
-          title: 'أبها بين الغيم',
-          destination: 'أبها',
-          duration: '4 أيام',
-          includes: {
-            0: 'جبل السودة',
-            1: 'ممشى الضباب',
-            2: 'جلسات قهوة',
-          },
-        },
-        'offer-redsea-luxury': {
-          title: 'تجربة البحر الأحمر الفاخرة',
-          destination: 'أملج',
-          duration: '4 أيام',
-          includes: {
-            0: 'إقامة فاخرة',
-            1: 'غوص اختياري',
-            2: 'جلسات شاطئية',
-          },
-        },
-        'offer-khobar-family': {
-          title: 'عطلة الخبر العائلية',
-          destination: 'الخبر',
-          duration: '2 أيام',
-          includes: {
-            0: 'كورنيش الخبر',
-            1: 'تجربة مطاعم',
-            2: 'مراكز تسوق',
-          },
-        },
-        'offer-taif-rose': {
-          title: 'موسم الورد الطائفي',
-          destination: 'الطائف',
-          duration: '3 أيام',
-          includes: {
-            0: 'مزارع الورد',
-            1: 'مرتفعات الهدا',
-            2: 'جلسات عسل',
-          },
-        },
-        'offer-elephant-rock': {
-          title: 'صخرة الفيل بلمسة مغامرة',
-          destination: 'العلا',
-          duration: '2 أيام',
-          includes: {
-            0: 'جلسة تصوير',
-            1: 'مخيم صحراوي',
-            2: 'تنقلات خاصة',
-          },
-        },
-        'offer-riyadh-culture': {
-          title: 'الرياض الثقافية',
-          destination: 'الرياض',
-          duration: '3 أيام',
-          includes: {
-            0: 'حي جاكس',
-            1: 'متاحف الرياض',
-            2: 'جولة تاريخية',
-          },
-        },
-        'offer-jeddah-shopping': {
-          title: 'تسوق جدة الذكي',
-          destination: 'جدة',
-          duration: '2 أيام',
-          includes: {
-            0: 'مولات مختارة',
-            1: 'خصومات حصرية',
-            2: 'تنقلات مرنة',
-          },
-        },
+      errors: {
+        loadGeneric: 'تعذر تحميل البيانات',
+      },
+      sections: {
+        createdTrips: 'إحصائيات الرحلات المنشأة',
+        tripAnalysis: 'تحليل الرحلات',
+        bookings: 'إحصائيات الحجوزات',
+      },
+      charts: {
+        tripStatuses: 'توزيع حالات الرحلات',
+        tripTypes: 'توزيع أنواع الرحلات',
+        bookingStatuses: 'توزيع حالات الحجوزات',
+        bookingTrend: 'ترند الحجوزات الشهري',
+      },
+      tripStatuses: {
+        pending: 'قيد المراجعة',
+        approved: 'المعتمدة',
+        rejected: 'المرفوضة',
+      },
+      tripTypes: {
+        group: 'جماعية',
+        school: 'مدرسية',
+      },
+      bookingStatuses: {
+        pending: 'معلقة',
+        confirmed: 'مؤكدة',
+        completed: 'مكتملة',
+        cancelled: 'ملغاة',
+      },
+      kpis: {
+        schoolTrips: 'الرحلات المدرسية',
+        groupTrips: 'الرحلات الجماعية',
+        totalCreatedTrips: 'إجمالي الرحلات المنشأة',
+        pendingTrips: 'انتظار المراجعة',
+        approvedTrips: 'المعتمدة',
+        rejectedTrips: 'المرفوضة',
+        totalBookings: 'إجمالي الحجوزات',
+        totalRevenue: 'إجمالي الإيراد',
+        completionRate: 'نسبة الإكمال',
+      },
+      empty: {
+        default: 'لا توجد بيانات خلال هذه الفترة',
+        createdTrips: 'لا توجد رحلات منشأة خلال هذه الفترة',
+        bookings: 'لا توجد حجوزات خلال هذه الفترة',
       },
     },
     checkout: {
@@ -287,7 +241,7 @@
       },
       info: {
         emailLabel: 'البريد',
-        emailValue: 'support@rahal.sa',
+        emailValue: 'swe.uqu26@gmail.com',
         hoursLabel: 'ساعات العمل',
         hoursValue: 'الأحد - الخميس، 9 صباحاً إلى 6 مساءً',
         followLabel: 'تابعنا',
@@ -306,7 +260,10 @@
         messageLabel: 'الرسالة',
         messagePlaceholder: 'اكتب رسالتك هنا...',
         submit: 'إرسال الرسالة',
+        sending: 'جاري الإرسال...',
         success: 'تم إرسال رسالتك بنجاح',
+        error: 'تعذر إرسال الرسالة. حاول مرة أخرى.',
+        validation: 'يرجى تعبئة جميع الحقول وكتابة رسالة أطول.',
         types: {
           suggestion: 'اقتراح',
           complaint: 'شكوى',
@@ -362,9 +319,25 @@
       submit: 'إرسال رابط إعادة التعيين',
       backLink: 'العودة لتسجيل الدخول',
     },
+    resetPassword: {
+      title: 'تعيين كلمة مرور جديدة',
+      subtitle: 'أدخل كلمة مرور جديدة لحسابك وأكدها.',
+      passwordLabel: 'كلمة المرور الجديدة',
+      passwordPlaceholder: '••••••••',
+      confirmPasswordLabel: 'تأكيد كلمة المرور',
+      confirmPasswordPlaceholder: '••••••••',
+      submit: 'تحديث كلمة المرور',
+      submitting: 'جاري التحديث...',
+      success: 'تم تحديث كلمة المرور بنجاح.',
+      errorTokenMissing: 'الرابط غير صالح أو منتهي.',
+      errorMismatch: 'كلمتا المرور غير متطابقتين.',
+      errorNetwork: 'تعذر الاتصال بالخادم، حاول مرة أخرى.',
+      errorGeneric: 'تعذر تحديث كلمة المرور. حاول مرة أخرى.',
+      backLink: 'العودة لتسجيل الدخول',
+    },
     trips: {
       hero: {
-        title: 'الفعاليات',
+        title: 'الفعاليات المتاحة',
         subtitle: 'اختر الوجهة، حدد الميزانية والمدة، وابدأ رحلتك.',
         countLabel: '{{count}} رحلة متاحة',
       },
@@ -456,11 +429,11 @@
     aiTrips: {
       hero: {
         title: 'خطّط رحلتك بالذكاء الاصطناعي',
-        subtitle: 'أعطنا ميزانيتك ومدّتك وتفضيلاتك — ونبني لك جدول يومي جاهز للحجز.',
-        badge: '⚡ خلال ثوانٍ',
+        subtitle: 'اختر بين دردشة سفر مفتوحة أو توليد جدول مرتب ومفهوم حسب وجهتك وميزانيتك.',
+        badge: 'خلال ثوانٍ',
       },
       form: {
-        title: 'بيانات الرحلة',
+        title: 'مولّد الجدول',
         cityLabel: 'الوجهة',
         cityPlaceholder: 'مثال: العلا، جدة، الرياض',
         daysLabel: 'المدة (أيام)',
@@ -493,18 +466,32 @@
         photography: 'تصوير',
       },
       tabs: {
-        plan: 'الجدول المقترح',
-        chat: 'محادثة المساعد',
+        assistant: 'مساعد سفر',
+        planner: 'مولّد جدول',
+      },
+      history: {
+        title: 'المحادثات المحفوظة',
+        subtitle: 'ارجع لأي جلسة سابقة وكمل من آخر تعديل.',
+        loading: 'جاري تحميل المحادثات...',
+        empty: 'ما عندك جلسات محفوظة بعد.',
+        authRequired: 'سجّل الدخول لعرض خططك ومحادثاتك المحفوظة.',
+        noMessages: 'لا توجد رسائل بعد. افتح الجلسة وابدأ التعديل.',
       },
       result: {
         title: 'الجدول المقترح',
+        subtitle: 'خطة أوضح ومرتبة حسب الأيام، مع ملخص سريع قبل التفاصيل.',
         regenerate: 'إعادة توليد',
-        save: 'احفظ الجدول',
-        share: 'شارك',
+        highlights: 'أبرز ملامح الرحلة',
+        tips: 'ملاحظات سريعة',
+        metrics: {
+          days: 'عدد الأيام',
+          budget: 'نطاق الميزانية',
+          total: 'التكلفة التقريبية',
+          audience: 'مناسبة لـ',
+        },
       },
       summary: {
         days: '{{count}} أيام',
-        budget: 'ميزانية: {{label}}',
       },
       empty: {
         before: 'عبّئ بيانات الرحلة ثم اضغط',
@@ -512,65 +499,66 @@
       },
       loading: 'نجهز لك جدول مرتب…',
       dayLabel: 'اليوم {{day}}',
-      activity: {
-        addToBooking: 'أضف للحجز',
-      },
       currency: 'ر.س',
       chat: {
-        title: 'محادثة المساعد',
-        tag: 'يعدّل الجدول تلقائياً',
-        intro: 'هلا! اسألني عن خطتك، وأنا أعدلها لك فوراً 👋',
-        noPlan: 'ولّد جدول أولاً، بعدها أقدر أعدّله 👍',
         error: 'صار خطأ بسيط… جرّب مرة ثانية.',
         loading: 'تمام… أعطيك أفضل تعديل 👌',
-        placeholder: 'اكتب سؤالك… مثال: خلّ اليوم الأول ثقافي أكثر',
         send: 'إرسال',
       },
-      prompts: {
-        cheaper: 'خلّها أرخص',
-        nature: 'زود نشاطات طبيعة',
-        restaurants: 'أبغى مطاعم أكثر',
-        easyDay: 'خلّ اليوم الثاني خفيف',
-        shopping: 'ضيف وقت للتسوق',
-        family: 'بدّلها لرحلة عائلية',
-      },
-      plan: {
-        unknownCity: 'وجهة غير محددة',
-        balancedTitle: 'يوم متوازن',
-        styleTitle: 'يوم {{style}}',
-        items: {
-          breakfast: { name: 'فطور وتجهيز', note: 'اقتراح قريب من السكن' },
-          attraction: { name: 'زيارة معلم/فعالية', note: 'حسب تفضيلاتك' },
-          lunch: { name: 'غداء', note: 'مطعم مناسب للميزانية' },
-          evening: { name: 'جولة مسائية', note: 'ممشى/كورنيش/سوق' },
+      assistant: {
+        title: 'مساعد السفر',
+        tag: 'دردشة مفتوحة عن الوجهات',
+        subtitle: 'اسأل عن المدن، الطابع، الجو، والمقارنات قبل ما تبني جدولك.',
+        intro: 'هلا! اسألني عن المدن، الأجواء، المقارنات، أو نوع الرحلة اللي يناسبك.',
+        placeholder: 'مثال: قارن بين العلا وأبها لرحلة قصيرة',
+        historyChip: 'محادثة',
+        status: 'متصل الآن',
+        quickTitle: 'ابدأ بسرعة',
+        roleAssistant: 'مساعد رحّال',
+        roleUser: 'أنت',
+        welcomeTitle: 'ابدأ دردشة سفر أقرب للواقع',
+        welcomeItems: {
+          compare: 'قارن بين وجهتين من ناحية الجو والطابع والوقت المناسب.',
+          recommend: 'خذ ترشيحات سريعة حسب الميزانية أو عدد الأيام.',
+          plan: 'بعد ما ترتاح لوجهة معينة، حوّلها إلى جدول مفصل.',
+        },
+        prompts: {
+          compare: 'قارن بين العلا وأبها',
+          family: 'أبغى وجهة عائلية هادئة',
+          weekend: 'رشّح لي ويكند داخل المملكة',
+          coolWeather: 'أبغى مكان جوه ألطف',
+          sea: 'أبغى مدينة بحر ومطاعم',
+          photography: 'أبغى أماكن تصوير قوية',
         },
       },
-      chatItems: {
-        nature: { name: 'جلسة طبيعة / نقطة مطل', note: 'نشاط خارجي خفيف مناسب للتصوير والاسترخاء' },
-        dinner: { name: 'عشاء (ترشيح مطعم حسب الميزانية)', note: 'أقدر أخصصه: شعبي/فاخر/بحري' },
-        shopping: { name: 'تسوق (سوق/مول/شارع مشهور)', note: 'وقت مرن تقدر تزوده أو تقلله' },
+      assistantGuide: {
+        title: 'وش تقدر تسأل؟',
+        subtitle: 'هذا المسار للدردشة العادية قبل ما تقرر خطة يومية مفصلة.',
+        examples: {
+          compare: 'قارن بين مدينتين من ناحية الأجواء والطابع والمدة المناسبة.',
+          family: 'اطلب ترشيحات عائلية أو هادئة أو مناسبة لويكند خفيف.',
+          weekend: 'اسأل عن أفضل وجهة حسب ميزانية أو عدد الأيام.',
+          coolWeather: 'قل له نوع التجربة: بحر، جبال، تصوير، مطاعم، أو جو أبرد.',
+        },
       },
-      chatFamily: {
-        title: 'يوم عائلي',
-        noteSuffix: ' — مناسب للعائلة',
+      assistantHistory: {
+        title: 'محادثات السفر السابقة',
+        subtitle: 'ارجع للمشاورات القديمة وكمل من نفس المكان.',
+        empty: 'ما عندك محادثات سفر محفوظة بعد.',
       },
-      chatDay2: {
-        title: 'يوم خفيف',
-      },
-      chatReplies: {
-        default: 'تمام! عدّلت الخطة لك ✅',
-        cheaper: 'تم 👌 قلّلت التكاليف التقديرية وخليت الاقتراحات على خيارات اقتصادية.',
-        nature: 'جميل! ضفت نشاط طبيعة/مطل في نهاية كل يوم 🌿',
-        restaurants: 'تمام! ضفت اقتراح عشاء يومي + ترشيحات حسب الميزانية 🍽️',
-        shopping: 'تم ✅ ضفت وقت للتسوق بعد العصر في كل يوم 🛍️',
-        family: 'تمام! خليت الخطة عائلية أكثر ووسمت الأنشطة بأنها مناسبة للعائلة 👨‍👩‍👧‍👦',
-        day2: 'تم 👍 خليت اليوم الثاني أخف وقلّلت عدد الأنشطة عشان يكون مريح.',
+      plannerHistory: {
+        title: 'الخطط السابقة',
+        subtitle: 'الخطط التي ولّدتها من الفورم تظهر هنا.',
+        empty: 'ما عندك جداول محفوظة بعد.',
       },
       examples: {
         city: 'العلا',
       },
       errors: {
         generate: 'صار خطأ أثناء توليد الخطة. جرّب مرة ثانية.',
+        loadHistory: 'تعذر تحميل المحادثات المحفوظة حالياً.',
+        loadSession: 'تعذر تحميل الجلسة المختارة حالياً.',
+        authRequired: 'سجّل الدخول أولاً حتى نحفظ خططك ومحادثاتك.',
       },
     },
     schoolTrips: {
@@ -593,6 +581,7 @@
         subtitle: 'املأ البيانات الأساسية ليتم تجهيز الرحلة وإشعار المشرفين.',
         fields: {
           title: 'عنوان الرحلة',
+          schoolName: 'اسم المدرسة',
           destination: 'الوجهة',
           date: 'تاريخ الرحلة',
           time: 'وقت الانطلاق',
@@ -608,7 +597,9 @@
         },
         placeholders: {
           title: 'رحلة علوم إلى مركز الملك عبدالعزيز',
-          destination: 'اسم الوجهة أو المركز التعليمي',
+          schoolName: 'مثال: مدارس الرواد',
+          destination: 'اختر الوجهة',
+          destinationLoading: 'جاري تحميل الوجهات...',
           grade: 'اختر المرحلة',
           transport: 'اختر وسيلة النقل',
           students: 'مثال: 45',
@@ -626,6 +617,8 @@
         },
         messages: {
           missingRequired: 'يرجى تعبئة الحقول الأساسية قبل إضافة الرحلة.',
+          pastDateNotAllowed: 'لا يمكن حجز أو إنشاء رحلة بتاريخ سابق.',
+          requestFailed: 'تعذر حفظ الرحلة. تحقق من الاتصال وحاول مرة أخرى.',
           created: 'تمت إضافة الرحلة بنجاح، سيتم إرسال إشعار للمشرفين.',
           cleared: 'تم مسح الحقول.',
         },
@@ -663,6 +656,15 @@
       card: {
         statusUpcoming: 'قادمة',
         statusPast: 'منتهية',
+        approval: {
+          approved: 'تمت الموافقة',
+          pending: 'بانتظار الموافقة',
+          rejected: 'مرفوضة',
+        },
+        prep: {
+          ready: 'جاهزة',
+          pending: 'بانتظار التجهيز',
+        },
         labels: {
           grade: 'المرحلة',
           students: 'الطلاب',
@@ -833,6 +835,7 @@
       },
       tabs: {
         available: 'الرحلات الجماعية المتوفرة',
+        past: 'الرحلات السابقة',
         upcoming: 'الرحلات الجماعية القادمة',
         create: 'إنشاء رحلة جماعية جديدة',
       },
@@ -843,6 +846,8 @@
         title: 'لا توجد رحلات متاحة',
         available:
           'لا توجد رحلات جماعية متاحة للانضمام حالياً. جرّب البحث بكلمات أخرى أو أنشئ رحلة جديدة.',
+        past:
+          'لا توجد رحلات جماعية سابقة حالياً. جرّب البحث بكلمات أخرى أو أنشئ رحلة جديدة.',
         upcoming:
           'لا توجد رحلات جماعية قادمة حالياً. جرّب البحث بكلمات أخرى أو أنشئ رحلة جديدة.',
       },
@@ -869,6 +874,7 @@
           price: 'السعر للشخص (اختياري)',
           description: 'وصف مختصر للرحلة',
           image: 'رفع صورة للمكان',
+          imageUrl: 'رابط الصورة (اختياري)',
         },
         placeholders: {
           title: 'مثال: رحلة العلا الجماعية',
@@ -877,6 +883,7 @@
           maxParticipants: 'مثال: 15',
           price: 'مثال: 950',
           description: 'اكتب وصفاً مختصراً عن الرحلة...',
+          imageUrl: 'https://example.com/place.jpg',
         },
         actions: {
           create: 'إنشاء الرحلة',
@@ -889,8 +896,14 @@
           destinationRequired: 'اسم المكان/الوجهة مطلوب',
           dateRequired: 'تاريخ الرحلة مطلوب',
           minParticipants: 'عدد الأشخاص يجب أن يكون 2 على الأقل',
+          requestFailed: 'تعذر إرسال الطلب',
         },
         imagePreviewAlt: 'معاينة الصورة',
+        imagePreviewLabel: 'المعاينة الحالية',
+        imageHint:
+          'ارفع صورة من جهازك أو ضع رابطًا مباشرًا. إذا تركت الخيارين فارغين سنستخدم شعار رحال تلقائيًا، وإذا وفرت الاثنين فسيتم اعتماد الملف المرفوع.',
+        selectedFile: 'الملف المختار: {{name}}',
+        noFileSelected: 'لم يتم اختيار أي ملف',
       },
       cities: {
         riyadh: 'الرياض',
@@ -985,7 +998,7 @@
         },
         book: {
           title: 'احجز بكل سهولة',
-          description: 'انتقل لصفحة الدفع لإكمال الحجز عند جاهزيتك.',
+          description: 'انتقل لصفحة الرحلات بالذكاء الاصطناعي لتخطيط رحلتك بسهولة.',
           action: 'احجز الآن',
         },
         share: {
@@ -1095,6 +1108,7 @@
         stats: 'Trip stats',
         approvals: 'Trip approvals',
         manage: 'Manage trips',
+        manageEvents: 'Manage events',
         signOut: 'Sign out',
       },
       signIn: 'Sign in',
@@ -1112,6 +1126,8 @@
         title: 'Saudi destinations',
         scrollAria: 'Scroll destinations',
         cardCta: 'View',
+        eventsAvailable: 'Events available',
+        eventsUnavailable: 'No events right now',
       },
       testimonials: {
         title: 'Real reviews',
@@ -1138,142 +1154,93 @@
         legal: 'Privacy Policy · Terms of Use',
       },
     },
-    offers: {
+    destinationDetails: {
+      events: {
+        title: 'Events and experiences nearby',
+        subtitle:
+          'Browse active events for this destination and book through the organizer official website.',
+        empty: 'No events are currently available for this destination.',
+        book: 'Book on official website',
+        priceFallback: 'Price set by organizer',
+        notFoundTitle: 'Destination not found',
+        notFoundFallback: 'Check the link or browse destinations to choose a new experience.',
+        backHome: 'Back to home',
+        overviewTitle: 'About the place',
+        overviewFallback: 'Learn what makes this destination unique.',
+        highlightsTitle: 'Top highlights',
+        highlightsSubtitle: 'A mix of culture, nature, and authentic experiences.',
+        mapTitle: 'Map',
+        mapSubtitle: 'See the destination location and nearby key points.',
+        galleryTitle: 'Photo gallery',
+        gallerySubtitle: 'Snapshots that capture the beauty of the place and the spirit of the trip.',
+        heroCta: 'Plan your trip',
+        heroIntro: 'Curated experiences to help you plan an unforgettable trip in the heart of {{name}}.',
+      },
+    },
+    statsPage: {
       hero: {
-        title: 'Featured trips',
-        subtitle: 'Handpicked deals for destinations across the Kingdom with great value and variety.',
+        eyebrow: 'Admin dashboard',
+        title: 'Trip statistics',
       },
       filters: {
-        searchLabel: 'Quick search',
-        searchPlaceholder: 'Search by destination or offer name',
-        regionLabel: 'Region',
-        sortLabel: 'Sort results',
+        periodAriaLabel: 'Filter time period',
       },
-      tags: {
-        all: 'All',
-        families: 'Families',
-        adventure: 'Adventure',
-        culture: 'Culture',
-        sea: 'Sea',
-        shopping: 'Shopping',
+      periods: {
+        month: 'Month',
+        sixMonths: '6 months',
+        year: 'Year',
       },
-      sorts: {
-        mostDiscount: 'Biggest discount',
-        lowestPrice: 'Lowest price',
-        highestRated: 'Highest rated',
-      },
-      listAria: 'Offers list',
-      empty: {
-        title: 'No matching results',
-        description: 'Try adjusting filters or search keywords to see more trips.',
+      states: {
+        loading: 'Loading data...',
+        errorPrefix: 'Unable to load trip statistics',
       },
       actions: {
-        bookNow: 'Book now',
-        comingSoon: 'Coming soon',
+        retry: 'Retry',
       },
-      badge: '{{percent}}% off',
-      currency: 'SAR',
-      data: {
-        'offer-riyadh-weekend': {
-          title: 'Riyadh weekend',
-          destination: 'Riyadh',
-          duration: '2 days',
-          includes: {
-            0: '4-star hotel',
-            1: 'Diriyah tour',
-            2: 'Boulevard experience',
-          },
-        },
-        'offer-alula-discovery': {
-          title: 'Discover AlUla',
-          destination: 'AlUla',
-          duration: '3 days',
-          includes: {
-            0: 'Hegra visit',
-            1: 'Stargazing session',
-            2: 'Local transfers',
-          },
-        },
-        'offer-jeddah-coast': {
-          title: 'Jeddah coastal charm',
-          destination: 'Jeddah',
-          duration: '3 days',
-          includes: {
-            0: 'Al-Balad tour',
-            1: 'Sea cruise',
-            2: 'Seafood meals',
-          },
-        },
-        'offer-abha-clouds': {
-          title: 'Abha above the clouds',
-          destination: 'Abha',
-          duration: '4 days',
-          includes: {
-            0: 'Jabal Al-Souda',
-            1: 'Fog Walkway',
-            2: 'Coffee sessions',
-          },
-        },
-        'offer-redsea-luxury': {
-          title: 'Luxury Red Sea escape',
-          destination: 'Umluj',
-          duration: '4 days',
-          includes: {
-            0: 'Luxury stay',
-            1: 'Optional diving',
-            2: 'Beach sessions',
-          },
-        },
-        'offer-khobar-family': {
-          title: 'Khobar family getaway',
-          destination: 'Khobar',
-          duration: '2 days',
-          includes: {
-            0: 'Khobar Corniche',
-            1: 'Dining experience',
-            2: 'Shopping centers',
-          },
-        },
-        'offer-taif-rose': {
-          title: 'Taif rose season',
-          destination: 'Taif',
-          duration: '3 days',
-          includes: {
-            0: 'Rose farms',
-            1: 'Al-Hada highlands',
-            2: 'Honey sessions',
-          },
-        },
-        'offer-elephant-rock': {
-          title: 'Elephant Rock adventure',
-          destination: 'AlUla',
-          duration: '2 days',
-          includes: {
-            0: 'Photo session',
-            1: 'Desert camp',
-            2: 'Private transfers',
-          },
-        },
-        'offer-riyadh-culture': {
-          title: 'Cultural Riyadh',
-          destination: 'Riyadh',
-          duration: '3 days',
-          includes: {
-            0: 'JAX District',
-            1: 'Riyadh museums',
-            2: 'Historical tour',
-          },
-        },
-        'offer-jeddah-shopping': {
-          title: 'Smart Jeddah shopping',
-          destination: 'Jeddah',
-          duration: '2 days',
-          includes: {
-            0: 'Selected malls',
-            1: 'Exclusive discounts',
-            2: 'Flexible transfers',
-          },
-        },
+      errors: {
+        loadGeneric: 'Unable to load data',
+      },
+      sections: {
+        createdTrips: 'Created trip statistics',
+        tripAnalysis: 'Trip analysis',
+        bookings: 'Booking statistics',
+      },
+      charts: {
+        tripStatuses: 'Trip status distribution',
+        tripTypes: 'Trip type distribution',
+        bookingStatuses: 'Booking status distribution',
+        bookingTrend: 'Monthly booking trend',
+      },
+      tripStatuses: {
+        pending: 'Pending review',
+        approved: 'Approved',
+        rejected: 'Rejected',
+      },
+      tripTypes: {
+        group: 'Group',
+        school: 'School',
+      },
+      bookingStatuses: {
+        pending: 'Pending',
+        confirmed: 'Confirmed',
+        completed: 'Completed',
+        cancelled: 'Cancelled',
+      },
+      kpis: {
+        schoolTrips: 'School trips',
+        groupTrips: 'Group trips',
+        totalCreatedTrips: 'Total created trips',
+        pendingTrips: 'Pending review',
+        approvedTrips: 'Approved',
+        rejectedTrips: 'Rejected',
+        totalBookings: 'Total bookings',
+        totalRevenue: 'Total revenue',
+        completionRate: 'Completion rate',
+      },
+      empty: {
+        default: 'No data available for this period.',
+        createdTrips: 'No trips were created during this period.',
+        bookings: 'No bookings were recorded during this period.',
       },
     },
     checkout: {
@@ -1345,7 +1312,7 @@
       },
       info: {
         emailLabel: 'Email',
-        emailValue: 'support@rahal.sa',
+        emailValue: 'swe.uqu26@gmail.com',
         hoursLabel: 'Working hours',
         hoursValue: 'Sun-Thu, 9:00am to 6:00pm',
         followLabel: 'Follow us',
@@ -1364,7 +1331,10 @@
         messageLabel: 'Message',
         messagePlaceholder: 'Write your message here...',
         submit: 'Send message',
+        sending: 'Sending...',
         success: 'Your message has been sent successfully',
+        error: 'Unable to send your message. Please try again.',
+        validation: 'Please fill in all fields and write a longer message.',
         types: {
           suggestion: 'Suggestion',
           complaint: 'Complaint',
@@ -1420,9 +1390,25 @@
       submit: 'Send reset link',
       backLink: 'Back to sign in',
     },
+    resetPassword: {
+      title: 'Set a new password',
+      subtitle: 'Enter a new password for your account and confirm it.',
+      passwordLabel: 'New password',
+      passwordPlaceholder: '••••••••',
+      confirmPasswordLabel: 'Confirm password',
+      confirmPasswordPlaceholder: '••••••••',
+      submit: 'Update password',
+      submitting: 'Updating...',
+      success: 'Password updated successfully.',
+      errorTokenMissing: 'Invalid or expired link.',
+      errorMismatch: 'Passwords do not match.',
+      errorNetwork: 'Unable to reach the server. Please try again.',
+      errorGeneric: 'Unable to update password. Please try again.',
+      backLink: 'Back to sign in',
+    },
     trips: {
       hero: {
-        title: 'Events',
+        title: 'Available events',
         subtitle: 'Pick a destination, set your budget and duration, and start your journey.',
         countLabel: '{{count}} trips available',
       },
@@ -1515,11 +1501,11 @@
       hero: {
         title: 'Plan your trip with AI',
         subtitle:
-          'Share your budget, duration, and preferences — we will build a day-by-day itinerary ready to book.',
-        badge: '⚡ Ready in seconds',
+          'Choose between open travel chat or a clearer day-by-day itinerary generator based on your destination and budget.',
+        badge: 'Ready in seconds',
       },
       form: {
-        title: 'Trip details',
+        title: 'Itinerary generator',
         cityLabel: 'Destination',
         cityPlaceholder: 'Example: AlUla, Jeddah, Riyadh',
         daysLabel: 'Duration (days)',
@@ -1552,18 +1538,32 @@
         photography: 'Photography',
       },
       tabs: {
-        plan: 'Suggested itinerary',
-        chat: 'Assistant chat',
+        assistant: 'Travel assistant',
+        planner: 'Itinerary builder',
+      },
+      history: {
+        title: 'Saved chats',
+        subtitle: 'Reopen any previous session and continue from the last update.',
+        loading: 'Loading saved chats...',
+        empty: 'You do not have any saved sessions yet.',
+        authRequired: 'Sign in to view your saved plans and chats.',
+        noMessages: 'No messages yet. Open the session and start refining it.',
       },
       result: {
         title: 'Suggested itinerary',
+        subtitle: 'A cleaner summary first, then a day-by-day breakdown.',
         regenerate: 'Regenerate',
-        save: 'Save itinerary',
-        share: 'Share',
+        highlights: 'Highlights',
+        tips: 'Quick notes',
+        metrics: {
+          days: 'Days',
+          budget: 'Budget range',
+          total: 'Approx. total',
+          audience: 'Suitable for',
+        },
       },
       summary: {
         days: '{{count}} days',
-        budget: 'Budget: {{label}}',
       },
       empty: {
         before: 'Fill in the trip details, then tap',
@@ -1571,75 +1571,66 @@
       },
       loading: 'Putting together a great itinerary...',
       dayLabel: 'Day {{day}}',
-      activity: {
-        addToBooking: 'Add to booking',
-      },
       currency: 'SAR',
       chat: {
-        title: 'Assistant chat',
-        tag: 'Auto-updates your plan',
-        intro: 'Hi! Ask me about your plan and I will update it instantly 👋',
-        noPlan: 'Generate a plan first, then I can refine it 👍',
         error: 'Something went wrong… try again.',
         loading: 'On it… let me refine it 👌',
-        placeholder: 'Type your request… example: make day one more cultural',
         send: 'Send',
       },
-      prompts: {
-        cheaper: 'Make it cheaper',
-        nature: 'Add more nature',
-        restaurants: 'More restaurants',
-        easyDay: 'Make day two lighter',
-        shopping: 'Add shopping time',
-        family: 'Switch to a family trip',
-      },
-      plan: {
-        unknownCity: 'Unspecified destination',
-        balancedTitle: 'Balanced day',
-        styleTitle: '{{style}} day',
-        items: {
-          breakfast: { name: 'Breakfast & prep', note: 'A nearby option to your stay' },
-          attraction: { name: 'Landmark / activity', note: 'Based on your preferences' },
-          lunch: { name: 'Lunch', note: 'Budget-friendly choice' },
-          evening: { name: 'Evening stroll', note: 'Promenade / corniche / market' },
+      assistant: {
+        title: 'Travel assistant',
+        tag: 'Open chat about destinations',
+        subtitle: 'Ask about cities, atmosphere, weather, and comparisons before building your itinerary.',
+        intro: 'Hi! Ask me about cities, atmosphere, comparisons, or the kind of trip that suits you.',
+        placeholder: 'Example: compare AlUla and Abha for a short trip',
+        historyChip: 'Chat',
+        status: 'Online now',
+        quickTitle: 'Quick starters',
+        roleAssistant: 'Rahhal assistant',
+        roleUser: 'You',
+        welcomeTitle: 'Start a travel chat that feels real',
+        welcomeItems: {
+          compare: 'Compare two destinations by atmosphere, timing, and overall vibe.',
+          recommend: 'Get quick recommendations based on budget or trip length.',
+          plan: 'Once you like a destination, turn it into a structured itinerary.',
+        },
+        prompts: {
+          compare: 'Compare AlUla and Abha',
+          family: 'I want a calm family destination',
+          weekend: 'Suggest a good weekend trip',
+          coolWeather: 'I want somewhere with nicer weather',
+          sea: 'I want a sea city with restaurants',
+          photography: 'I want strong photo spots',
         },
       },
-      chatItems: {
-        nature: {
-          name: 'Nature stop / scenic viewpoint',
-          note: 'A light outdoor activity for photos and relaxation',
-        },
-        dinner: {
-          name: 'Dinner (restaurant suggestion by budget)',
-          note: 'Can be customized: local / upscale / seafood',
-        },
-        shopping: {
-          name: 'Shopping (market / mall / main street)',
-          note: 'Flexible time you can expand or shorten',
+      assistantGuide: {
+        title: 'What can you ask?',
+        subtitle: 'This mode is for open travel chat before generating a detailed itinerary.',
+        examples: {
+          compare: 'Compare two cities by atmosphere, trip length, and overall vibe.',
+          family: 'Ask for family-friendly, calm, or easy weekend destinations.',
+          weekend: 'Ask for the best destination based on budget or number of days.',
+          coolWeather: 'Tell it the experience you want: sea, mountains, photography, food, or cooler weather.',
         },
       },
-      chatFamily: {
-        title: 'Family day',
-        noteSuffix: ' — family-friendly',
+      assistantHistory: {
+        title: 'Past travel chats',
+        subtitle: 'Return to older consultations and continue from where you left off.',
+        empty: 'You do not have any saved travel chats yet.',
       },
-      chatDay2: {
-        title: 'Light day',
-      },
-      chatReplies: {
-        default: 'Great! I updated your plan ✅',
-        cheaper: 'Done 👌 Reduced estimated costs and leaned toward budget-friendly options.',
-        nature: 'Nice! Added a nature/scenic stop to each day 🌿',
-        restaurants: 'Done! Added a dinner suggestion each day + budget-based picks 🍽️',
-        shopping: 'Done ✅ Added shopping time in the evening for each day 🛍️',
-        family:
-          'All set! Made the plan more family-friendly and tagged activities accordingly 👨‍👩‍👧‍👦',
-        day2: 'Done 👍 Made day two lighter with fewer activities.',
+      plannerHistory: {
+        title: 'Past itineraries',
+        subtitle: 'The plans you generated from the form show up here.',
+        empty: 'You do not have any saved itineraries yet.',
       },
       examples: {
         city: 'AlUla',
       },
       errors: {
         generate: 'There was an error generating the plan. Please try again.',
+        loadHistory: 'Unable to load saved chats right now.',
+        loadSession: 'Unable to load the selected session right now.',
+        authRequired: 'Sign in first so we can save your plans and chats.',
       },
     },
     schoolTrips: {
@@ -1663,6 +1654,7 @@
         subtitle: 'Fill in the essentials to prepare the trip and notify supervisors.',
         fields: {
           title: 'Trip title',
+          schoolName: 'School name',
           destination: 'Destination',
           date: 'Trip date',
           time: 'Departure time',
@@ -1678,7 +1670,9 @@
         },
         placeholders: {
           title: 'Science trip to King Abdulaziz Center',
-          destination: 'Destination or educational center',
+          schoolName: 'Example: Al Rawad School',
+          destination: 'Select destination',
+          destinationLoading: 'Loading destinations...',
           grade: 'Select grade',
           transport: 'Select transport',
           students: 'Example: 45',
@@ -1696,6 +1690,8 @@
         },
         messages: {
           missingRequired: 'Please fill in the required fields before adding the trip.',
+          pastDateNotAllowed: 'You cannot create or book a trip in the past.',
+          requestFailed: 'Could not save the trip. Check your connection and try again.',
           created: 'Trip added successfully. Supervisors will be notified.',
           cleared: 'Fields cleared.',
         },
@@ -1733,6 +1729,15 @@
       card: {
         statusUpcoming: 'Upcoming',
         statusPast: 'Completed',
+        approval: {
+          approved: 'Approved',
+          pending: 'Pending approval',
+          rejected: 'Rejected',
+        },
+        prep: {
+          ready: 'Ready',
+          pending: 'Preparing',
+        },
         labels: {
           grade: 'Grade',
           students: 'Students',
@@ -1904,6 +1909,7 @@
       },
       tabs: {
         available: 'Available group trips',
+        past: 'Past trips',
         upcoming: 'Upcoming group trips',
         create: 'Create a new group trip',
       },
@@ -1914,6 +1920,8 @@
         title: 'No trips available',
         available:
           'No group trips are available to join right now. Try another search or create a new trip.',
+        past:
+          'No past group trips are available right now. Try another search or create a new trip.',
         upcoming:
           'No upcoming group trips at the moment. Try another search or create a new trip.',
       },
@@ -1940,6 +1948,7 @@
           price: 'Price per person (optional)',
           description: 'Short trip description',
           image: 'Upload a place image',
+          imageUrl: 'Image URL (optional)',
         },
         placeholders: {
           title: 'Example: AlUla group trip',
@@ -1948,6 +1957,7 @@
           maxParticipants: 'Example: 15',
           price: 'Example: 950',
           description: 'Write a short description of the trip...',
+          imageUrl: 'https://example.com/place.jpg',
         },
         actions: {
           create: 'Create trip',
@@ -1960,8 +1970,14 @@
           destinationRequired: 'Destination name is required',
           dateRequired: 'Trip date is required',
           minParticipants: 'Participants must be at least 2',
+          requestFailed: 'Unable to submit the request',
         },
         imagePreviewAlt: 'Image preview',
+        imagePreviewLabel: 'Current preview',
+        imageHint:
+          'Upload an image from your device or paste a direct link. If both are empty, Rahhal logo will be used automatically. If both are provided, the uploaded file takes priority.',
+        selectedFile: 'Selected file: {{name}}',
+        noFileSelected: 'No file selected',
       },
       cities: {
         riyadh: 'Riyadh',
@@ -2056,7 +2072,7 @@
         },
         book: {
           title: 'Book with ease',
-          description: 'Head to checkout to complete your booking when you are ready.',
+          description: 'Go to the AI Trips page to plan your trip with ease.',
           action: 'Book now',
         },
         share: {
@@ -2133,3 +2149,4 @@
     },
   },
 }
+

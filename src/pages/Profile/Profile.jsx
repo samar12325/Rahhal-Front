@@ -1,57 +1,228 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import '../Home/Home.css'
 import './Profile.css'
-import { loadTrips } from '../../data/trips.store'
 import { apiRequest } from '../../api/client'
+import { useLanguage } from '../../i18n/LanguageContext'
+import {
+  clearStoredUser,
+  getSessionEventName,
+  isAuthenticated as hasStoredSession,
+  persistUser,
+  readStoredUser,
+} from '../../auth/session'
+import { localizeGroupTripValue } from '../../components/groupTrips/groupTripsLocale'
 
 const defaultUserDetails = {
-  fullName: 'نورة عبدالله',
+  fullName: 'Noura Abdullah',
   email: 'noura@rahhal.sa',
   phone: '+966 55 123 4567',
 }
 
-const bookings = [
-  {
-    id: 'b1',
-    tripId: 't1',
-    date: '2026-01-27',
-    time: '08:30',
-    people: 1,
-    status: 'upcoming',
+const profileTripTranslations = {
+  en: {
+    titles: {
+      'رحلة العلا - يومين': 'AlUla trip - 2 days',
+      'جولة جدة البحرية': 'Jeddah sea tour',
+      'ترحال أبها الجبلي': 'Abha mountain escape',
+      'رحلة الطائف الثقافية': 'Taif cultural trip',
+      'جولة الرياض التراثية': 'Riyadh heritage tour',
+      'الخبر على البحر': 'Khobar by the sea',
+      'الفيل الصخري وما حوله': 'Elephant Rock and beyond',
+      'رحلة البحر الأحمر': 'Red Sea trip',
+    },
+    cities: {
+      'الرياض': 'Riyadh',
+      'جدة': 'Jeddah',
+      'العلا': 'AlUla',
+      'أبها': 'Abha',
+      'الخبر': 'Khobar',
+      'الطائف': 'Taif',
+      'أملج': 'Umluj',
+      'الدمام': 'Dammam',
+      'تبوك': 'Tabuk',
+      'مكة': 'Makkah',
+      'نجران': 'Najran',
+    },
   },
-  {
-    id: 'b2',
-    tripId: 't5',
-    date: '2025-11-18',
-    time: '18:00',
-    people: 3,
-    status: 'completed',
-  },
-]
-
-const statusCopy = {
-  upcoming: 'قادمة',
-  completed: 'منتهية',
 }
 
-function formatDate(value) {
+const profileNameTranslations = {
+  en: {
+    'رحال': 'Rahhal',
+  },
+}
+
+const copy = {
+  ar: {
+    profileEyebrow: 'حسابي',
+    profileTitle: 'الملف الشخصي',
+    profileSubtitle: 'إدارة معلوماتك وحجوزاتك بسهولة.',
+    fullName: 'الاسم الكامل',
+    email: 'البريد الإلكتروني',
+    phone: 'رقم الجوال',
+    save: 'حفظ التغييرات',
+    cancel: 'إلغاء',
+    edit: 'تعديل البيانات',
+    bookingsTitle: 'حجوزاتي',
+    bookingsSubtitle: 'تابع تفاصيل رحلاتك الحالية والسابقة.',
+    loadingBookings: 'جارٍ تحميل الحجوزات...',
+    emptyBookings: 'لا توجد حجوزات بعد.',
+    upcoming: 'قادمة',
+    completed: 'منتهية',
+    tripAlt: 'رحلة',
+    tripFallback: 'رحلة غير محددة',
+    date: 'التاريخ',
+    time: 'الوقت',
+    people: 'عدد الأشخاص',
+    details: 'عرض التفاصيل',
+    participants: 'المشاركون',
+    rateTrip: 'قيّم الرحلة',
+    viewRating: 'عرض التقييم',
+    expiredTag: 'منتهية',
+    expiredBarcode: 'انتهت هذه الرحلة ولم يعد هذا الباركود صالحًا.',
+    activeBarcode: 'يُستخدم هذا الباركود للتحقق من الحجز قبل الانطلاق.',
+    ratingEyebrow: 'قيّم الرحلة',
+    ratingFallback: 'رحلتك',
+    close: 'إغلاق',
+    starsAria: 'التقييم بالنجوم',
+    ratingOfFive: 'تقييم {{value}} من 5',
+    viewHint: 'هذا تقييمك الحالي ولا يمكن تعديله.',
+    commentLabel: 'تعليق قصير عن التجربة',
+    commentPlaceholder: 'اكتب لنا أجمل ما حدث خلال الرحلة...',
+    selectStarsError: 'اختر عدد النجوم قبل الحفظ.',
+    shortCommentError: 'اكتب تعليقًا قصيرًا عن التجربة (6 أحرف على الأقل).',
+    invalidBookingError: 'رقم الحجز غير صالح. الرجاء تحديث الحجوزات لربطها بالقاعدة.',
+    saveRating: 'حفظ التقييم',
+    ratingSaveFailed: 'تعذر حفظ التقييم الآن.',
+    loadingBookingsFailed: 'تعذر تحميل الحجوزات حالياً.',
+    participantsEyebrow: 'الرحلة الجماعية',
+    participantsTitle: 'المشاركون في الرحلة',
+    participantsLoading: 'جارٍ تحميل المشاركين...',
+    participantsEmpty: 'لا توجد بيانات مشاركين حالياً.',
+    participantsLoadFailed: 'تعذر تحميل المشاركين حالياً.',
+    participantName: 'الاسم',
+    participantEmail: 'البريد الإلكتروني',
+    participantPeople: 'عدد الأشخاص',
+    participantStatus: 'حالة الحجز',
+    participantStatusPaid: 'مدفوع',
+    participantStatusPending: 'معلق',
+    participantStatusCancelled: 'ملغي',
+    participantEmailUnavailable: 'غير متاح',
+    participantFallbackName: 'مشارك',
+  },
+  en: {
+    profileEyebrow: 'My account',
+    profileTitle: 'Profile',
+    profileSubtitle: 'Manage your details and bookings with ease.',
+    fullName: 'Full name',
+    email: 'Email',
+    phone: 'Phone number',
+    save: 'Save changes',
+    cancel: 'Cancel',
+    edit: 'Edit details',
+    bookingsTitle: 'My bookings',
+    bookingsSubtitle: 'Track your current and past trip details.',
+    loadingBookings: 'Loading bookings...',
+    emptyBookings: 'No bookings yet.',
+    upcoming: 'Upcoming',
+    completed: 'Completed',
+    tripAlt: 'Trip',
+    tripFallback: 'Unnamed trip',
+    date: 'Date',
+    time: 'Time',
+    people: 'People',
+    details: 'View details',
+    participants: 'Participants',
+    rateTrip: 'Rate trip',
+    viewRating: 'View rating',
+    expiredTag: 'Expired',
+    expiredBarcode: 'This trip has ended and this barcode is no longer valid.',
+    activeBarcode: 'Use this barcode to verify the booking before departure.',
+    ratingEyebrow: 'Rate trip',
+    ratingFallback: 'Your trip',
+    close: 'Close',
+    starsAria: 'Star rating',
+    ratingOfFive: 'Rate {{value}} out of 5',
+    viewHint: 'This is your current rating and it cannot be edited.',
+    commentLabel: 'Short comment about the experience',
+    commentPlaceholder: 'Tell us the best part of the trip...',
+    selectStarsError: 'Choose a star rating before saving.',
+    shortCommentError: 'Write a short comment about the experience (at least 6 characters).',
+    invalidBookingError: 'Booking number is invalid. Refresh bookings to sync with the database.',
+    saveRating: 'Save rating',
+    ratingSaveFailed: 'Unable to save the rating right now.',
+    loadingBookingsFailed: 'Unable to load bookings right now.',
+    participantsEyebrow: 'Group trip',
+    participantsTitle: 'Trip participants',
+    participantsLoading: 'Loading participants...',
+    participantsEmpty: 'No participant data is available right now.',
+    participantsLoadFailed: 'Unable to load participants right now.',
+    participantName: 'Name',
+    participantEmail: 'Email',
+    participantPeople: 'People count',
+    participantStatus: 'Booking status',
+    participantStatusPaid: 'Paid',
+    participantStatusPending: 'Pending',
+    participantStatusCancelled: 'Cancelled',
+    participantEmailUnavailable: 'Not available',
+    participantFallbackName: 'Participant',
+  },
+}
+
+function formatDate(value, locale) {
   try {
-    return new Intl.DateTimeFormat('ar-SA', { dateStyle: 'long' }).format(new Date(value))
+    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(value))
   } catch {
     return value
   }
 }
 
-function formatTime(value) {
+function formatTime(value, locale) {
   if (!value) return ''
   const [hours = '0', minutes = '0'] = value.split(':')
   const date = new Date()
   date.setHours(Number(hours), Number(minutes), 0, 0)
   try {
-    return new Intl.DateTimeFormat('ar-SA', { hour: 'numeric', minute: 'numeric' }).format(date)
+    return new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: 'numeric' }).format(date)
   } catch {
     return value
   }
+}
+
+function mergeStoredUser(overrides) {
+  const stored = readStoredUser() ?? {}
+  return {
+    ...stored,
+    ...overrides,
+  }
+}
+
+const localizeProfileTripTitle = (language, trip) => {
+  const title = trip?.title
+  if (!title || language === 'ar') return title
+
+  if (trip?.type === 'group') {
+    return localizeGroupTripValue(language, 'titles', title)
+  }
+
+  return profileTripTranslations[language]?.titles?.[title] ?? title
+}
+
+const localizeProfileTripCity = (language, trip) => {
+  const city = trip?.city
+  if (!city || language === 'ar') return city
+
+  if (trip?.type === 'group') {
+    return localizeGroupTripValue(language, 'cities', city)
+  }
+
+  return profileTripTranslations[language]?.cities?.[city] ?? city
+}
+
+const localizeProfileName = (language, value) => {
+  if (!value || language === 'ar') return value
+  return profileNameTranslations[language]?.[value] ?? value
 }
 
 const qrMatrix = [
@@ -78,9 +249,9 @@ const qrMatrix = [
   '111111111111111111111',
 ]
 
-function QrPlaceholder() {
+function QrPlaceholder({ ariaLabel }) {
   return (
-    <div className="qrPlaceholder" role="img" aria-label="باركود الحجز">
+    <div className="qrPlaceholder" role="img" aria-label={ariaLabel}>
       {qrMatrix.map((row, rowIndex) => (
         <div className="qrRow" key={`qr-row-${rowIndex}`}>
           {row.split('').map((value, cellIndex) => (
@@ -95,95 +266,149 @@ function QrPlaceholder() {
   )
 }
 
-const reviewStars = (rating) =>
-  Array.from({ length: 5 }, (_, index) => (
-    <span key={`rating-star-${index}`} className={`ratingStar ${index < rating ? 'filled' : ''}`}>
-      ★
-    </span>
-  ))
-
 function Profile() {
-  const [trips] = useState(() => loadTrips())
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { language, dir } = useLanguage()
+  const text = copy[language] ?? copy.ar
+  const locale = language === 'en' ? 'en-US' : 'ar-SA'
+  const statusCopy = { upcoming: text.upcoming, completed: text.completed }
+
   const [userDetails, setUserDetails] = useState(defaultUserDetails)
   const [formValues, setFormValues] = useState(defaultUserDetails)
   const [isEditing, setIsEditing] = useState(false)
   const [expandedBookings, setExpandedBookings] = useState([])
   const [reviews, setReviews] = useState({})
+  const [bookings, setBookings] = useState([])
+  const [bookingsLoading, setBookingsLoading] = useState(true)
+  const [bookingsError, setBookingsError] = useState('')
   const [ratingTarget, setRatingTarget] = useState(null)
   const [ratingValue, setRatingValue] = useState(0)
   const [ratingComment, setRatingComment] = useState('')
   const [ratingError, setRatingError] = useState('')
   const [ratingMode, setRatingMode] = useState('create')
+  const [participantsModal, setParticipantsModal] = useState(null)
+  const [participants, setParticipants] = useState([])
+  const [participantsLoading, setParticipantsLoading] = useState(false)
+  const [participantsError, setParticipantsError] = useState('')
+  const [participantsViewerRole, setParticipantsViewerRole] = useState('user')
+  const [isLoggedIn, setIsLoggedIn] = useState(() => hasStoredSession())
 
   useEffect(() => {
+    const handleAuthChange = () => {
+      setIsLoggedIn(hasStoredSession())
+    }
+
+    window.addEventListener('storage', handleAuthChange)
+    window.addEventListener(getSessionEventName(), handleAuthChange)
+
+    return () => {
+      window.removeEventListener('storage', handleAuthChange)
+      window.removeEventListener(getSessionEventName(), handleAuthChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setBookings([])
+      setBookingsLoading(false)
+      setBookingsError('')
+      navigate('/login?redirect=%2Fprofile', { replace: true })
+    }
+  }, [isLoggedIn, navigate])
+
+  useEffect(() => {
+    if (!isLoggedIn) return
+
     const loadProfile = async () => {
       try {
         const payload = await apiRequest('/me')
         if (payload) {
-          const normalized = {
+          const normalized = mergeStoredUser({
+            id: payload.id,
+            name: payload.name ?? '',
             fullName: payload.name ?? '',
             email: payload.email ?? '',
             phone: payload.phone ?? '',
-          }
+            role: payload.role,
+          })
           setUserDetails(normalized)
           setFormValues(normalized)
-          localStorage.setItem('rahhalUser', JSON.stringify(normalized))
+          persistUser(normalized)
           return
         }
-      } catch {
-        // fall back to local storage
+      } catch (err) {
+        if (err?.status === 401) {
+          clearStoredUser()
+          return
+        }
       }
 
-      const stored = localStorage.getItem('rahhalUser')
+      const stored = readStoredUser()
       if (stored) {
-        try {
-          const parsed = JSON.parse(stored)
-          setUserDetails(parsed)
-          setFormValues(parsed)
-          return
-        } catch {
-          // ignore
-        }
+        setUserDetails(stored)
+        setFormValues(stored)
       }
     }
 
     loadProfile()
-  }, [])
+  }, [isLoggedIn])
 
   useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const payload = await apiRequest('/me')
-        if (payload) {
-          const normalized = {
-            fullName: payload.name ?? '',
-            email: payload.email ?? '',
-            phone: payload.phone ?? '',
-          }
-          setUserDetails(normalized)
-          setFormValues(normalized)
-          localStorage.setItem('rahhalUser', JSON.stringify(normalized))
-          return
-        }
-      } catch {
-        // fall back to local storage
-      }
+    if (!isLoggedIn) return
 
-      const stored = localStorage.getItem('rahhalUser')
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored)
-          setUserDetails(parsed)
-          setFormValues(parsed)
+    let isMounted = true
+    const loadBookings = async () => {
+      setBookingsLoading(true)
+      setBookingsError('')
+      try {
+        const payload = await apiRequest('/me/bookings')
+        if (!isMounted) return
+        const items = Array.isArray(payload?.items) ? payload.items : []
+        setBookings(items)
+        const seededReviews = items.reduce((acc, booking) => {
+          if (booking?.review) acc[booking.id] = booking.review
+          return acc
+        }, {})
+        setReviews(seededReviews)
+      } catch (err) {
+        if (!isMounted) return
+        if (err?.status === 401) {
+          clearStoredUser()
           return
-        } catch {
-          // ignore
         }
+        setBookings([])
+        setBookingsError(err?.message || text.loadingBookingsFailed)
+      } finally {
+        if (isMounted) setBookingsLoading(false)
       }
     }
 
-    loadProfile()
-  }, [])
+    loadBookings()
+    return () => {
+      isMounted = false
+    }
+  }, [isLoggedIn, text.loadingBookingsFailed])
+
+  useEffect(() => {
+    if (!location.hash) return
+
+    const elementId = location.hash.replace('#', '')
+    if (!elementId) return
+
+    const scrollToSection = () => {
+      const element = document.getElementById(elementId)
+      if (!element) return false
+
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return true
+    }
+
+    if (scrollToSection()) return
+
+    const timerId = window.setTimeout(scrollToSection, 120)
+    return () => window.clearTimeout(timerId)
+  }, [location.hash, bookingsLoading])
 
   const handleEditToggle = () => {
     setFormValues(userDetails)
@@ -210,28 +435,35 @@ function Profile() {
         },
       })
 
-      const normalized = {
+      const normalized = mergeStoredUser({
+        id: payload?.id,
+        name: payload?.name ?? formValues.fullName,
         fullName: payload?.name ?? formValues.fullName,
         email: payload?.email ?? formValues.email,
         phone: payload?.phone ?? formValues.phone,
-      }
+        role: payload?.role,
+      })
 
       setUserDetails(normalized)
       setFormValues(normalized)
-      localStorage.setItem('rahhalUser', JSON.stringify(normalized))
-      window.dispatchEvent(new Event('rahhal-user-change'))
+      persistUser(normalized)
       setIsEditing(false)
     } catch (err) {
-      // fallback to local update on failure
-      setUserDetails(formValues)
-      localStorage.setItem('rahhalUser', JSON.stringify(formValues))
-      window.dispatchEvent(new Event('rahhal-user-change'))
+      if (err?.status === 401) {
+        clearStoredUser()
+        return
+      }
+
+      const normalized = mergeStoredUser(formValues)
+      setUserDetails(normalized)
+      persistUser(normalized)
       setIsEditing(false)
     }
   }
+
   const toggleBookingDetails = (id) => {
     setExpandedBookings((prev) =>
-      prev.includes(id) ? prev.filter((bookingId) => bookingId !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((bookingId) => bookingId !== id) : [...prev, id],
     )
   }
 
@@ -256,18 +488,18 @@ function Profile() {
   const handleRatingSubmit = async () => {
     if (!ratingTarget?.booking || ratingMode === 'view') return
     if (!ratingValue) {
-      setRatingError('اختر عدد النجوم قبل الحفظ.')
+      setRatingError(text.selectStarsError)
       return
     }
 
     const trimmedComment = ratingComment.trim()
     if (trimmedComment.length < 6) {
-      setRatingError('اكتب تعليقًا قصيرًا عن التجربة (6 أحرف على الأقل).')
+      setRatingError(text.shortCommentError)
       return
     }
 
     if (!/^\d+$/.test(String(ratingTarget.booking.id))) {
-      setRatingError('رقم الحجز غير صالح. الرجاء تحديث الحجوزات لربطها بالقاعدة.')
+      setRatingError(text.invalidBookingError)
       return
     }
 
@@ -289,8 +521,56 @@ function Profile() {
       }))
       closeRatingModal()
     } catch (err) {
-      setRatingError(err?.message || 'تعذر حفظ التقييم الآن.')
+      if (err?.status === 401) {
+        clearStoredUser()
+        return
+      }
+      setRatingError(err?.message || text.ratingSaveFailed)
     }
+  }
+
+  const openParticipantsModal = async (booking) => {
+    if (!booking?.tripId) return
+
+    setParticipantsModal({
+      tripId: booking.tripId,
+      tripTitle: booking.trip?.title || text.tripFallback,
+      tripCity: booking.trip?.city || '',
+    })
+    setParticipants([])
+    setParticipantsError('')
+    setParticipantsLoading(true)
+    setParticipantsViewerRole('user')
+
+    try {
+      const payload = await apiRequest(`/api/group-trips/${booking.tripId}/participants`)
+      const items = Array.isArray(payload?.participants) ? payload.participants : []
+      setParticipantsViewerRole(payload?.viewer_role === 'admin' ? 'admin' : 'user')
+      setParticipants(items)
+    } catch (err) {
+      if (err?.status === 401) {
+        clearStoredUser()
+        return
+      }
+      setParticipants([])
+      setParticipantsError(err?.message || text.participantsLoadFailed)
+    } finally {
+      setParticipantsLoading(false)
+    }
+  }
+
+  const closeParticipantsModal = () => {
+    setParticipantsModal(null)
+    setParticipants([])
+    setParticipantsError('')
+    setParticipantsLoading(false)
+    setParticipantsViewerRole('user')
+  }
+
+  const getParticipantStatusLabel = (status) => {
+    if (status === 'paid') return text.participantStatusPaid
+    if (status === 'cancelled') return text.participantStatusCancelled
+    return text.participantStatusPending
   }
 
   const isRatingModalOpen = Boolean(ratingTarget)
@@ -302,19 +582,19 @@ function Profile() {
   }
 
   return (
-    <div className="profilePage" dir="rtl">
+    <div className="profilePage" dir={dir}>
       <div className="profileMain">
         <header className="profileHeader" id="top">
-          <p className="profileEyebrow">حسابي</p>
-          <h1>الملف الشخصي</h1>
-          <p className="profileSubtitle">إدارة معلوماتك وحجوزاتك بسهولة.</p>
+          <p className="profileEyebrow">{text.profileEyebrow}</p>
+          <h1>{text.profileTitle}</h1>
+          <p className="profileSubtitle">{text.profileSubtitle}</p>
         </header>
 
         <section className="profileInfoCard">
           {isEditing ? (
             <>
               <label className="profileField">
-                <span>الاسم الكامل</span>
+                <span>{text.fullName}</span>
                 <input
                   className="profileInput"
                   type="text"
@@ -323,7 +603,7 @@ function Profile() {
                 />
               </label>
               <label className="profileField">
-                <span>البريد الإلكتروني</span>
+                <span>{text.email}</span>
                 <input
                   className="profileInput"
                   type="email"
@@ -332,7 +612,7 @@ function Profile() {
                 />
               </label>
               <label className="profileField">
-                <span>رقم الجوال</span>
+                <span>{text.phone}</span>
                 <input
                   className="profileInput"
                   type="tel"
@@ -342,29 +622,29 @@ function Profile() {
               </label>
               <div className="profileActions">
                 <button className="primaryBtn" type="button" onClick={handleSave}>
-                  حفظ التغييرات
+                  {text.save}
                 </button>
                 <button className="ghostBtn" type="button" onClick={handleCancel}>
-                  إلغاء
+                  {text.cancel}
                 </button>
               </div>
             </>
           ) : (
             <>
               <div className="profileInfoRow">
-                <span>الاسم الكامل</span>
-                <strong>{userDetails.fullName}</strong>
+                <span>{text.fullName}</span>
+                <strong>{localizeProfileName(language, userDetails.fullName)}</strong>
               </div>
               <div className="profileInfoRow">
-                <span>البريد الإلكتروني</span>
+                <span>{text.email}</span>
                 <strong>{userDetails.email}</strong>
               </div>
               <div className="profileInfoRow">
-                <span>رقم الجوال</span>
+                <span>{text.phone}</span>
                 <strong>{userDetails.phone}</strong>
               </div>
               <button className="secondaryBtn profileEditBtn" type="button" onClick={handleEditToggle}>
-                تعديل البيانات
+                {text.edit}
               </button>
             </>
           )}
@@ -372,107 +652,151 @@ function Profile() {
 
         <section className="profileBookings" id="bookings">
           <div className="sectionHead">
-            <h2 className="sectionTitle">حجوزاتي</h2>
-            <p className="sectionSubtitle">تابع تفاصيل رحلاتك الحالية والسابقة.</p>
+            <h2 className="sectionTitle">{text.bookingsTitle}</h2>
+            <p className="sectionSubtitle">{text.bookingsSubtitle}</p>
           </div>
 
           <div className="bookingsGrid">
-            {bookings.map((booking) => {
-              const trip = trips.find((item) => item.id === booking.tripId)
-              const isMarkedCompleted = booking.status === 'completed'
-              const review = reviews[booking.id]
-              const showRatingCTA = isMarkedCompleted && !review
-              return (
-                <article className="bookingCard" key={booking.id}>
-                  <div className="bookingImage">
-                    <img src={trip?.image} alt={trip?.title} />
-                    <span className={`bookingStatus ${booking.status}`}>
-                      {statusCopy[booking.status] || booking.status}
-                    </span>
-                  </div>
-                  <div className="bookingBody">
-                    <div className="bookingTitle">
-                      <h3>{trip?.title || 'رحلة غير محددة'}</h3>
-                      <p>{trip?.city}</p>
+            {bookingsLoading ? (
+              <div className="bookingsEmpty">
+                <p>{text.loadingBookings}</p>
+              </div>
+            ) : bookingsError ? (
+              <div className="bookingsEmpty">
+                <p>{bookingsError}</p>
+              </div>
+            ) : bookings.length === 0 ? (
+              <div className="bookingsEmpty">
+                <p>{text.emptyBookings}</p>
+              </div>
+            ) : (
+              bookings.map((booking) => {
+                const trip = booking.trip
+                const localizedTripTitle = localizeProfileTripTitle(language, trip) || text.tripFallback
+                const localizedTripCity = localizeProfileTripCity(language, trip)
+                const isGroupTrip = trip?.type === 'group'
+                const hasEnded = booking.hasEnded ?? booking.status === 'completed'
+                const visualStatus = hasEnded ? 'completed' : 'upcoming'
+                const review = reviews[booking.id]
+                const showRatingCTA = booking.canReview ?? (hasEnded && !review)
+
+                return (
+                  <article className="bookingCard" key={booking.id}>
+                    <div className="bookingImage">
+                      <img src={trip?.image} alt={localizedTripTitle || text.tripAlt} />
+                      <span className={`bookingStatus ${visualStatus}`}>
+                        {statusCopy[visualStatus] || visualStatus}
+                      </span>
                     </div>
-                    <ul className="bookingMeta">
-                      <li>
-                        <span>التاريخ</span>
-                        <strong>{formatDate(booking.date)}</strong>
-                      </li>
-                      <li>
-                        <span>الوقت</span>
-                        <strong>{formatTime(booking.time)}</strong>
-                      </li>
-                      <li>
-                        <span>عدد الأشخاص</span>
-                        <strong>{booking.people}</strong>
-                      </li>
-                    </ul>
-                    <button
-                      type="button"
-                      className="secondaryBtn bookingDetailsBtn"
-                      onClick={() => toggleBookingDetails(booking.id)}
-                    >
-                      عرض التفاصيل
-                    </button>
-                    {showRatingCTA ? (
-                      <button
-                        type="button"
-                        className="primaryBtn bookingRateBtn"
-                        onClick={() => openRatingModal(booking, trip)}
-                      >
-                        قيّم الرحلة
-                      </button>
-                    ) : null}
-                    {review ? (
-                      <button
-                        type="button"
-                        className="ghostBtn viewRatingBtn"
-                        onClick={() => openRatingModal(booking, trip, { mode: 'view' })}
-                      >
-                        عرض التقييم
-                      </button>
-                    ) : null}
-                    {expandedBookings.includes(booking.id) ? (
-                      <div className="bookingExtra">
-                        <div className={`barcodeWrapper ${isMarkedCompleted ? 'isExpired' : ''}`}>
-                          <QrPlaceholder />
-                          {isMarkedCompleted ? (
-                            <div className="barcodeOverlay" aria-hidden="true">
-                              <span className="barcodeTag">منتهية</span>
-                            </div>
-                          ) : null}
-                        </div>
-                        <p className="barcodeHint">يُستخدم هذا الباركود للتحقق من الحجز قبل الانطلاق.</p>
+                    <div className="bookingBody">
+                      <div className="bookingTitle">
+                        <h3>{localizedTripTitle}</h3>
+                        <p>{localizedTripCity}</p>
                       </div>
-                    ) : null}
-                  </div>
-                </article>
-              )
-            })}
+                      <ul className="bookingMeta">
+                        <li>
+                          <span>{text.date}</span>
+                          <strong>{formatDate(booking.date, locale)}</strong>
+                        </li>
+                        <li>
+                          <span>{text.time}</span>
+                          <strong>{formatTime(booking.time, locale)}</strong>
+                        </li>
+                        <li>
+                          <span>{text.people}</span>
+                          <strong>{booking.people}</strong>
+                        </li>
+                      </ul>
+
+                      <button
+                        type="button"
+                        className="secondaryBtn bookingDetailsBtn"
+                        onClick={() => toggleBookingDetails(booking.id)}
+                      >
+                        {text.details}
+                      </button>
+
+                      {isGroupTrip ? (
+                        <button
+                          type="button"
+                          className="secondaryBtn bookingDetailsBtn"
+                          onClick={() => openParticipantsModal(booking)}
+                        >
+                          {text.participants}
+                        </button>
+                      ) : null}
+
+                      {showRatingCTA ? (
+                        <button
+                          type="button"
+                          className="primaryBtn bookingRateBtn"
+                          onClick={() => openRatingModal(booking, trip)}
+                        >
+                          {text.rateTrip}
+                        </button>
+                      ) : null}
+
+                      {review ? (
+                        <button
+                          type="button"
+                          className="ghostBtn viewRatingBtn"
+                          onClick={() => openRatingModal(booking, trip, { mode: 'view' })}
+                        >
+                          {text.viewRating}
+                        </button>
+                      ) : null}
+
+                      {expandedBookings.includes(booking.id) ? (
+                        <div className="bookingExtra">
+                          <div className={`barcodeWrapper ${hasEnded ? 'isExpired' : ''}`}>
+                            <QrPlaceholder ariaLabel={text.details} />
+                            {hasEnded ? (
+                              <div className="barcodeOverlay" aria-hidden="true">
+                                <span className="barcodeXMark">×</span>
+                                <span className="barcodeTag">{text.expiredTag}</span>
+                              </div>
+                            ) : null}
+                          </div>
+                          <p className="barcodeHint">
+                            {hasEnded ? text.expiredBarcode : text.activeBarcode}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                  </article>
+                )
+              })
+            )}
           </div>
         </section>
       </div>
+
       {isRatingModalOpen ? (
         <div className="ratingModalOverlay">
-          <div className="ratingModal" role="dialog" aria-modal="true" aria-labelledby="rating-modal-title">
+          <div
+            className="ratingModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rating-modal-title"
+          >
             <div className="ratingModalHead">
               <div>
-                <p className="ratingEyebrow">قيّم الرحلة</p>
-                <h3 id="rating-modal-title">{ratingTarget?.trip?.title || 'رحلتك'}</h3>
-                <p className="ratingSub">{ratingTarget?.trip?.city}</p>
+                <p className="ratingEyebrow">{text.ratingEyebrow}</p>
+                <h3 id="rating-modal-title">
+                  {localizeProfileTripTitle(language, ratingTarget?.trip) || text.ratingFallback}
+                </h3>
+                <p className="ratingSub">{localizeProfileTripCity(language, ratingTarget?.trip)}</p>
               </div>
               <button
                 type="button"
                 className="ghostBtn ratingCloseBtn"
                 onClick={closeRatingModal}
-                aria-label="إغلاق"
+                aria-label={text.close}
               >
                 &times;
               </button>
             </div>
-            <div className="ratingStarsInput" role="group" aria-label="التقييم بالنجوم">
+            <div className="ratingStarsInput" role="group" aria-label={text.starsAria}>
               {Array.from({ length: 5 }, (_, index) => {
                 const value = index + 1
                 return (
@@ -483,7 +807,7 @@ function Profile() {
                       isViewMode ? 'isLocked' : ''
                     }`}
                     onClick={() => setStarValue(value)}
-                    aria-label={`تقييم ${value} من 5`}
+                    aria-label={text.ratingOfFive.replace('{{value}}', value)}
                     disabled={isViewMode}
                   >
                     ★
@@ -491,15 +815,15 @@ function Profile() {
                 )
               })}
             </div>
-            {isViewMode ? <p className="ratingViewHint">هذا تقييمك الحالي ولا يمكن تعديله.</p> : null}
+            {isViewMode ? <p className="ratingViewHint">{text.viewHint}</p> : null}
             <label className="ratingField">
-              <span>تعليق قصير عن التجربة</span>
+              <span>{text.commentLabel}</span>
               <textarea
                 value={ratingComment}
                 onChange={(event) => setRatingComment(event.target.value)}
                 maxLength={320}
                 rows={4}
-                placeholder="اكتب لنا أجمل ما حدث خلال الرحلة..."
+                placeholder={text.commentPlaceholder}
                 className={`ratingTextarea ${isViewMode ? 'isReadOnly' : ''}`}
                 readOnly={isViewMode}
               />
@@ -507,19 +831,112 @@ function Profile() {
             {!isViewMode && ratingError ? <p className="ratingError">{ratingError}</p> : null}
             <div className={`ratingModalActions ${isViewMode ? 'isViewMode' : ''}`}>
               {isViewMode ? (
-                <button type="button" className="ghostBtn ratingDismissBtn isFull" onClick={closeRatingModal}>
-                  إغلاق
+                <button
+                  type="button"
+                  className="ghostBtn ratingDismissBtn isFull"
+                  onClick={closeRatingModal}
+                >
+                  {text.close}
                 </button>
               ) : (
                 <>
                   <button type="button" className="primaryBtn" onClick={handleRatingSubmit}>
-                    حفظ التقييم
+                    {text.saveRating}
                   </button>
-                  <button type="button" className="ghostBtn ratingDismissBtn" onClick={closeRatingModal}>
-                    إغلاق
+                  <button
+                    type="button"
+                    className="ghostBtn ratingDismissBtn"
+                    onClick={closeRatingModal}
+                  >
+                    {text.close}
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {participantsModal ? (
+        <div className="ratingModalOverlay">
+          <div
+            className="ratingModal participantsModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="participants-modal-title"
+          >
+            <div className="ratingModalHead">
+              <div>
+                <p className="ratingEyebrow">{text.participantsEyebrow}</p>
+                <h3 id="participants-modal-title">{text.participantsTitle}</h3>
+                <p className="ratingSub">
+                  {localizeProfileTripTitle(language, {
+                    title: participantsModal.tripTitle,
+                    city: participantsModal.tripCity,
+                    type: 'group',
+                  })}
+                  {participantsModal.tripCity
+                    ? ` - ${localizeProfileTripCity(language, {
+                        title: participantsModal.tripTitle,
+                        city: participantsModal.tripCity,
+                        type: 'group',
+                      })}`
+                    : ''}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="ghostBtn ratingCloseBtn"
+                onClick={closeParticipantsModal}
+                aria-label={text.close}
+              >
+                &times;
+              </button>
+            </div>
+
+            {participantsLoading ? (
+              <p className="ratingViewHint">{text.participantsLoading}</p>
+            ) : participantsError ? (
+              <p className="ratingError">{participantsError}</p>
+            ) : participants.length === 0 ? (
+              <p className="ratingViewHint">{text.participantsEmpty}</p>
+            ) : (
+              <div className="participantsList">
+                {participants.map((participant) => (
+                  <article className="participantCard" key={participant.booking_id}>
+                    <div className="participantRow">
+                      <span>{text.participantName}</span>
+                      <strong>{participant.name || text.participantFallbackName}</strong>
+                    </div>
+                    <div className="participantRow">
+                      <span>{text.participantPeople}</span>
+                      <strong>{participant.persons_count ?? 1}</strong>
+                    </div>
+                    {participantsViewerRole === 'admin' ? (
+                      <div className="participantRow">
+                        <span>{text.participantEmail}</span>
+                        <strong>{participant.email || text.participantEmailUnavailable}</strong>
+                      </div>
+                    ) : null}
+                    {participantsViewerRole === 'admin' ? (
+                      <div className="participantRow">
+                        <span>{text.participantStatus}</span>
+                        <strong>{getParticipantStatusLabel(participant.status)}</strong>
+                      </div>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            )}
+
+            <div className="ratingModalActions isViewMode">
+              <button
+                type="button"
+                className="ghostBtn ratingDismissBtn isFull"
+                onClick={closeParticipantsModal}
+              >
+                {text.close}
+              </button>
             </div>
           </div>
         </div>
@@ -529,5 +946,3 @@ function Profile() {
 }
 
 export default Profile
-
-

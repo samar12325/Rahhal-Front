@@ -38,10 +38,7 @@ function Testimonials() {
   }, [])
 
   useEffect(() => {
-    if (reviews.length <= 1) {
-      setFade(true)
-      return undefined
-    }
+    if (reviews.length <= 1) return undefined
 
     let timeoutId
     const intervalId = setInterval(() => {
@@ -58,17 +55,7 @@ function Testimonials() {
     }
   }, [reviews.length])
 
-  useEffect(() => {
-    if (!reviews.length) {
-      setCurrentIndex(0)
-      return
-    }
-    if (currentIndex >= reviews.length) {
-      setCurrentIndex(0)
-    }
-  }, [reviews.length, currentIndex])
-
-  const current = reviews[currentIndex]
+  const current = reviews[currentIndex] ?? reviews[0]
   const hasReviews = reviews.length > 0
 
   return (

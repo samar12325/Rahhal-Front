@@ -1,6 +1,6 @@
 import { useLanguage } from '../../i18n/LanguageContext'
 
-function OrderSummary({ destination, activity, offer, pricing, trip, bookingDetails }) {
+function OrderSummary({ destination, activity, pricing, trip, bookingDetails }) {
   const { t, language } = useLanguage()
   const locale = language === 'ar' ? 'ar-SA' : 'en-US'
   const formatter = new Intl.NumberFormat(locale)
@@ -36,7 +36,6 @@ function OrderSummary({ destination, activity, offer, pricing, trip, bookingDeta
     }
   }
 
-  const hasOffer = Boolean(offer)
   const hasActivity = Boolean(destination && activity)
   const hasTrip = Boolean(trip)
 
@@ -52,15 +51,6 @@ function OrderSummary({ destination, activity, offer, pricing, trip, bookingDeta
       : null,
   ].filter(Boolean)
 
-  const offerTitle = offer
-    ? t(`offers.data.${offer.id}.title`, { fallback: offer.title })
-    : ''
-  const offerDestination = offer
-    ? t(`offers.data.${offer.id}.destination`, { fallback: offer.destination })
-    : ''
-  const offerDuration = offer
-    ? t(`offers.data.${offer.id}.duration`, { fallback: offer.duration })
-    : ''
   const destinationName = destination
     ? t(`destinationNames.${destination.id}`, { fallback: destination.name })
     : ''
@@ -81,15 +71,6 @@ function OrderSummary({ destination, activity, offer, pricing, trip, bookingDeta
                 {t('checkout.summary.rating', { params: { rating: trip.rating } })}
               </p>
             ) : null}
-          </div>
-        </div>
-      ) : hasOffer ? (
-        <div className="summaryHeader">
-          <img src={offer.image} alt={offerTitle} />
-          <div>
-            <p className="summaryDestination">{offerDestination}</p>
-            <p className="summaryActivity">{offerTitle}</p>
-            <p className="summaryMeta">{offerDuration}</p>
           </div>
         </div>
       ) : hasActivity ? (

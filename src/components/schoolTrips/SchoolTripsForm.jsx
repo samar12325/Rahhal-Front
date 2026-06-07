@@ -1,16 +1,68 @@
 import { useLanguage } from '../../i18n/LanguageContext'
+import SchoolTripsParentApprovals from './SchoolTripsParentApprovals'
+import { localizeSchoolTripName } from './schoolTripsLocale'
 
 const gradeKeys = ['g4', 'g5', 'g6', 'm1', 'm2', 'm3', 'h1', 'h2', 'h3']
-const transportKeys = ['schoolBuses', 'privateBuses', 'noTransport']
+const getTodayDateValue = () => new Date().toISOString().slice(0, 10)
 
-function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey }) {
-  const { t } = useLanguage()
+function SchoolTripsForm({
+  form,
+  setForm,
+  onCreate,
+  onReset,
+  message,
+  approvalTripId,
+  onApprovalsChanged,
+  permitKey,
+  regions,
+  cities,
+  places,
+  regionsLoading,
+  citiesLoading,
+  placesLoading,
+  onRegionChange,
+  onCityChange,
+}) {
+  const { t, language } = useLanguage()
+  const minTripDate = getTodayDateValue()
+
   const handleChange = (field) => (event) => {
     setForm((prev) => ({
       ...prev,
       [field]: event.target.value,
     }))
   }
+
+  const handleBooleanChange = (field, value) => () => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const cityPlaceholder = !form.region
+    ? language === 'ar'
+      ? 'اختر المنطقة أولاً'
+      : 'Select region first'
+    : cities.length
+      ? language === 'ar'
+        ? 'اختر المدينة'
+        : 'Select city'
+      : language === 'ar'
+        ? 'لا توجد مدن متاحة'
+        : 'No cities available'
+
+  const placePlaceholder = !form.destinationId
+    ? language === 'ar'
+      ? 'اختر المدينة أولاً'
+      : 'Select city first'
+    : places.length
+      ? language === 'ar'
+        ? 'اختر المكان أو المتحف'
+        : 'Select place or museum'
+      : language === 'ar'
+        ? 'لا توجد أماكن متاحة'
+        : 'No places available'
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0]
@@ -20,6 +72,10 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
       permitFileName: file ? file.name : '',
     }))
   }
+
+  const busLabel = t('schoolTrips.form.fields.hasBus', {
+    fallback: language === 'ar' ? 'هل تريد توفير باص؟' : 'Do you want to provide a bus?',
+  })
 
   return (
     <section className="schoolCard schoolTripForm" id="create-trip">
@@ -43,15 +99,89 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
           </div>
 
           <div className="schoolField">
-            <label htmlFor="trip-destination">{t('schoolTrips.form.fields.destination')}</label>
+            <label htmlFor="trip-school">{t('schoolTrips.form.fields.schoolName')}</label>
             <input
-              id="trip-destination"
+              id="trip-school"
               className="schoolInput"
               type="text"
-              placeholder={t('schoolTrips.form.placeholders.destination')}
-              value={form.destination}
-              onChange={handleChange('destination')}
+              placeholder={t('schoolTrips.form.placeholders.schoolName')}
+              value={form.schoolName}
+              onChange={handleChange('schoolName')}
             />
+          </div>
+
+          <div className="schoolField">
+            <label htmlFor="trip-region">
+              {t('schoolTrips.form.fields.region', {
+                fallback: language === 'ar' ? 'المنطقة' : 'Region',
+              })}
+            </label>
+            <select
+              id="trip-region"
+              className="schoolSelect"
+              value={form.region}
+              onChange={(event) => onRegionChange(event.target.value)}
+              disabled={regionsLoading}
+            >
+              <option value="">
+                {t('schoolTrips.form.placeholders.region', {
+                  fallback: language === 'ar' ? 'اختر المنطقة' : 'Select region',
+                })}
+              </option>
+              {regions.map((region) => (
+                <option key={region.value} value={region.value}>
+                  {t(`regions.${region.value}`, { fallback: region.label })}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="schoolField">
+            <label htmlFor="trip-city">
+              {t('schoolTrips.form.fields.city', {
+                fallback: language === 'ar' ? 'المدينة' : 'City',
+              })}
+            </label>
+            <select
+              id="trip-city"
+              className="schoolSelect"
+              value={form.destinationId}
+              onChange={(event) => onCityChange(event.target.value)}
+              disabled={!form.region || citiesLoading}
+            >
+              <option value="">
+                {citiesLoading ? t('schoolTrips.form.placeholders.destinationLoading') : cityPlaceholder}
+              </option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.id}>
+                  {localizeSchoolTripName(language, city.name)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="schoolField">
+            <label htmlFor="trip-place">
+              {t('schoolTrips.form.fields.place', {
+                fallback: language === 'ar' ? 'المكان أو المتحف' : 'Place or museum',
+              })}
+            </label>
+            <select
+              id="trip-place"
+              className="schoolSelect"
+              value={form.placeId}
+              onChange={handleChange('placeId')}
+              disabled={!form.destinationId || placesLoading}
+            >
+              <option value="">
+                {placesLoading ? t('schoolTrips.form.placeholders.destinationLoading') : placePlaceholder}
+              </option>
+              {places.map((place) => (
+                <option key={place.id} value={place.id}>
+                  {localizeSchoolTripName(language, place.name)}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="schoolField">
@@ -60,6 +190,7 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
               id="trip-date"
               className="schoolInput"
               type="date"
+              min={minTripDate}
               value={form.date}
               onChange={handleChange('date')}
             />
@@ -94,20 +225,27 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
           </div>
 
           <div className="schoolField">
-            <label htmlFor="trip-transport">{t('schoolTrips.form.fields.transport')}</label>
-            <select
-              id="trip-transport"
-              className="schoolSelect"
-              value={form.transport}
-              onChange={handleChange('transport')}
-            >
-              <option value="">{t('schoolTrips.form.placeholders.transport')}</option>
-              {transportKeys.map((transportKey) => (
-                <option key={transportKey} value={transportKey}>
-                  {t(`schoolTrips.transports.${transportKey}`)}
-                </option>
-              ))}
-            </select>
+            <span className="schoolTripsLabel">{busLabel}</span>
+            <div className="schoolRadioGroup" role="radiogroup" aria-label={busLabel}>
+              <label className="schoolRadioOption">
+                <input
+                  type="radio"
+                  name="trip-has-bus"
+                  checked={form.hasBus === true}
+                  onChange={handleBooleanChange('hasBus', true)}
+                />
+                <span>{language === 'ar' ? 'نعم' : 'Yes'}</span>
+              </label>
+              <label className="schoolRadioOption">
+                <input
+                  type="radio"
+                  name="trip-has-bus"
+                  checked={form.hasBus === false}
+                  onChange={handleBooleanChange('hasBus', false)}
+                />
+                <span>{language === 'ar' ? 'لا' : 'No'}</span>
+              </label>
+            </div>
           </div>
 
           <div className="schoolField">
@@ -133,18 +271,6 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
               placeholder={t('schoolTrips.form.placeholders.supervisors')}
               value={form.supervisorsCount}
               onChange={handleChange('supervisorsCount')}
-            />
-          </div>
-
-          <div className="schoolField">
-            <label htmlFor="trip-focus">{t('schoolTrips.form.fields.focus')}</label>
-            <input
-              id="trip-focus"
-              className="schoolInput"
-              type="text"
-              placeholder={t('schoolTrips.form.placeholders.focus')}
-              value={form.focus}
-              onChange={handleChange('focus')}
             />
           </div>
 
@@ -181,29 +307,13 @@ function SchoolTripsForm({ form, setForm, onCreate, onReset, message, permitKey 
             )}
           </div>
         </div>
-
-        <div className="schoolField">
-          <label htmlFor="trip-agenda">{t('schoolTrips.form.fields.agenda')}</label>
-          <textarea
-            id="trip-agenda"
-            className="schoolTextarea"
-            placeholder={t('schoolTrips.form.placeholders.agenda')}
-            value={form.agenda}
-            onChange={handleChange('agenda')}
-          />
-        </div>
-
-        <div className="schoolField">
-          <label htmlFor="trip-notes">{t('schoolTrips.form.fields.notes')}</label>
-          <textarea
-            id="trip-notes"
-            className="schoolTextarea"
-            placeholder={t('schoolTrips.form.placeholders.notes')}
-            value={form.notes}
-            onChange={handleChange('notes')}
-          />
-        </div>
       </form>
+
+      <SchoolTripsParentApprovals
+        tripId={approvalTripId}
+        embedded
+        onApprovalsChanged={onApprovalsChanged}
+      />
 
       <div className="schoolFormActions">
         <button className="primaryBtn" type="button" onClick={onCreate}>

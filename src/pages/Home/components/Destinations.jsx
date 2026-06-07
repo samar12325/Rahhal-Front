@@ -5,11 +5,11 @@ import { useLanguage } from '../../../i18n/LanguageContext'
 import { apiRequest } from '../../../api/client'
 
 const REGION_KEY_BY_ARABIC = {
-  'الوسطى': 'central',
-  'الغربية': 'west',
-  'الشمالية': 'north',
-  'الجنوبية': 'south',
-  'الشرقية': 'east',
+  الوسطى: 'central',
+  الغربية: 'west',
+  الشمالية: 'north',
+  الجنوبية: 'south',
+  الشرقية: 'east',
 }
 
 const getRegionKey = (region) => REGION_KEY_BY_ARABIC[region] || region
@@ -18,6 +18,7 @@ function Destinations() {
   const { t, dir } = useLanguage()
   const [activeFilter, setActiveFilter] = useState('all')
   const [destinations, setDestinations] = useState([])
+  const [events, setEvents] = useState([])
   const [loadError, setLoadError] = useState('')
   const scrollRef = useRef(null)
 
@@ -60,11 +61,40 @@ function Destinations() {
     }
 
     loadDestinations()
-
     return () => {
       isMounted = false
     }
   }, [activeFilter, fallbackByName, fallbackIdByName])
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadEvents = async () => {
+      try {
+        const data = await apiRequest('/events')
+        if (!isMounted) return
+        setEvents(Array.isArray(data?.events) ? data.events : [])
+      } catch {
+        if (!isMounted) return
+        setEvents([])
+      }
+    }
+
+    loadEvents()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const eventCountByCity = useMemo(() => {
+    const map = new Map()
+    events.forEach((event) => {
+      const city = event.city?.trim()
+      if (!city) return
+      map.set(city, (map.get(city) || 0) + 1)
+    })
+    return map
+  }, [events])
 
   const filters = ['all', 'central', 'west', 'east', 'north', 'south']
   const baseDestinations = destinations.length ? destinations : destinationsFallback
@@ -117,7 +147,7 @@ function Destinations() {
                   />
                 </div>
                 <div className="destBody">
-                  <div>
+                  <div className="destInfo">
                     <h3 className="destName">
                       {t(`destinationNames.${destination.id}`, {
                         fallback: destination.name,
@@ -128,10 +158,17 @@ function Destinations() {
                         fallback: destination.region,
                       })}
                     </p>
+                    <p className="destEventsMeta">
+                      {(eventCountByCity.get(destination.name) || 0) > 0
+                        ? t('home.destinations.eventsAvailable')
+                        : t('home.destinations.eventsUnavailable')}
+                    </p>
                   </div>
-                  <Link className="miniBtn" to={`/destinations/${destination.id}`}>
-                    {t('home.destinations.cardCta')}
-                  </Link>
+                  <div className="destActions">
+                    <Link className="miniBtn" to={`/destinations/${destination.id}`}>
+                      {t('home.destinations.cardCta')}
+                    </Link>
+                  </div>
                 </div>
               </article>
             ))}

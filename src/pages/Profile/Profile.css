@@ -118,6 +118,16 @@
   gap: 18px;
 }
 
+.bookingsEmpty {
+  grid-column: 1 / -1;
+  background: #fff;
+  border: 1px dashed var(--stroke);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
 .bookingCard {
   background: #fff;
   border: 1px solid var(--stroke);
@@ -213,6 +223,11 @@
   border-radius: 16px;
 }
 
+.bookingDetailsBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .bookingExtra {
   margin-top: 12px;
   padding: 12px;
@@ -272,10 +287,20 @@
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.72);
   border-radius: 12px;
+}
+
+.barcodeXMark {
+  color: #a84d4d;
+  font-size: 3.5rem;
+  line-height: 1;
+  font-weight: 400;
+  text-shadow: 0 2px 8px rgba(168, 77, 77, 0.14);
 }
 
 .barcodeTag {
@@ -455,6 +480,41 @@
   font-size: 0.9rem;
 }
 
+.participantsList {
+  display: grid;
+  gap: 12px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-inline-end: 4px;
+}
+
+.participantCard {
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 14px;
+  background: #fdfcf9;
+  display: grid;
+  gap: 10px;
+}
+
+.participantRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.participantRow span {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.participantRow strong {
+  color: var(--ink);
+  font-weight: 700;
+  text-align: end;
+}
+
 .ratingModalActions {
   display: flex;
   justify-content: flex-start;
@@ -549,5 +609,15 @@
   .ratingStarBtn {
     width: 42px;
     height: 42px;
+  }
+
+  .participantRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .participantRow strong {
+    text-align: start;
   }
 }

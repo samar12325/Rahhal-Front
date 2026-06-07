@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import './FAQItem.css'
 
 function FAQItem({ question, answer, defaultOpen = false }) {

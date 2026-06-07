@@ -115,6 +115,29 @@
   font-size: 0.85rem;
 }
 
+.adminPagination {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.adminPaginationActions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.adminPaginationActions .secondaryBtn {
+  min-width: 130px;
+}
+
+.adminPaginationActions .adminToolbarHint {
+  white-space: nowrap;
+  margin: 0 2px;
+}
+
 .adminTripsGrid {
   margin-top: 14px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -122,6 +145,21 @@
 
 .adminTripCard {
   position: relative;
+}
+
+.adminTripCard .tripImg {
+  width: 100%;
+  height: 180px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #f1f1f1;
+}
+
+.adminTripCard .tripImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .adminTripMeta {
@@ -393,6 +431,14 @@
 @media (max-width: 720px) {
   .adminFilters {
     grid-template-columns: 1fr;
+  }
+
+  .adminPagination {
+    align-items: flex-start;
+  }
+
+  .adminPaginationActions {
+    width: 100%;
   }
 
   .adminTripsGrid {

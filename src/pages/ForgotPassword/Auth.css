@@ -126,6 +126,20 @@
   gap: 20px;
 }
 
+.authError {
+  margin: 0;
+  color: #c0392b;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.authSuccess {
+  margin: 0;
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
 .formGroup {
   display: flex;
   flex-direction: column;
@@ -264,4 +278,3 @@
     height: 40px;
   }
 }
-

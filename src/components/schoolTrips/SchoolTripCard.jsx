@@ -1,30 +1,56 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../../i18n/LanguageContext'
+import SchoolTripsParentApprovals from './SchoolTripsParentApprovals'
+import {
+  localizeSchoolTripGrade,
+  localizeSchoolTripMeetingPoint,
+  localizeSchoolTripName,
+  localizeSchoolTripTitle,
+  localizeSchoolTripTransport,
+} from './schoolTripsLocale'
 
-function SchoolTripCard({ trip }) {
-  const { t } = useLanguage()
+function SchoolTripCard({
+  trip,
+  onViewReport,
+  onDownloadSummary,
+  onApprovalsChanged,
+}) {
+  const { t, language } = useLanguage()
+  const navigate = useNavigate()
+  const [showApprovals, setShowApprovals] = useState(false)
   const isPast = trip.status === 'past'
+  const canShowReportActions = isPast && trip.approval !== 'pending'
   const getTripValue = (field, fallback) =>
     t(`schoolTrips.data.${trip.id}.${field}`, { fallback })
 
-  const title = getTripValue('title', trip.title)
-  const destination = getTripValue('destination', trip.destination)
+  const title = getTripValue('title', localizeSchoolTripTitle(language, trip.title))
+  const destination = getTripValue('destination', localizeSchoolTripName(language, trip.destination))
   const date = getTripValue('date', trip.date)
   const time = getTripValue('time', trip.time)
-  const grade = getTripValue(
-    'grade',
-    t(`schoolTrips.grades.${trip.grade}`, { fallback: trip.grade })
+  const grade = getTripValue('grade', localizeSchoolTripGrade(language, trip.grade, t))
+  const meetingPoint = getTripValue(
+    'meetingPoint',
+    localizeSchoolTripMeetingPoint(language, trip.meetingPoint),
   )
-  const focus = getTripValue('focus', trip.focus)
-  const meetingPoint = getTripValue('meetingPoint', trip.meetingPoint)
   const transport = getTripValue(
     'transport',
-    t(`schoolTrips.transports.${trip.transport}`, { fallback: trip.transport })
+    localizeSchoolTripTransport(language, trip.transport, t),
   )
 
   return (
     <article className={`schoolTripCard ${isPast ? 'past' : 'upcoming'}`}>
       <header className="schoolTripCardHeader">
         <div className="schoolTripHeadText">
+          {trip.approval ? (
+            <span className={`approvalBadge ${trip.approval}`}>
+              {trip.approval === 'approved'
+                ? t('schoolTrips.card.approval.approved')
+                : trip.approval === 'rejected'
+                  ? t('schoolTrips.card.approval.rejected')
+                  : t('schoolTrips.card.approval.pending')}
+            </span>
+          ) : null}
           <span className={`schoolTripStatus ${isPast ? 'past' : 'upcoming'}`}>
             {isPast ? t('schoolTrips.card.statusPast') : t('schoolTrips.card.statusUpcoming')}
           </span>
@@ -53,10 +79,6 @@ function SchoolTripCard({ trip }) {
           <span className="schoolTripValue">{trip.supervisorsCount}</span>
         </div>
         <div className="schoolTripInfoItem">
-          <span className="schoolTripLabel">{t('schoolTrips.card.labels.focus')}</span>
-          <span className="schoolTripValue">{focus}</span>
-        </div>
-        <div className="schoolTripInfoItem">
           <span className="schoolTripLabel">{t('schoolTrips.card.labels.meetingPoint')}</span>
           <span className="schoolTripValue">{meetingPoint}</span>
         </div>
@@ -66,57 +88,66 @@ function SchoolTripCard({ trip }) {
         </div>
       </div>
 
-      {trip.agenda?.length ? (
-        <div className="schoolTripAgenda">
-          {trip.agenda.map((item, index) => (
-            <span key={`${trip.id}-agenda-${index}`}>
-              {t(`schoolTrips.data.${trip.id}.agenda.${index}`, { fallback: item })}
-            </span>
-          ))}
+      {isPast ? (
+        <div className="schoolTripReportStatus">
+          {trip.reportReady ? t('schoolTrips.card.reportReady') : t('schoolTrips.card.reportPending')}
         </div>
       ) : null}
 
-      {!isPast && (
-        <div className="schoolTripProgress">
-          <div className="schoolTripProgressHeader">
-            <span>{t('schoolTrips.card.progressLabel')}</span>
-            <span>{trip.readiness}%</span>
-          </div>
-          <div className="schoolTripProgressBar">
-            <span style={{ width: `${trip.readiness}%` }} />
-          </div>
-        </div>
-      )}
-
-      {isPast && (
-        <div className="schoolTripReportStatus">
-          {trip.reportReady
-            ? t('schoolTrips.card.reportReady')
-            : t('schoolTrips.card.reportPending')}
-        </div>
-      )}
-
       <div className="schoolTripActions">
         {isPast ? (
-          <>
-            <button className="secondaryBtn" type="button">
-              {t('schoolTrips.card.actions.viewReport')}
-            </button>
-            <button className="primaryBtn" type="button">
-              {t('schoolTrips.card.actions.downloadSummary')}
-            </button>
-          </>
+          canShowReportActions ? (
+            <>
+              <button
+                className="secondaryBtn"
+                type="button"
+                onClick={() => onViewReport?.(trip.id)}
+              >
+                {t('schoolTrips.card.actions.viewReport')}
+              </button>
+              <button
+                className="primaryBtn"
+                type="button"
+                onClick={() => onDownloadSummary?.(trip.id)}
+              >
+                {t('schoolTrips.card.actions.downloadSummary')}
+              </button>
+            </>
+          ) : null
         ) : (
           <>
-            <button className="primaryBtn" type="button">
-              {t('schoolTrips.card.actions.confirmPrep')}
+            <button
+              className="primaryBtn"
+              type="button"
+              onClick={() => setShowApprovals((prev) => !prev)}
+              disabled={!trip.id}
+            >
+              {t('schoolTrips.card.actions.addStudents', {
+                fallback: language === 'ar' ? 'إضافة طلاب' : 'Add students',
+              })}
             </button>
-            <button className="secondaryBtn" type="button">
-              {t('schoolTrips.card.actions.taskList')}
+            <button
+              className="secondaryBtn"
+              type="button"
+              onClick={() => navigate(`/school-trips/${trip.id}/preparation`)}
+              disabled={!trip.id}
+            >
+              {t('schoolTrips.card.actions.prepareStudents', {
+                fallback: language === 'ar' ? 'تحضير الطلاب' : 'Prepare students',
+              })}
             </button>
           </>
         )}
       </div>
+
+      {!isPast && showApprovals ? (
+        <SchoolTripsParentApprovals
+          tripId={trip.id}
+          tripName={title}
+          embedded
+          onApprovalsChanged={onApprovalsChanged}
+        />
+      ) : null}
     </article>
   )
 }

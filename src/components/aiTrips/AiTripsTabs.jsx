@@ -1,10 +1,10 @@
 import { useLanguage } from '../../i18n/LanguageContext'
 
-function AiTripsTabs({ tab, setTab }) {
+function AiTripsTabs({ mode, setMode }) {
   const { t } = useLanguage()
   const tabs = [
-    { id: 'plan', label: t('aiTrips.tabs.plan') },
-    { id: 'chat', label: t('aiTrips.tabs.chat') },
+    { id: 'assistant', label: t('aiTrips.tabs.assistant') },
+    { id: 'planner', label: t('aiTrips.tabs.planner') },
   ]
 
   return (
@@ -13,8 +13,8 @@ function AiTripsTabs({ tab, setTab }) {
         <button
           key={item.id}
           type="button"
-          className={`tag ${tab === item.id ? 'active' : ''}`}
-          onClick={() => setTab(item.id)}
+          className={`tag ${mode === item.id ? 'active' : ''}`}
+          onClick={() => setMode(item.id)}
         >
           {item.label}
         </button>

@@ -11,6 +11,18 @@
   gap: 18px;
 }
 
+.statsSection {
+  display: grid;
+  gap: 14px;
+}
+
+.statsSecondarySection {
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(79, 179, 166, 0.06), rgba(79, 179, 166, 0.01));
+  border: 1px solid rgba(79, 111, 105, 0.16);
+  border-radius: 22px;
+}
+
 .statsHero {
   background: #ffffff;
   border: 1px solid var(--stroke);
@@ -34,6 +46,33 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.statsStateMessage {
+  background: #ffffff;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.statsStateMessage.error {
+  border-color: rgba(231, 111, 81, 0.4);
+}
+
+.statsStateMessage button {
+  align-self: flex-start;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .filterChip {
@@ -65,6 +104,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
+}
+
+.statsKpiGridPrimary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.statsKpiGridCompact {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .statsKpiCard {
@@ -116,6 +163,35 @@
   height: 260px;
 }
 
+.statsEmptyState {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  border: 1px dashed rgba(79, 111, 105, 0.28);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(79, 179, 166, 0.08), rgba(79, 179, 166, 0.02)),
+    #fdfefe;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+}
+
+.statsEmptyStateTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.statsEmptyStateHint {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
 .chartCard.wide .chartCanvas {
   height: 300px;
 }
@@ -128,6 +204,10 @@
   .chartCard.wide {
     grid-column: auto;
   }
+
+  .statsKpiGridPrimary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
@@ -137,6 +217,10 @@
 
   .statsHeroText h1 {
     font-size: 1.35rem;
+  }
+
+  .statsKpiGridPrimary {
+    grid-template-columns: 1fr;
   }
 
   .statsKpiCard {

@@ -1,4 +1,4 @@
-﻿import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import alula from '../../../assets/images/alula.jpg'
 import riyadh from '../../../assets/images/riyadh.jpg'
 import jeddah from '../../../assets/images/jeddah.jpg'
@@ -10,18 +10,18 @@ function Hero() {
 
   return (
     <section className="hero" id="home-top">
-      <div className="container heroWrap heroWrapCenter hero-container hero-layout">
-        <div className="heroCenter heroCenterRel hero-content">
-          <h1 className="heroTitle heroTitleCenter hero-title">
+      <div className="container heroWrap heroWrapCenter">
+        <div className="heroCenter heroCenterRel">
+          <h1 className="heroTitle heroTitleCenter">
             {t('home.hero.titlePrefix')} <span className="accent">{t('home.hero.titleAccent')}</span>{' '}
             {t('home.hero.titleSuffix')}
           </h1>
 
-          <p className="heroText heroTextCenter hero-description">
+          <p className="heroText heroTextCenter">
             {t('home.hero.description')}
           </p>
 
-          <div className="heroCtas heroCtasCenter hero-actions">
+          <div className="heroCtas heroCtasCenter">
             <Link className="primaryBtn big" to="/ai-trips">
               {t('home.hero.ctaPlan')}
             </Link>
@@ -30,21 +30,16 @@ function Hero() {
             </a>
           </div>
 
-          <img
-            className="planePathImg hero-decoration plane-decoration flight-path"
-            src={planePath}
-            alt=""
-            aria-hidden="true"
-          />
+          <img className="planePathImg" src={planePath} alt="" aria-hidden="true" />
         </div>
 
-        <div className="heroRight heroRightFix hero-gallery hero-images">
-          <div className="collage collageRefFix hero-gallery-layout">
-            <div className="card big bigFix hero-main-image">
+        <div className="heroRight heroRightFix">
+          <div className="collage collageRefFix">
+            <div className="card big bigFix">
               <img src={alula} alt={t('destinationNames.alula')} />
             </div>
 
-            <div className="stack stackFix hero-gallery-small hero-image-stack">
+            <div className="stack stackFix">
               <div className="card small smallFix">
                 <img src={riyadh} alt={t('destinationNames.riyadh')} />
               </div>

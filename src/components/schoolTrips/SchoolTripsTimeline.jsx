@@ -1,37 +1,37 @@
 import SchoolTripCard from './SchoolTripCard'
 import { useLanguage } from '../../i18n/LanguageContext'
 
-function SchoolTripsTimeline({ upcomingTrips, pastTrips, activeTab, onTabChange }) {
+function SchoolTripsTimeline({
+  activeTripTab,
+  onTabChange,
+  currentTrips,
+  pastTrips,
+  onViewReport,
+  onDownloadSummary,
+  onApprovalsChanged,
+}) {
   const { t } = useLanguage()
-  const isUpcoming = activeTab === 'upcoming'
-  const list = isUpcoming ? upcomingTrips : pastTrips
+  const isCurrentTab = activeTripTab === 'current'
+  const displayedTrips = isCurrentTab ? currentTrips : pastTrips
 
   return (
     <section className="schoolCard schoolTripsTimeline">
       <div className="schoolTripsTimelineHead">
         <div>
-          <h2>{isUpcoming ? t('schoolTrips.timeline.upcomingTitle') : t('schoolTrips.timeline.pastTitle')}</h2>
-          <p>
-            {isUpcoming
-              ? t('schoolTrips.timeline.upcomingSubtitle')
-              : t('schoolTrips.timeline.pastSubtitle')}
-          </p>
+          <h2>{isCurrentTab ? t('schoolTrips.timeline.upcomingTitle') : t('schoolTrips.timeline.pastTitle')}</h2>
+          <p>{isCurrentTab ? t('schoolTrips.timeline.upcomingSubtitle') : t('schoolTrips.timeline.pastSubtitle')}</p>
         </div>
-        <div className="schoolTripsTabs" role="tablist">
+        <div className="schoolTripsTabs">
           <button
-            className={`schoolTab ${isUpcoming ? 'active' : ''}`}
+            className={`schoolTab ${isCurrentTab ? 'active' : ''}`}
             type="button"
-            role="tab"
-            aria-selected={isUpcoming}
-            onClick={() => onTabChange('upcoming')}
+            onClick={() => onTabChange('current')}
           >
-            {t('schoolTrips.timeline.tabUpcoming', { params: { count: upcomingTrips.length } })}
+            {t('schoolTrips.timeline.tabUpcoming', { params: { count: currentTrips.length } })}
           </button>
           <button
-            className={`schoolTab ${!isUpcoming ? 'active' : ''}`}
+            className={`schoolTab ${!isCurrentTab ? 'active' : ''}`}
             type="button"
-            role="tab"
-            aria-selected={!isUpcoming}
             onClick={() => onTabChange('past')}
           >
             {t('schoolTrips.timeline.tabPast', { params: { count: pastTrips.length } })}
@@ -40,8 +40,16 @@ function SchoolTripsTimeline({ upcomingTrips, pastTrips, activeTab, onTabChange 
       </div>
 
       <div className="schoolTripsList">
-        {list.length ? (
-          list.map((trip) => <SchoolTripCard key={trip.id} trip={trip} />)
+        {displayedTrips.length ? (
+          displayedTrips.map((trip) => (
+            <SchoolTripCard
+              key={trip.id}
+              trip={trip}
+              onViewReport={onViewReport}
+              onDownloadSummary={onDownloadSummary}
+              onApprovalsChanged={onApprovalsChanged}
+            />
+          ))
         ) : (
           <div className="schoolTripEmpty">{t('schoolTrips.timeline.empty')}</div>
         )}

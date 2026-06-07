@@ -1,5 +1,10 @@
 import logo from '../../../assets/images/rahhal-logo.png'
 import { useLanguage } from '../../../i18n/LanguageContext'
+import { Link } from 'react-router-dom'
+
+const X_URL = 'https://x.com/rahhalweb?s=11&t=HpviNSILl07UsXDxa6vWTA'
+const LINKEDIN_URL =
+  'https://www.linkedin.com/in/rahal-website-108160406'
 
 function Footer() {
   const { t } = useLanguage()
@@ -15,37 +20,38 @@ function Footer() {
         </div>
 
         <div className="footerBlock">
-          <strong className="footerTitle">{t('home.footer.quickLinks')}</strong>
-          <div className="footerLinks">
-            <a href="#destinations">{t('home.footer.links.destinations')}</a>
-            <a href="#trip-types">{t('home.footer.links.tripTypes')}</a>
-          </div>
-        </div>
-
-        <div className="footerBlock">
           <strong className="footerTitle">{t('home.footer.help')}</strong>
           <div className="footerLinks">
-            <a href="#how">{t('home.footer.links.how')}</a>
-            <a href="#faq">{t('home.footer.links.faq')}</a>
-            <a href="#contact">{t('home.footer.links.contact')}</a>
+            <Link to="/how-to-start">{t('home.footer.links.how')}</Link>
+            <Link to="/faq">{t('home.footer.links.faq')}</Link>
+            <Link to="/contact">{t('home.footer.links.contact')}</Link>
           </div>
         </div>
 
         <div className="footerBlock">
           <strong className="footerTitle">{t('home.footer.contact')}</strong>
           <div className="footerContact">
-            <span>info@rahhal.sa</span>
+            <a href="mailto:swe.uqu26@gmail.com">swe.uqu26@gmail.com</a>
             <span>{t('home.footer.contactHours')}</span>
           </div>
           <div className="footerSocial">
-            <a className="socialBtn" href="https://x.com" aria-label="X">
+            <a
+              className="socialBtn"
+              href={X_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="X"
+            >
               X
             </a>
-            <a className="socialBtn" href="https://instagram.com" aria-label="Instagram">
-              IG
-            </a>
-            <a className="socialBtn" href="https://snapchat.com" aria-label="Snapchat">
-              SC
+            <a
+              className="socialBtn"
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+            >
+              LI
             </a>
           </div>
         </div>

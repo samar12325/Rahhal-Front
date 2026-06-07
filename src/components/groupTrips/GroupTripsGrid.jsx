@@ -1,8 +1,26 @@
 import GroupTripCard from './GroupTripCard'
 import { useLanguage } from '../../i18n/LanguageContext'
 
-function GroupTripsGrid({ trips, activeTab }) {
+function GroupTripsGrid({ trips, activeTab, isLoading = false, loadError = '' }) {
   const { t } = useLanguage()
+  if (isLoading) {
+    return (
+      <section className="groupTripsEmpty">
+        <h3>{t('groupTrips.empty.title')}</h3>
+        <p>{t('groupTrips.loading', { fallback: 'جاري تحميل الرحلات...' })}</p>
+      </section>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <section className="groupTripsEmpty">
+        <h3>{t('groupTrips.empty.title')}</h3>
+        <p>{loadError}</p>
+      </section>
+    )
+  }
+
   if (!trips.length) {
     return (
       <section className="groupTripsEmpty">
@@ -10,7 +28,7 @@ function GroupTripsGrid({ trips, activeTab }) {
         <p>
           {activeTab === 'available'
             ? t('groupTrips.empty.available')
-            : t('groupTrips.empty.upcoming')}
+            : t('groupTrips.empty.past')}
         </p>
       </section>
     )

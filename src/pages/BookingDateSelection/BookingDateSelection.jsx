@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react'
+/* eslint-disable no-unused-vars, react-hooks/set-state-in-effect */
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import '../Home/Home.css'
 import Header from '../Home/components/Header'
 import Footer from '../Home/components/Footer'
 import './BookingDateSelection.css'
 import { loadTrips } from '../../data/trips.store'
+import { apiRequest } from '../../api/client'
 
 const timeSlots = [
   { value: '08:30', label: 'صباح هادئ', hint: 'إقلاع مع الشروق' },
@@ -69,7 +71,47 @@ function BookingDateSelection() {
   const destinationId = searchParams.get('destinationId')
   const activityId = searchParams.get('activityId')
 
-  const trip = useMemo(() => trips.find((item) => item.id === tripId), [trips, tripId])
+  const localTrip = useMemo(
+    () => trips.find((item) => String(item.id) === String(tripId)),
+    [trips, tripId]
+  )
+  const [apiTrip, setApiTrip] = useState(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!tripId || localTrip || !/^\d+$/.test(String(tripId))) {
+      setApiTrip(null)
+      return () => {
+        isMounted = false
+      }
+    }
+
+    const loadTrip = async () => {
+      try {
+        const payload = await apiRequest(`/api/trips/${tripId}`)
+        if (!isMounted) return
+        setApiTrip({
+          id: payload.id,
+          destinationId: payload.destination_id,
+          activityId: null,
+          title: payload.title,
+          city: payload.destination?.name || '',
+          price: Number(payload.price_per_person || 0),
+        })
+      } catch {
+        if (isMounted) setApiTrip(null)
+      }
+    }
+
+    loadTrip()
+
+    return () => {
+      isMounted = false
+    }
+  }, [localTrip, tripId])
+
+  const trip = localTrip || apiTrip
 
   const today = useMemo(() => {
     const current = new Date()
@@ -225,7 +267,7 @@ function BookingDateSelection() {
             ) : (
               <div className="bookingEmpty">
                 <p>لم يتم العثور على الرحلة المطلوبة.</p>
-                <Link className="secondaryBtn" to="/events">
+                <Link className="secondaryBtn" to="/trips">
                   العودة للرحلات
                 </Link>
               </div>

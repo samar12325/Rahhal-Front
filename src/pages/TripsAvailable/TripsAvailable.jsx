@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import '../Home/Home.css'
 import './TripsAvailable.css'
 import Header from '../Home/components/Header'
@@ -7,7 +7,7 @@ import TripsHero from '../../components/trips/TripsHero'
 import TripsFilters from '../../components/trips/TripsFilters'
 import TripsGrid from '../../components/trips/TripsGrid'
 import TripsPagination from '../../components/trips/TripsPagination'
-import { loadTrips } from '../../data/trips.store'
+import { apiRequest } from '../../api/client'
 import { useLanguage } from '../../i18n/LanguageContext'
 import {
   TRIP_TAG_KEYS,
@@ -22,9 +22,26 @@ import {
 const chips = TRIP_TAG_KEYS
 const sorts = TRIP_SORT_KEYS
 
+const mapApiTripToCard = (trip) => ({
+  id: trip.id,
+  destinationId: trip.destination_id,
+  activityId: null,
+  title: trip.title,
+  city: trip.destination?.name || '',
+  durationLabel: trip.duration_days ? `${trip.duration_days}` : '',
+  price: Number(trip.price_per_person || 0),
+  rating: 0,
+  seats: trip.max_participants || 0,
+  tags: trip.type ? [trip.type] : [],
+  badges: [],
+  image: trip.destination?.image_url || '/src/assets/images/saudi-map1.png',
+})
+
 function TripsAvailable() {
   const { t, dir } = useLanguage()
-  const [trips] = useState(() => loadTrips())
+  const [trips, setTrips] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [query, setQuery] = useState('')
   const [activeChip, setActiveChip] = useState('all')
   const [filters, setFilters] = useState({
@@ -34,6 +51,34 @@ function TripsAvailable() {
     minPrice: '',
     maxPrice: '',
   })
+
+  useEffect(() => {
+    let mounted = true
+
+    const fetchTrips = async () => {
+      try {
+        setIsLoading(true)
+        setLoadError('')
+        const data = await apiRequest('/api/trips')
+        const items = Array.isArray(data?.trips) ? data.trips : []
+        if (mounted) {
+          setTrips(items.map(mapApiTripToCard))
+        }
+      } catch (error) {
+        if (mounted) {
+          setLoadError(error?.message || 'Failed to load trips')
+          setTrips([])
+        }
+      } finally {
+        if (mounted) setIsLoading(false)
+      }
+    }
+
+    fetchTrips()
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   const cities = useMemo(() => {
     const list = Array.from(new Set(trips.map((t) => getTripCityKey(t.city))))
@@ -145,6 +190,9 @@ function TripsAvailable() {
           maxPlaceholder={t('trips.filters.maxPlaceholder')}
           sortLabel={t('trips.filters.sortLabel')}
         />
+
+        {loadError ? <p className="tripMeta">{loadError}</p> : null}
+        {isLoading ? <p className="tripMeta">{t('trips.loading', { fallback: 'جاري تحميل الرحلات...' })}</p> : null}
 
         <TripsGrid trips={filtered} />
 

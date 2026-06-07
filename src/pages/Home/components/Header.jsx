@@ -2,20 +2,30 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../../assets/images/rahhal-logo.png'
 import { useLanguage } from '../../../i18n/LanguageContext'
+import { apiRequest } from '../../../api/client'
+import {
+  clearStoredUser,
+  getSessionEventName,
+  isAdminUser,
+  readStoredUser,
+} from '../../../auth/session'
+import { CONTACT_INBOX_EVENT } from '../../../utils/contactInbox'
 
 function Header() {
   const { language, setLanguage, t } = useLanguage()
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [isTripsOpen, setIsTripsOpen] = useState(false)
   const [isHelpOpen, setIsHelpOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [unreadInboxCount, setUnreadInboxCount] = useState(0)
   const helpMenuRef = useRef(null)
   const profileMenuRef = useRef(null)
   const searchWrapperRef = useRef(null)
   const navigate = useNavigate()
+  const isAuthenticated = Boolean(currentUser)
+  const isAdmin = isAdminUser(currentUser)
   const navLinks = [
     { to: '/home#destinations', label: t('header.links.destinations') },
     { to: '/contact', label: t('header.links.contact') },
@@ -23,21 +33,44 @@ function Header() {
 
   useEffect(() => {
     const handleAuthChange = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem('rahhalUser')))
+      setCurrentUser(readStoredUser())
     }
 
     handleAuthChange()
     window.addEventListener('storage', handleAuthChange)
-    window.addEventListener('rahhal-user-change', handleAuthChange)
+    window.addEventListener(getSessionEventName(), handleAuthChange)
 
     return () => {
       window.removeEventListener('storage', handleAuthChange)
-      window.removeEventListener('rahhal-user-change', handleAuthChange)
+      window.removeEventListener(getSessionEventName(), handleAuthChange)
     }
   }, [])
 
   useEffect(() => {
-    if (!isHelpOpen && !isProfileOpen && !isMobileNavOpen) return
+    if (!isAdmin) return
+
+    let isMounted = true
+
+    const loadUnreadCount = async () => {
+      try {
+        const payload = await apiRequest('/admin/contact-messages/unread-count')
+        if (isMounted) setUnreadInboxCount(Number(payload?.count ?? 0))
+      } catch {
+        if (isMounted) setUnreadInboxCount(0)
+      }
+    }
+
+    loadUnreadCount()
+    window.addEventListener(CONTACT_INBOX_EVENT, loadUnreadCount)
+
+    return () => {
+      isMounted = false
+      window.removeEventListener(CONTACT_INBOX_EVENT, loadUnreadCount)
+    }
+  }, [isAdmin])
+
+  useEffect(() => {
+    if (!isHelpOpen && !isProfileOpen) return
 
     const handleClickOutside = (event) => {
       if (isHelpOpen && helpMenuRef.current && !helpMenuRef.current.contains(event.target)) {
@@ -51,19 +84,12 @@ function Header() {
       ) {
         setIsProfileOpen(false)
       }
-
-      const clickedMenuToggle = event.target.closest('.mobileMenuToggle')
-      const clickedInsideNav = event.target.closest('.nav')
-      if (isMobileNavOpen && !clickedMenuToggle && !clickedInsideNav) {
-        setIsMobileNavOpen(false)
-      }
     }
 
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setIsHelpOpen(false)
         setIsProfileOpen(false)
-        setIsMobileNavOpen(false)
       }
     }
 
@@ -76,7 +102,7 @@ function Header() {
       document.removeEventListener('touchstart', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [isHelpOpen, isMobileNavOpen, isProfileOpen])
+  }, [isHelpOpen, isProfileOpen])
 
   useEffect(() => {
     if (!isSearchOpen) return
@@ -102,42 +128,29 @@ function Header() {
     }
   }, [isSearchOpen])
 
-  const handleSignOut = () => {
-    localStorage.removeItem('rahhalUser')
-    window.dispatchEvent(new Event('rahhal-user-change'))
-    setIsAuthenticated(false)
-    setIsProfileOpen(false)
-    setIsMobileNavOpen(false)
-    navigate('/home')
-  }
+  const handleSignOut = async () => {
+    try {
+      await apiRequest('/auth/logout', { method: 'POST' })
+    } catch {
+      // Clear the local session even if the server logout fails.
+    }
 
-  const handleNavLinkClick = () => {
-    setIsMobileNavOpen(false)
-    setIsTripsOpen(false)
-    setIsHelpOpen(false)
+    clearStoredUser()
+    setCurrentUser(null)
+    setIsProfileOpen(false)
+    navigate('/home')
   }
 
   return (
     <header className="header">
       <div className="container headerInner">
-        <div className="brandSearch headerTop">
-          <button
-            type="button"
-            className={`mobileMenuToggle mobile-menu-button ${isMobileNavOpen ? 'isActive' : ''}`}
-            aria-label={t('header.navLabel')}
-            aria-expanded={isMobileNavOpen}
-            onClick={() => setIsMobileNavOpen((prev) => !prev)}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+        <div className="brandSearch">
           <Link className="brand" to="/home" aria-label={t('header.brandLabel')}>
             <img className="logo" src={logo} alt={t('header.logoAlt')} />
           </Link>
           <div
             ref={searchWrapperRef}
-            className={`searchWrapper headerSearch ${isSearchOpen ? 'searchOpen' : ''}`}
+            className={`searchWrapper ${isSearchOpen ? 'searchOpen' : ''}`}
           >
             <div className="searchBox" onClick={() => setIsSearchOpen(false)}>
               <svg
@@ -192,12 +205,9 @@ function Header() {
           </div>
         </div>
 
-        <nav
-          className={`nav desktop-nav ${isMobileNavOpen ? 'mobileOpen' : ''}`}
-          aria-label={t('header.navLabel')}
-        >
+        <nav className="nav" aria-label={t('header.navLabel')}>
           {navLinks.map((link) => (
-            <Link className="navLink" to={link.to} key={link.to} onClick={handleNavLinkClick}>
+            <Link className="navLink" to={link.to} key={link.to}>
               {link.label}
             </Link>
           ))}
@@ -212,183 +222,179 @@ function Header() {
             </button>
             {isTripsOpen && (
               <div className="navMenu" role="menu">
-                <Link className="navMenuItem" role="menuitem" to="/events" onClick={handleNavLinkClick}>
+                <Link className="navMenuItem" role="menuitem" to="/events">
                   {t('header.tripsMenu.available')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/ai-trips" onClick={handleNavLinkClick}>
+                <Link className="navMenuItem" role="menuitem" to="/ai-trips">
                   {t('header.tripsMenu.ai')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/school-trips" onClick={handleNavLinkClick}>
+                <Link className="navMenuItem" role="menuitem" to="/school-trips">
                   {t('header.tripsMenu.school')}
                 </Link>
-                <Link className="navMenuItem" role="menuitem" to="/group-trips" onClick={handleNavLinkClick}>
+                <Link className="navMenuItem" role="menuitem" to="/group-trips">
                   {t('header.tripsMenu.group')}
                 </Link>
               </div>
             )}
           </div>
-          <div className="mobileMenuSection" aria-hidden={!isMobileNavOpen}>
-            <Link className="navMenuItem" to="/how-to-start" onClick={handleNavLinkClick}>
-              {t('header.helpMenu.howToStart')}
-            </Link>
-            <Link className="navMenuItem" to="/faq" onClick={handleNavLinkClick}>
-              {t('header.helpMenu.faq')}
-            </Link>
-          </div>
         </nav>
 
         <div className="actions">
-          <div className="headerLanguageRow">
-            <div
-              className="langToggle language-switcher"
-              role="group"
-              aria-label={t('header.languageToggle')}
+          <div className="langToggle" role="group" aria-label={t('header.languageToggle')}>
+            <button
+              type="button"
+              className={`langBtn ${language === 'en' ? 'active' : ''}`}
+              aria-pressed={language === 'en'}
+              onClick={() => setLanguage('en')}
             >
-              <button
-                type="button"
-                className={`langBtn ${language === 'en' ? 'active' : ''}`}
-                aria-pressed={language === 'en'}
-                onClick={() => setLanguage('en')}
-              >
-                EN
-              </button>
-              <span className="langDivider" aria-hidden="true">|</span>
-              <button
-                type="button"
-                className={`langBtn ${language === 'ar' ? 'active' : ''}`}
-                aria-pressed={language === 'ar'}
-                onClick={() => setLanguage('ar')}
-              >
-                AR
-              </button>
-            </div>
+              EN
+            </button>
+            <span className="langDivider" aria-hidden="true">|</span>
+            <button
+              type="button"
+              className={`langBtn ${language === 'ar' ? 'active' : ''}`}
+              aria-pressed={language === 'ar'}
+              onClick={() => setLanguage('ar')}
+            >
+              AR
+            </button>
           </div>
 
-          <div className="headerAccountRow">
-            <div className="navDropdown headerHelpDropdown" ref={helpMenuRef}>
+          <div className="navDropdown" ref={helpMenuRef}>
+            <button
+              type="button"
+              className="helpBtn"
+              aria-expanded={isHelpOpen}
+              aria-label={t('header.help')}
+              onClick={() => setIsHelpOpen((prev) => !prev)}
+            >
+              ?
+            </button>
+            {isHelpOpen && (
+              <div className="navMenu navMenuHelp" role="menu">
+                <Link className="navMenuItem" role="menuitem" to="/how-to-start">
+                  {t('header.helpMenu.howToStart')}
+                </Link>
+                <Link className="navMenuItem" role="menuitem" to="/faq">
+                  {t('header.helpMenu.faq')}
+                </Link>
+                <Link className="navMenuItem" role="menuitem" to="/contact">
+                  {t('header.helpMenu.contact')}
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {isAuthenticated ? (
+            <div className="navDropdown profileDropdown" ref={profileMenuRef}>
               <button
                 type="button"
-                className="helpBtn"
-                aria-expanded={isHelpOpen}
-                aria-label={t('header.help')}
-                onClick={() => setIsHelpOpen((prev) => !prev)}
+                className="profileBtn"
+                aria-expanded={isProfileOpen}
+                aria-label={t('header.profile.label')}
+                onClick={() => setIsProfileOpen((prev) => !prev)}
               >
-                ?
-              </button>
-              {isHelpOpen && (
-                <div className="navMenu navMenuHelp" role="menu">
-                  <Link className="navMenuItem" role="menuitem" to="/how-to-start" onClick={handleNavLinkClick}>
-                    {t('header.helpMenu.howToStart')}
-                  </Link>
-                  <Link className="navMenuItem" role="menuitem" to="/faq" onClick={handleNavLinkClick}>
-                    {t('header.helpMenu.faq')}
-                  </Link>
-                  <Link className="navMenuItem" role="menuitem" to="/contact" onClick={handleNavLinkClick}>
-                    {t('header.helpMenu.contact')}
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {isAuthenticated ? (
-              <div className="navDropdown profileDropdown" ref={profileMenuRef}>
-                <button
-                  type="button"
-                  className="profileBtn login-button"
-                  aria-expanded={isProfileOpen}
-                  aria-label={t('header.profile.label')}
-                  onClick={() => setIsProfileOpen((prev) => !prev)}
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
+                  <path
+                    d="M12 12a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5ZM5.25 19.25a6.75 6.75 0 0 1 13.5 0"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              {isProfileOpen && (
+                <div className="navMenu profileMenu" role="menu">
+                  <Link
+                    className="navMenuItem"
+                    role="menuitem"
+                    to="/profile"
+                    onClick={() => setIsProfileOpen(false)}
                   >
-                    <path
-                      d="M12 12a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5ZM5.25 19.25a6.75 6.75 0 0 1 13.5 0"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                {isProfileOpen && (
-                  <div className="navMenu profileMenu" role="menu">
+                    {t('header.profile.label')}
+                  </Link>
+                  <Link
+                    className="navMenuItem"
+                    role="menuitem"
+                    to="/profile#bookings"
+                    onClick={() => setIsProfileOpen(false)}
+                  >
+                    {t('header.profile.bookings')}
+                  </Link>
+                  {isAdmin ? (
                     <Link
-                      className="navMenuItem"
+                      className="navMenuItem navMenuItemWithBadge"
                       role="menuitem"
-                      to="/profile"
-                      onClick={() => {
-                        setIsProfileOpen(false)
-                        setIsMobileNavOpen(false)
-                      }}
+                      to="/admin/contact-messages"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      {t('header.profile.label')}
+                      <span>{language === 'en' ? 'Inbox' : 'الوارد'}</span>
+                      {unreadInboxCount > 0 ? (
+                        <span className="menuBadge">{unreadInboxCount}</span>
+                      ) : null}
                     </Link>
-                    <Link
-                      className="navMenuItem"
-                      role="menuitem"
-                      to="/profile#bookings"
-                      onClick={() => {
-                        setIsProfileOpen(false)
-                        setIsMobileNavOpen(false)
-                      }}
-                    >
-                      {t('header.profile.bookings')}
-                    </Link>
+                  ) : null}
+                  {isAdmin ? (
                     <Link
                       className="navMenuItem"
                       role="menuitem"
                       to="/stats"
-                      onClick={() => {
-                        setIsProfileOpen(false)
-                        setIsMobileNavOpen(false)
-                      }}
+                      onClick={() => setIsProfileOpen(false)}
                     >
                       {t('header.profile.stats')}
                     </Link>
-                    <Link
-                      className="navMenuItem"
-                      role="menuitem"
-                      to="/admin/approvals"
-                      onClick={() => {
-                        setIsProfileOpen(false)
-                        setIsMobileNavOpen(false)
-                      }}
-                    >
-                      {t('header.profile.approvals')}
-                    </Link>
+                  ) : null}
+                  <Link
+                    className="navMenuItem"
+                    role="menuitem"
+                    to="/admin/approvals"
+                    onClick={() => setIsProfileOpen(false)}
+                  >
+                    {t('header.profile.approvals')}
+                  </Link>
+                  {isAdmin ? (
                     <Link
                       className="navMenuItem"
                       role="menuitem"
                       to="/admin/trips"
-                      onClick={() => {
-                        setIsProfileOpen(false)
-                        setIsMobileNavOpen(false)
-                      }}
+                      onClick={() => setIsProfileOpen(false)}
                     >
                       {t('header.profile.manage')}
                     </Link>
-                    <button
-                      type="button"
-                      className="navMenuItem navMenuButton"
-                      onClick={handleSignOut}
+                  ) : null}
+                  {isAdmin ? (
+                    <Link
+                      className="navMenuItem"
+                      role="menuitem"
+                      to="/admin/events"
+                      onClick={() => setIsProfileOpen(false)}
                     >
-                      {t('header.profile.signOut')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link className="primaryBtn login-button" to="/login">
-                {t('header.signIn')}
-              </Link>
-            )}
-          </div>
+                      {t('header.profile.manageEvents')}
+                    </Link>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="navMenuItem navMenuButton"
+                    onClick={handleSignOut}
+                  >
+                    {t('header.profile.signOut')}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link className="primaryBtn" to="/login">
+              {t('header.signIn')}
+            </Link>
+          )}
         </div>
       </div>
     </header>

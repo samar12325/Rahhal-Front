@@ -1,9 +1,20 @@
 import axios from 'axios'
+import { buildLoginRedirectPath, clearStoredUser } from '../auth/session'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const envApiUrl = import.meta.env.VITE_API_URL?.trim()
+
+export const API_BASE_URL =
+  envApiUrl || (import.meta.env.DEV ? 'http://localhost:3000' : '')
+
+export const resolveApiUrl = (path = '') => {
+  if (!API_BASE_URL) return path
+
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return new URL(normalizedPath, `${API_BASE_URL}/`).toString()
+}
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE_URL || undefined,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 })
@@ -20,6 +31,22 @@ const flushQueue = (error) => {
     }
   })
   pendingQueue = []
+}
+
+const clearSessionAndRedirect = () => {
+  clearStoredUser()
+
+  if (typeof window === 'undefined') return
+
+  const currentPath = window.location.pathname
+  const isProtectedRoute =
+    currentPath === '/profile' ||
+    currentPath === '/stats' ||
+    currentPath.startsWith('/admin')
+
+  if (isProtectedRoute) {
+    window.location.assign(buildLoginRedirectPath())
+  }
 }
 
 api.interceptors.response.use(
@@ -43,11 +70,15 @@ api.interceptors.response.use(
 
       isRefreshing = true
       try {
-        await api.post('/auth/refresh')
+        const refreshResponse = await api.post('/auth/refresh')
+        if (!refreshResponse?.data?.ok) {
+          throw new Error('Session refresh failed')
+        }
         flushQueue()
         return api(original)
       } catch (refreshError) {
         flushQueue(refreshError)
+        clearSessionAndRedirect()
         throw refreshError
       } finally {
         isRefreshing = false

@@ -222,10 +222,6 @@
   flex-wrap: wrap;
 }
 
-.tripActions > * {
-  flex: 1 1 160px;
-}
-
 .tripsPagination {
   display: flex;
   justify-content: center;
@@ -255,12 +251,6 @@
   .tripsHero {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .countBadge {
-    white-space: normal;
-    width: 100%;
-    text-align: center;
   }
 
   .tripsHero h1 {
@@ -297,32 +287,5 @@
 
   .tag {
     font-size: 0.8rem;
-  }
-
-  .tripActions > * {
-    width: 100%;
-    flex-basis: 100%;
-  }
-}
-
-@media (max-width: 420px) {
-  .tripsMain {
-    padding-inline: 12px;
-  }
-
-  .tripsHero,
-  .filtersCard,
-  .tripCard {
-    border-radius: 18px;
-  }
-
-  .tripBody {
-    padding: 12px;
-  }
-
-  .input,
-  .select {
-    padding: 10px;
-    font-size: 0.95rem;
   }
 }

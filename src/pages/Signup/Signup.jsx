@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { apiRequest } from '../../api/client'
+import { persistUser } from '../../auth/session'
 import AuthHeader from '../../components/AuthHeader/AuthHeader'
+import Footer from '../Home/components/Footer'
 import './Auth.css'
 import { useLanguage } from '../../i18n/LanguageContext'
 
@@ -40,8 +42,7 @@ function Signup() {
         fullName: payload.user?.name ?? fullName.trim(),
         phone: payload.user?.phone ?? '',
       }
-      localStorage.setItem('rahhalUser', JSON.stringify(normalizedUser))
-      window.dispatchEvent(new Event('rahhal-user-change'))
+      persistUser(normalizedUser)
       navigate('/home')
     } catch (err) {
       if (!err?.status) {
@@ -112,6 +113,7 @@ function Signup() {
                 placeholder={t('signup.passwordPlaceholder')}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                minLength={8}
                 required
               />
             </div>
@@ -127,6 +129,7 @@ function Signup() {
                 placeholder={t('signup.confirmPasswordPlaceholder')}
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
+                minLength={8}
                 required
               />
             </div>
@@ -146,6 +149,7 @@ function Signup() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

@@ -1,78 +1,212 @@
-﻿import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import '../Home/Home.css'
 import '../AdminTrips/AdminTrips.css'
 import './AdminApprovals.css'
-import Footer from '../Home/components/Footer'
+import { apiRequest, resolveApiUrl } from '../../api/client'
+import { isAdminUser, readStoredUser } from '../../auth/session'
+import { useLanguage } from '../../i18n/LanguageContext'
+import { localizeGroupTripValue } from '../../components/groupTrips/groupTripsLocale'
+import {
+  localizeSchoolTripName,
+  localizeSchoolTripSchool,
+  localizeSchoolTripTitle,
+} from '../../components/schoolTrips/schoolTripsLocale'
 
-const initialRequests = [
-  {
-    id: 'req-101',
-    tripTitle: 'رحلة العلا التراثية',
-    city: 'العلا',
-    organizer: 'شركة رحلات العلا',
-    date: '2026-02-12',
-    people: 28,
-    price: 320,
-    submittedAt: '2026-01-20',
-    status: 'pending',
-    note: 'رحلة ميدانية مع مرشد سياحي معتمد.',
-    isSchoolTrip: true,
-    hasDocuments: true,
-    isGroupTrip: true,
+const copy = {
+  ar: {
+    status: {
+      pending: 'قيد المراجعة',
+      approved: 'تمت الموافقة',
+      rejected: 'مرفوضة',
+    },
+    statusFilter: {
+      all: 'كل الحالات',
+      pending: 'قيد المراجعة',
+      approved: 'تمت الموافقة',
+      rejected: 'مرفوضة',
+    },
+    heroEyebrow: 'لوحة الإدارة',
+    heroTitle: 'طلبات الموافقة على الرحلات',
+    heroSubtitle: 'راجع الطلبات القادمة واعتمد ما يستوفي الشروط.',
+    stats: {
+      total: 'إجمالي الطلبات',
+      pending: 'قيد المراجعة',
+      approved: 'تمت الموافقة',
+      rejected: 'مرفوضة',
+    },
+    categoryAria: 'تصنيف الطلبات',
+    statusAria: 'تصفية الحالات',
+    gridAria: 'طلبات الموافقة',
+    categories: {
+      all: 'الكل',
+      school: 'رحلات مدرسية',
+      group: 'رحلات جماعية',
+    },
+    loading: 'جارٍ تحميل الطلبات...',
+    loadFailed: 'تعذر تحميل الطلبات',
+    retry: 'أعد المحاولة',
+    city: 'المدينة',
+    schoolTag: 'مدرسية',
+    docsTag: 'وثائق',
+    groupTag: 'جماعية',
+    organizer: 'الجهة المنظمة',
+    tripDate: 'تاريخ الرحلة',
+    seats: 'عدد المقاعد',
+    price: 'السعر المقترح',
+    submittedAt: 'تاريخ الإرسال',
+    rejectReasonLabel: 'سبب الرفض',
+    uploadDocs: 'تحميل الوثائق',
+    details: 'تفاصيل',
+    reject: 'رفض',
+    approve: 'موافقة',
+    noPrice: '—',
+    noRequestsTitle: 'لا توجد طلبات ضمن هذه التصفية',
+    noRequestsSubtitle: 'جرّب تغيير نوع الرحلة أو حالة الطلب لعرض الطلبات.',
+    rejectModalTitle: 'سبب رفض الرحلة',
+    rejectPlaceholder: 'اكتب سبب الرفض ليظهر لصاحب الطلب...',
+    rejectRequired: 'يرجى كتابة سبب الرفض.',
+    rejectFailed: 'تعذر رفض الطلب.',
+    updateFailed: 'تعذر تحديث حالة الطلب',
+    loadErrorFallback: 'تعذر تحميل الطلبات',
+    cancel: 'إلغاء',
+    confirmReject: 'تأكيد الرفض',
+    close: 'إغلاق',
+    detailsEyebrow: 'تفاصيل الطلب',
   },
-  {
-    id: 'req-102',
-    tripTitle: 'جولة الرياض الليلية',
-    city: 'الرياض',
-    organizer: 'مغامرات الرياض',
-    date: '2026-03-04',
-    people: 18,
-    price: 260,
-    submittedAt: '2026-01-22',
-    status: 'pending',
-    note: 'جولة داخلية تشمل أبرز المواقع الليلية.',
-    isSchoolTrip: false,
-    hasDocuments: false,
-    isGroupTrip: true,
+  en: {
+    status: {
+      pending: 'Pending review',
+      approved: 'Approved',
+      rejected: 'Rejected',
+    },
+    statusFilter: {
+      all: 'All statuses',
+      pending: 'Pending review',
+      approved: 'Approved',
+      rejected: 'Rejected',
+    },
+    heroEyebrow: 'Admin panel',
+    heroTitle: 'Trip approval requests',
+    heroSubtitle: 'Review incoming requests and approve the ones that meet requirements.',
+    stats: {
+      total: 'Total requests',
+      pending: 'Pending review',
+      approved: 'Approved',
+      rejected: 'Rejected',
+    },
+    categoryAria: 'Request categories',
+    statusAria: 'Status filters',
+    gridAria: 'Approval requests',
+    categories: {
+      all: 'All',
+      school: 'School trips',
+      group: 'Group trips',
+    },
+    loading: 'Loading requests...',
+    loadFailed: 'Unable to load requests',
+    retry: 'Retry',
+    city: 'City',
+    schoolTag: 'School',
+    docsTag: 'Documents',
+    groupTag: 'Group',
+    organizer: 'Organizer',
+    tripDate: 'Trip date',
+    seats: 'Seats',
+    price: 'Proposed price',
+    submittedAt: 'Submitted at',
+    rejectReasonLabel: 'Rejection reason',
+    uploadDocs: 'Upload documents',
+    details: 'Details',
+    reject: 'Reject',
+    approve: 'Approve',
+    noPrice: '—',
+    noRequestsTitle: 'No requests match this filter',
+    noRequestsSubtitle: 'Try changing the trip type or request status.',
+    rejectModalTitle: 'Reason for rejecting the trip',
+    rejectPlaceholder: 'Write the reason that the requester will see...',
+    rejectRequired: 'Please enter a rejection reason.',
+    rejectFailed: 'Unable to reject the request.',
+    updateFailed: 'Unable to update request status',
+    loadErrorFallback: 'Unable to load requests',
+    cancel: 'Cancel',
+    confirmReject: 'Confirm rejection',
+    close: 'Close',
+    detailsEyebrow: 'Request details',
   },
-  {
-    id: 'req-103',
-    tripTitle: 'رحلة بحرية - جدة',
-    city: 'جدة',
-    organizer: 'سياحة البحر الأحمر',
-    date: '2026-02-28',
-    people: 22,
-    price: 410,
-    submittedAt: '2026-01-18',
-    status: 'pending',
-    note: 'يشمل النقل والتأمين ومعدات السلامة.',
-    isSchoolTrip: false,
-    hasDocuments: true,
-    isGroupTrip: true,
-  },
-]
-
-const statusCopy = {
-  pending: 'قيد المراجعة',
-  approved: 'تمت الموافقة',
-  rejected: 'مرفوضة',
 }
 
-function formatDate(value) {
+function formatDate(value, locale) {
   try {
-    return new Intl.DateTimeFormat('ar-SA', { dateStyle: 'long' }).format(new Date(value))
+    return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(value))
   } catch {
     return value
   }
 }
 
+function getDocumentUrl(fileUrl) {
+  if (!fileUrl) return null
+  if (/^https?:\/\//i.test(fileUrl)) return fileUrl
+  return resolveApiUrl(fileUrl)
+}
+
+function getLocalizedApprovalRequest(request, language) {
+  if (!request || language === 'ar') return request
+
+  if (request.isSchoolTrip) {
+    return {
+      ...request,
+      tripTitle: localizeSchoolTripTitle(language, request.tripTitle),
+      city: localizeSchoolTripName(language, request.city),
+      organizer: localizeSchoolTripSchool(language, request.organizer),
+    }
+  }
+
+  if (request.isGroupTrip) {
+    return {
+      ...request,
+      tripTitle: localizeGroupTripValue(language, 'titles', request.tripTitle),
+      city: localizeGroupTripValue(language, 'cities', request.city),
+      note: localizeGroupTripValue(language, 'descriptions', request.note),
+    }
+  }
+
+  return request
+}
+
 function AdminApprovals() {
-  const [requests, setRequests] = useState(initialRequests)
+  const { language, dir } = useLanguage()
+  const text = copy[language] ?? copy.ar
+  const locale = language === 'en' ? 'en-US' : 'ar-SA'
+  const currentUser = readStoredUser()
+  const isAdmin = isAdminUser(currentUser)
+  const [requests, setRequests] = useState([])
   const [rejectingId, setRejectingId] = useState(null)
   const [rejectReason, setRejectReason] = useState('')
   const [rejectError, setRejectError] = useState('')
   const [detailsRequest, setDetailsRequest] = useState(null)
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const fetchRequests = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const payload = await apiRequest('/admin/approvals')
+      const items = Array.isArray(payload?.items) ? payload.items : []
+      setRequests(items)
+    } catch (err) {
+      setError(err?.message || text.loadErrorFallback)
+      setRequests([])
+    } finally {
+      setLoading(false)
+    }
+  }, [text.loadErrorFallback])
+
+  useEffect(() => {
+    fetchRequests()
+  }, [fetchRequests])
 
   const stats = useMemo(() => {
     const pending = requests.filter((item) => item.status === 'pending').length
@@ -82,21 +216,28 @@ function AdminApprovals() {
   }, [requests])
 
   const filteredRequests = useMemo(() => {
-    if (categoryFilter === 'all') return requests
-
     return requests.filter((request) => {
+      if (statusFilter !== 'all' && request.status !== statusFilter) return false
       if (categoryFilter === 'school') return request.isSchoolTrip
       if (categoryFilter === 'group') return request.isGroupTrip
-      return true
+      return categoryFilter === 'all'
     })
-  }, [requests, categoryFilter])
+  }, [requests, categoryFilter, statusFilter])
 
-  const handleApprove = (id) => {
-    setRequests((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, status: 'approved', rejectedReason: '' } : item
+  const handleApprove = async (id) => {
+    try {
+      const updated = await apiRequest(`/admin/approvals/${id}/approve`, {
+        method: 'PATCH',
+      })
+      setRequests((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, ...updated } : item)),
       )
-    )
+      if (detailsRequest?.id === id) {
+        setDetailsRequest((prev) => (prev ? { ...prev, ...updated } : prev))
+      }
+    } catch (err) {
+      setError(err?.message || text.updateFailed)
+    }
   }
 
   const handleRejectOpen = (id) => {
@@ -105,185 +246,229 @@ function AdminApprovals() {
     setRejectError('')
   }
 
-  const handleRejectConfirm = () => {
+  const handleRejectConfirm = async () => {
     if (!rejectReason.trim()) {
-      setRejectError('يرجى كتابة سبب الرفض.')
+      setRejectError(text.rejectRequired)
       return
     }
 
-    setRequests((prev) =>
-      prev.map((item) =>
-        item.id === rejectingId
-          ? { ...item, status: 'rejected', rejectedReason: rejectReason.trim() }
-          : item
+    try {
+      const updated = await apiRequest(`/admin/approvals/${rejectingId}/reject`, {
+        method: 'PATCH',
+        body: { reason: rejectReason.trim() },
+      })
+      setRequests((prev) =>
+        prev.map((item) => (item.id === rejectingId ? { ...item, ...updated } : item)),
       )
-    )
-    setRejectingId(null)
-    setRejectReason('')
-    setRejectError('')
+      if (detailsRequest?.id === rejectingId) {
+        setDetailsRequest((prev) => (prev ? { ...prev, ...updated } : prev))
+      }
+      setRejectingId(null)
+      setRejectReason('')
+      setRejectError('')
+    } catch (err) {
+      setRejectError(err?.message || text.rejectFailed)
+    }
   }
 
+  const handleOpenDocuments = (request) => {
+    const documentUrl = getDocumentUrl(request.permitFileUrl)
+    if (!documentUrl) return
+    window.open(documentUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const detailsLocalizedRequest = getLocalizedApprovalRequest(detailsRequest, language)
+
   return (
-    <div className="home adminApprovalsPage" dir="rtl">
+    <div className="home adminTripsPage adminApprovalsPage" dir={dir}>
       <main className="adminTripsMain">
         <section className="adminHero">
           <div className="adminHeroText">
-            <p className="adminEyebrow">لوحة الإدارة</p>
-            <h1>طلبات الموافقة على الرحلات</h1>
-            <p className="adminSubtitle">راجع الطلبات القادمة واعتمد ما يستوفي الشروط.</p>
+            <p className="adminEyebrow">{text.heroEyebrow}</p>
+            <h1>{text.heroTitle}</h1>
+            <p className="adminSubtitle">{text.heroSubtitle}</p>
           </div>
           <div className="adminHeroActions adminStatsGrid">
             <div className="adminStat">
-              <span>إجمالي الطلبات</span>
+              <span>{text.stats.total}</span>
               <strong>{stats.total}</strong>
             </div>
             <div className="adminStat">
-              <span>قيد المراجعة</span>
+              <span>{text.stats.pending}</span>
               <strong>{stats.pending}</strong>
             </div>
             <div className="adminStat">
-              <span>تمت الموافقة</span>
+              <span>{text.stats.approved}</span>
               <strong>{stats.approved}</strong>
             </div>
             <div className="adminStat">
-              <span>مرفوضة</span>
+              <span>{text.stats.rejected}</span>
               <strong>{stats.rejected}</strong>
             </div>
           </div>
         </section>
 
-        <section className="approvalsFilters" aria-label="تصنيف الطلبات">
+        <section className="approvalsFilters" aria-label={text.categoryAria}>
           <button
             className={`filterChip ${categoryFilter === 'all' ? 'active' : ''}`}
             type="button"
             onClick={() => setCategoryFilter('all')}
           >
-            الكل
+            {text.categories.all}
           </button>
           <button
             className={`filterChip ${categoryFilter === 'school' ? 'active' : ''}`}
             type="button"
             onClick={() => setCategoryFilter('school')}
           >
-            رحلات مدرسية
+            {text.categories.school}
           </button>
           <button
             className={`filterChip ${categoryFilter === 'group' ? 'active' : ''}`}
             type="button"
             onClick={() => setCategoryFilter('group')}
           >
-            رحلات جماعية
+            {text.categories.group}
           </button>
         </section>
 
-        <section className="approvalsGrid" aria-label="طلبات الموافقة">
-          {filteredRequests.length ? (
+        <section className="approvalsFilters" aria-label={text.statusAria}>
+          {Object.entries(text.statusFilter).map(([value, label]) => (
+            <button
+              key={value}
+              className={`filterChip ${statusFilter === value ? 'active' : ''}`}
+              type="button"
+              onClick={() => setStatusFilter(value)}
+            >
+              {label}
+            </button>
+          ))}
+        </section>
+
+        <section className="approvalsGrid" aria-label={text.gridAria}>
+          {loading ? (
+            <div className="adminEmptyState">
+              <h3>{text.loading}</h3>
+            </div>
+          ) : error ? (
+            <div className="adminEmptyState">
+              <h3>{text.loadFailed}</h3>
+              <p className="approvalMeta">{error}</p>
+              <button className="secondaryBtn" type="button" onClick={fetchRequests}>
+                {text.retry}
+              </button>
+            </div>
+          ) : filteredRequests.length ? (
             filteredRequests.map((request) => {
-              const inputId = `docs-${request.id}`
+              const localizedRequest = getLocalizedApprovalRequest(request, language)
+
               return (
                 <article className="approvalCard" key={request.id}>
                   <header className="approvalHeader">
-                  <div>
-                    <h3>{request.tripTitle}</h3>
-                    <p className="approvalMeta">المدينة: {request.city}</p>
-                    <div className="approvalTags">
-                      {request.isSchoolTrip ? <span className="tag">مدرسية</span> : null}
-                      {request.hasDocuments ? <span className="tag">بوثائق</span> : null}
-                      {request.isGroupTrip ? <span className="tag">جماعية</span> : null}
+                    <div>
+                      <h3>{localizedRequest.tripTitle}</h3>
+                      <p className="approvalMeta">
+                        {text.city}: {localizedRequest.city}
+                      </p>
+                      <div className="approvalTags">
+                        {localizedRequest.isSchoolTrip ? <span className="tag">{text.schoolTag}</span> : null}
+                        {localizedRequest.hasDocuments ? <span className="tag">{text.docsTag}</span> : null}
+                        {localizedRequest.isGroupTrip ? <span className="tag">{text.groupTag}</span> : null}
+                      </div>
                     </div>
-                  </div>
-                  <span className={`approvalStatus ${request.status}`}>
-                    {statusCopy[request.status]}
-                  </span>
-                </header>
+                    <span className={`approvalStatus ${localizedRequest.status}`}>
+                      {text.status[localizedRequest.status]}
+                    </span>
+                  </header>
 
-                <div className="approvalBody">
-                  <div className="approvalRow">
-                    <span>الجهة المنظمة</span>
-                    <strong>{request.organizer}</strong>
+                  <div className="approvalBody">
+                    <div className="approvalRow">
+                      <span>{text.organizer}</span>
+                      <strong>{localizedRequest.organizer}</strong>
+                    </div>
+                    <div className="approvalRow">
+                      <span>{text.tripDate}</span>
+                      <strong>{formatDate(localizedRequest.date, locale)}</strong>
+                    </div>
+                    <div className="approvalRow">
+                      <span>{text.seats}</span>
+                      <strong>{localizedRequest.people}</strong>
+                    </div>
+                    <div className="approvalRow">
+                      <span>{text.price}</span>
+                      <strong>
+                        {localizedRequest.price !== null && localizedRequest.price !== undefined
+                          ? `${localizedRequest.price} ${language === 'en' ? 'SAR' : 'ر.س'}`
+                          : text.noPrice}
+                      </strong>
+                    </div>
+                    <div className="approvalRow">
+                      <span>{text.submittedAt}</span>
+                      <strong>{formatDate(localizedRequest.submittedAt, locale)}</strong>
+                    </div>
+                    {localizedRequest.note ? <p className="approvalNote">{localizedRequest.note}</p> : null}
+                    {localizedRequest.status === 'rejected' && localizedRequest.rejectedReason ? (
+                      <p className="approvalRejectReason">
+                        {text.rejectReasonLabel}: {localizedRequest.rejectedReason}
+                      </p>
+                    ) : null}
                   </div>
-                  <div className="approvalRow">
-                    <span>تاريخ الرحلة</span>
-                    <strong>{formatDate(request.date)}</strong>
-                  </div>
-                  <div className="approvalRow">
-                    <span>عدد المقاعد</span>
-                    <strong>{request.people}</strong>
-                  </div>
-                  <div className="approvalRow">
-                    <span>السعر المقترح</span>
-                    <strong>{request.price} ر.س</strong>
-                  </div>
-                  <div className="approvalRow">
-                    <span>تاريخ الإرسال</span>
-                    <strong>{formatDate(request.submittedAt)}</strong>
-                  </div>
-                  {request.note ? <p className="approvalNote">{request.note}</p> : null}
-                  {request.status === 'rejected' && request.rejectedReason ? (
-                    <p className="approvalRejectReason">
-                      سبب الرفض: {request.rejectedReason}
-                    </p>
-                  ) : null}
-                </div>
 
-                <div className="approvalActions">
-                  <label className="secondaryBtn uploadDocsBtn" htmlFor={inputId}>
-                    تحميل الوثائق
-                  </label>
-                  <input
-                    id={inputId}
-                    className="uploadDocsInput"
-                    type="file"
-                    multiple
-                    accept=".pdf,image/*"
-                  />
-                  <button
-                    className="secondaryBtn detailsBtn"
-                    type="button"
-                    onClick={() => setDetailsRequest(request)}
-                  >
-                    تفاصيل
-                  </button>
-                  {request.status === 'pending' ? (
-                    <>
-                      <button
-                        className="secondaryBtn"
-                        type="button"
-                        onClick={() => handleRejectOpen(request.id)}
-                      >
-                        رفض
-                      </button>
-                      <button
-                        className="primaryBtn"
-                        type="button"
-                        onClick={() => handleApprove(request.id)}
-                      >
-                        موافقة
-                      </button>
-                    </>
-                  ) : null}
-                </div>
+                  <div className="approvalActions">
+                    <button
+                      className="secondaryBtn uploadDocsBtn"
+                      type="button"
+                      onClick={() => handleOpenDocuments(localizedRequest)}
+                      disabled={!localizedRequest.permitFileUrl}
+                    >
+                      {text.uploadDocs}
+                    </button>
+                    <button
+                      className="secondaryBtn detailsBtn"
+                      type="button"
+                      onClick={() => setDetailsRequest(request)}
+                    >
+                      {text.details}
+                    </button>
+                    {isAdmin && localizedRequest.status === 'pending' ? (
+                      <>
+                        <button
+                          className="secondaryBtn"
+                          type="button"
+                          onClick={() => handleRejectOpen(request.id)}
+                        >
+                          {text.reject}
+                        </button>
+                        <button
+                          className="primaryBtn"
+                          type="button"
+                          onClick={() => handleApprove(request.id)}
+                        >
+                          {text.approve}
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
                 </article>
               )
             })
           ) : (
             <div className="adminEmptyState">
-              <h3>لا توجد طلبات ضمن هذا التصنيف</h3>
-              <p className="tripMeta">جرّب اختيار تصنيف آخر لعرض الطلبات.</p>
+              <h3>{text.noRequestsTitle}</h3>
+              <p className="approvalMeta">{text.noRequestsSubtitle}</p>
             </div>
           )}
         </section>
       </main>
-      <Footer />
 
       {rejectingId ? (
         <div className="adminModal" role="dialog" aria-modal="true">
           <div className="adminModalCard confirmCard">
-            <h3>سبب رفض الرحلة</h3>
+            <h3>{text.rejectModalTitle}</h3>
             <textarea
               className="rejectTextarea"
               rows="4"
-              placeholder="اكتب سبب الرفض ليظهر لصاحب الطلب..."
+              placeholder={text.rejectPlaceholder}
               value={rejectReason}
               onChange={(event) => {
                 setRejectReason(event.target.value)
@@ -293,10 +478,10 @@ function AdminApprovals() {
             {rejectError ? <p className="rejectError">{rejectError}</p> : null}
             <div className="adminModalActions">
               <button className="secondaryBtn" type="button" onClick={() => setRejectingId(null)}>
-                إلغاء
+                {text.cancel}
               </button>
               <button className="primaryBtn danger" type="button" onClick={handleRejectConfirm}>
-                تأكيد الرفض
+                {text.confirmReject}
               </button>
             </div>
           </div>
@@ -310,51 +495,66 @@ function AdminApprovals() {
               className="modalClose"
               type="button"
               onClick={() => setDetailsRequest(null)}
-              aria-label="إغلاق"
+              aria-label={text.close}
             >
-              أ—
+              ×
             </button>
-            <p className="adminEyebrow">تفاصيل الطلب</p>
-            <h3>{detailsRequest.tripTitle}</h3>
-            <p className="approvalMeta">المدينة: {detailsRequest.city}</p>
+            <p className="adminEyebrow">{text.detailsEyebrow}</p>
+            <h3>{detailsLocalizedRequest.tripTitle}</h3>
+            <p className="approvalMeta">
+              {text.city}: {detailsLocalizedRequest.city}
+            </p>
             <div className="approvalTags">
-              {detailsRequest.isSchoolTrip ? <span className="tag">مدرسية</span> : null}
-              {detailsRequest.hasDocuments ? <span className="tag">بوثائق</span> : null}
-              {detailsRequest.isGroupTrip ? <span className="tag">جماعية</span> : null}
+              {detailsLocalizedRequest.isSchoolTrip ? <span className="tag">{text.schoolTag}</span> : null}
+              {detailsLocalizedRequest.hasDocuments ? <span className="tag">{text.docsTag}</span> : null}
+              {detailsLocalizedRequest.isGroupTrip ? <span className="tag">{text.groupTag}</span> : null}
             </div>
-            <span className={`approvalStatus ${detailsRequest.status}`}>
-              {statusCopy[detailsRequest.status]}
+            <span className={`approvalStatus ${detailsLocalizedRequest.status}`}>
+              {text.status[detailsLocalizedRequest.status]}
             </span>
             <div className="approvalBody">
               <div className="approvalRow">
-                <span>الجهة المنظمة</span>
-                <strong>{detailsRequest.organizer}</strong>
+                <span>{text.organizer}</span>
+                <strong>{detailsLocalizedRequest.organizer}</strong>
               </div>
               <div className="approvalRow">
-                <span>تاريخ الرحلة</span>
-                <strong>{formatDate(detailsRequest.date)}</strong>
+                <span>{text.tripDate}</span>
+                <strong>{formatDate(detailsLocalizedRequest.date, locale)}</strong>
               </div>
               <div className="approvalRow">
-                <span>عدد المقاعد</span>
-                <strong>{detailsRequest.people}</strong>
+                <span>{text.seats}</span>
+                <strong>{detailsLocalizedRequest.people}</strong>
               </div>
               <div className="approvalRow">
-                <span>السعر المقترح</span>
-                <strong>{detailsRequest.price} ر.س</strong>
+                <span>{text.price}</span>
+                <strong>
+                  {detailsLocalizedRequest.price !== null && detailsLocalizedRequest.price !== undefined
+                    ? `${detailsLocalizedRequest.price} ${language === 'en' ? 'SAR' : 'ر.س'}`
+                    : text.noPrice}
+                </strong>
               </div>
               <div className="approvalRow">
-                <span>تاريخ الإرسال</span>
-                <strong>{formatDate(detailsRequest.submittedAt)}</strong>
+                <span>{text.submittedAt}</span>
+                <strong>{formatDate(detailsLocalizedRequest.submittedAt, locale)}</strong>
               </div>
-              {detailsRequest.note ? (
-                <p className="approvalNote">{detailsRequest.note}</p>
-              ) : null}
-              {detailsRequest.status === 'rejected' && detailsRequest.rejectedReason ? (
+              {detailsLocalizedRequest.note ? <p className="approvalNote">{detailsLocalizedRequest.note}</p> : null}
+              {detailsLocalizedRequest.status === 'rejected' && detailsLocalizedRequest.rejectedReason ? (
                 <p className="approvalRejectReason">
-                  سبب الرفض: {detailsRequest.rejectedReason}
+                  {text.rejectReasonLabel}: {detailsLocalizedRequest.rejectedReason}
                 </p>
               ) : null}
             </div>
+            {detailsLocalizedRequest.permitFileUrl ? (
+              <div className="approvalActions">
+                <button
+                  className="secondaryBtn uploadDocsBtn"
+                  type="button"
+                  onClick={() => handleOpenDocuments(detailsLocalizedRequest)}
+                >
+                  {text.uploadDocs}
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}

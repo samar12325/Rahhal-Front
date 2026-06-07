@@ -156,6 +156,35 @@
   outline: none;
 }
 
+.schoolRadioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolRadioOption {
+  min-height: 43px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.schoolRadioOption input {
+  accent-color: var(--accent);
+}
+
+.schoolRadioOption:has(input:focus-visible) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 179, 166, 0.08);
+}
+
 .schoolFileName,
 .schoolFileHint {
   color: var(--muted);
@@ -297,6 +326,57 @@
   color: var(--accent-strong);
 }
 
+.prepBadge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  border: 1px solid var(--stroke);
+}
+
+.prepBadge.ready {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+.prepBadge.pending {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #475569;
+}
+
+.approvalBadge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  border: 1px solid var(--stroke);
+}
+
+.approvalBadge.approved {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+.approvalBadge.pending {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #475569;
+}
+
+.approvalBadge.rejected {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
 .schoolTripTitle {
   margin: 0;
   font-size: 1.1rem;
@@ -347,21 +427,6 @@
   color: var(--ink);
 }
 
-.schoolTripAgenda {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.schoolTripAgenda span {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: var(--pill);
-  border: 1px solid var(--stroke);
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
 .schoolTripProgress {
   display: grid;
   gap: 6px;
@@ -408,6 +473,342 @@
   padding: 20px;
   display: grid;
   gap: 16px;
+}
+
+.schoolParentApprovals {
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.schoolParentApprovals.embedded {
+  margin-top: 18px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--stroke);
+}
+
+.schoolApprovalModes {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 6px;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  background: #fdf8f1;
+}
+
+.schoolApprovalModeBtn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schoolApprovalModeBtn.active {
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.schoolApprovalPanel {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fffdf9 0%, #ffffff 100%);
+}
+
+.schoolApprovalPanelHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.schoolApprovalPanelHeader h3 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolApprovalPanelHeader p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.schoolApprovalPanelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolBatchUpload,
+.schoolBatchPreview,
+.schoolBatchResults {
+  display: grid;
+  gap: 14px;
+}
+
+.schoolManualQueueEmpty {
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.schoolBatchUpload {
+  padding-top: 0;
+}
+
+.schoolBatchUploadControls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolBatchFileField {
+  min-width: min(100%, 420px);
+}
+
+.schoolBatchPreviewHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.schoolBatchPreviewHeader h3,
+.schoolBatchResults h3 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolBatchPreviewHeader p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.schoolPreviewTable {
+  min-width: 920px;
+}
+
+.schoolValidationCell {
+  display: grid;
+  gap: 6px;
+}
+
+.schoolValidationReasons {
+  color: #991b1b;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.schoolBatchErrors {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  background: rgba(254, 242, 242, 0.9);
+}
+
+.schoolBatchErrors p {
+  margin: 0;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.schoolApprovalForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.schoolApprovalTableWrap {
+  overflow-x: auto;
+}
+
+.schoolApprovalTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.schoolApprovalTable th,
+.schoolApprovalTable td {
+  padding: 12px;
+  border-bottom: 1px solid var(--stroke);
+  text-align: start;
+  color: var(--ink);
+  vertical-align: middle;
+}
+
+.schoolApprovalTable th {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.schoolApprovalLink {
+  display: inline-block;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+  color: var(--accent-strong);
+  direction: ltr;
+}
+
+.schoolApprovalActions,
+.parentApprovalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.approvalStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  font-size: 0.85rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.approvalStatusBadge.pending {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #475569;
+}
+
+.approvalStatusBadge.approved {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+.approvalStatusBadge.rejected {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
+.approvalStatusBadge.present {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+.approvalStatusBadge.absent {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
+.approvalStatusBadge.unprepared {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #475569;
+}
+
+.secondaryBtn.danger {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
+.schoolApprovalEmpty {
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.parentApprovalPage {
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.schoolTripPreparationPage,
+.parentTrackingPage {
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.parentApprovalPage h1 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.schoolTripPreparationPage h1,
+.parentTrackingPage h1 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.parentApprovalDetails {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.parentApprovalEmpty {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.parentApprovalEmpty p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.schoolPreparationMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.schoolPreparationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.schoolPreparationGrid,
+.schoolTrackingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.schoolTrackingNotesCard {
+  grid-column: 1 / -1;
+}
+
+.schoolTrackingNotesCard p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .schoolTripsReportHead {
@@ -513,7 +914,8 @@
 
 .schoolReportList {
   margin: 0;
-  padding: 0 18px 0 0;
+  padding-inline-start: 28px;
+  padding-inline-end: 0;
   color: var(--muted);
   display: grid;
   gap: 6px;
@@ -523,6 +925,18 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.schoolReportSummaryGrid .schoolReportCard strong {
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.schoolApprovalEmpty {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px dashed var(--stroke);
+  background: #fffaf2;
 }
 
 .schoolReportEmpty {
@@ -549,7 +963,30 @@
     grid-template-columns: 1fr;
   }
 
+  .schoolBatchUploadControls,
+  .schoolBatchPreviewHeader,
+  .schoolApprovalForm,
+  .parentApprovalDetails {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolBatchUploadControls,
+  .schoolBatchPreviewHeader {
+    display: grid;
+  }
+
+  .schoolApprovalModes {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .schoolReportGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .schoolPreparationGrid,
+  .schoolTrackingGrid {
     grid-template-columns: 1fr;
   }
 
@@ -561,5 +998,33 @@
 @media (max-width: 560px) {
   .schoolTripsStats {
     grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .schoolTripsHero,
+  .schoolTripForm,
+  .schoolTripsTimeline,
+  header,
+  footer,
+  .schoolReportActions,
+  .schoolTripsReportSelect {
+    display: none !important;
+  }
+
+  .schoolTripsMain {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .schoolTripsReport {
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+
+  .schoolApprovalTable {
+    min-width: 0;
   }
 }
