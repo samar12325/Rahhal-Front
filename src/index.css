@@ -18,6 +18,12 @@
   --oasis-600: #1f6f5b;
 }
 
+html {
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
 *,
 *::before,
 *::after {
@@ -26,15 +32,18 @@
 
 body {
   margin: 0;
+  width: 100%;
   min-height: 100vh;
   font-family: "Tajawal", "Cairo", "Noto Kufi Arabic", "IBM Plex Sans Arabic", sans-serif;
   color: var(--ink);
   background: #ffffff;
   direction: rtl;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
+  width: 100%;
 }
 
 img {

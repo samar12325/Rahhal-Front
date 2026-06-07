@@ -17,7 +17,7 @@
 .container {
   width: min(1180px, 100%);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(16px, 4vw, 24px);
 }
 
 .home main {
@@ -192,6 +192,7 @@
   gap: 18px;
   flex: 1;
   justify-content: center;
+  min-width: 0;
 }
 
 .navDropdown {
@@ -285,6 +286,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .langToggle {
@@ -446,6 +449,7 @@
   align-items: center;
   justify-content: center;
   min-height: 80vh;
+  overflow: clip;
 }
 
 .heroWrap {
@@ -1150,23 +1154,52 @@
 }
 
 @media (max-width: 640px) {
+  .home main {
+    gap: 56px;
+    padding-bottom: 48px;
+  }
+
+  .headerInner {
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .brandSearch,
+  .actions,
+  .nav {
+    width: 100%;
+  }
+
   .searchBox {
     min-width: auto;
   }
 
   .nav {
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     order: 3;
-    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navLink,
+  .navTrigger {
+    white-space: nowrap;
   }
 
   .actions {
     order: 2;
+    justify-content: space-between;
   }
 
   .heroWrap {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .collage {
@@ -1187,6 +1220,37 @@
   .heroCtas {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .heroCenter {
+    min-height: auto;
+  }
+
+  .heroTitleCenter {
+    font-size: clamp(30px, 10vw, 40px);
+  }
+
+  .heroTextCenter {
+    max-width: 100%;
+  }
+
+  .heroRightFix {
+    justify-content: center;
+  }
+
+  .collageRefFix::after {
+    inset: -36px;
+  }
+
+  .planePathImg {
+    width: 160px;
+    bottom: -52px;
+  }
+
+  .planeDotFix {
+    right: -10px;
+    width: 46px;
+    height: 46px;
   }
 
   .footerInner {
@@ -1229,6 +1293,49 @@
   }
 }
 
+@media (max-width: 480px) {
+  .header .primaryBtn {
+    width: 100%;
+  }
+
+  .langToggle {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .hero {
+    padding-top: 32px;
+  }
+
+  .heroCenter {
+    gap: 12px;
+  }
+
+  .primaryBtn.big,
+  .secondaryBtn.big {
+    width: 100%;
+  }
+
+  .bigFix {
+    width: min(100%, 280px);
+    height: 300px;
+  }
+
+  .smallFix {
+    width: min(100%, 180px);
+    height: 144px;
+  }
+
+  .card.big {
+    height: 300px;
+  }
+
+  .planePathImg {
+    width: 128px;
+    bottom: -40px;
+  }
+}
+
 /* ===== HERO CENTER like reference ===== */
 .heroWrapCenter{
   grid-template-columns: 1fr 1fr;
@@ -1248,6 +1355,7 @@
   min-height: 380px;
   justify-content: center;
   transform: none;
+  min-width: 0;
 }
 
 .heroTitleCenter{
@@ -1297,6 +1405,7 @@
   width: 100%;
   justify-content: flex-start;
   transform: none;
+  min-width: 0;
 }
 
 .collageRefFix{
@@ -1312,7 +1421,7 @@
   content: "";
   position: absolute;
   inset: -70px -90px;
-  background-image: url("/src/assets/images/saudi-map.png");
+  background-image: url("../../assets/images/saudi-map3.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -1363,6 +1472,9 @@
   .smallFix{
     width: 200px;
     height: 160px;
+  }
+  .hero .container.heroWrap.heroWrapCenter{
+    padding: 0 clamp(16px, 4vw, 24px);
   }
 }
 
