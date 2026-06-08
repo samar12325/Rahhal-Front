@@ -16,7 +16,6 @@ export const resolveApiUrl = (path = '') => {
 const api = axios.create({
   baseURL: API_BASE_URL || undefined,
   withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
 })
 
 let isRefreshing = false
@@ -91,12 +90,19 @@ api.interceptors.response.use(
 
 export const apiRequest = async (path, options = {}) => {
   const { body, headers, ...rest } = options
+  const requestHeaders = { ...headers }
+
+  if (typeof FormData !== 'undefined' && body instanceof FormData) {
+    delete requestHeaders['Content-Type']
+  } else if (!requestHeaders['Content-Type'] && body !== undefined) {
+    requestHeaders['Content-Type'] = 'application/json'
+  }
 
   try {
     const response = await api({
       url: path,
       data: body,
-      headers: { ...headers },
+      headers: requestHeaders,
       method: rest.method ?? 'GET',
       ...rest,
     })

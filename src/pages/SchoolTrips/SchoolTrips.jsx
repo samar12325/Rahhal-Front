@@ -384,7 +384,6 @@ function SchoolTrips() {
       const createdTrip = await apiRequest('/api/school-trips', {
         method: 'POST',
         body: fd,
-        headers: { 'Content-Type': 'multipart/form-data' },
       })
 
       const newTrip = toUiTrip(

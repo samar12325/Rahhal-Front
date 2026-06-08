@@ -414,7 +414,6 @@ function SchoolTripsParentApprovals({ tripId, embedded = false, onApprovalsChang
       const response = await apiRequest('/trip/upload-excel', {
         method: 'POST',
         body: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
       })
 
       setBatchPreview(response)

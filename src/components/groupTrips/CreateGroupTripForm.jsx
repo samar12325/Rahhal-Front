@@ -182,7 +182,6 @@ function CreateGroupTripForm({ destinations = [], destinationsLoading = false, o
         const created = await apiRequest('/api/group-trips', {
           method: 'POST',
           body: buildPayload(),
-          headers: { 'Content-Type': 'multipart/form-data' },
         })
 
         setSubmitted(true)
