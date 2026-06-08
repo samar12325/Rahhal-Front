@@ -11,6 +11,7 @@ function SchoolTripsForm({
   onCreate,
   onReset,
   message,
+  isSubmitting = false,
   approvalTripId,
   onApprovalsChanged,
   permitKey,
@@ -85,7 +86,7 @@ function SchoolTripsForm({
       </div>
 
       <form className="schoolForm" onSubmit={(event) => event.preventDefault()}>
-        <div className="schoolFormGrid">
+        <fieldset className="schoolFormGrid" disabled={isSubmitting}>
           <div className="schoolField">
             <label htmlFor="trip-title">{t('schoolTrips.form.fields.title')}</label>
             <input
@@ -306,7 +307,7 @@ function SchoolTripsForm({
               <span className="schoolFileHint">{t('schoolTrips.form.fileHint')}</span>
             )}
           </div>
-        </div>
+        </fieldset>
       </form>
 
       <SchoolTripsParentApprovals
@@ -316,10 +317,10 @@ function SchoolTripsForm({
       />
 
       <div className="schoolFormActions">
-        <button className="primaryBtn" type="button" onClick={onCreate}>
-          {t('schoolTrips.form.actions.create')}
+        <button className="primaryBtn" type="button" onClick={onCreate} disabled={isSubmitting}>
+          {isSubmitting ? 'انتظر... يتم إضافة الرحلة' : t('schoolTrips.form.actions.create')}
         </button>
-        <button className="secondaryBtn" type="button" onClick={onReset}>
+        <button className="secondaryBtn" type="button" onClick={onReset} disabled={isSubmitting}>
           {t('schoolTrips.form.actions.reset')}
         </button>
       </div>

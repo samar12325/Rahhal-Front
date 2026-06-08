@@ -28,6 +28,11 @@ const emptyForm = {
 }
 
 const getTodayDateValue = () => new Date().toISOString().slice(0, 10)
+const successFallbackMessage = 'تم إضافة الرحلة بنجاح. انتظر الموافقة على الرحلة.'
+const duplicateSubmissionMessage =
+  'يتم الآن إضافة الرحلة أو تمت إضافتها بالفعل. فضلاً انتظر ولا تكرر الضغط.'
+const duplicateSubmissionPattern =
+  /already added|already exists|duplicate|pending|in progress|being added|قيد الإضافة|تمت إضافتها بالفعل|موجودة بالفعل/i
 
 const formatDateLabel = (value, locale) => {
   if (!value) return ''
@@ -80,6 +85,7 @@ function SchoolTrips() {
   const locale = language === 'ar' ? 'ar-SA' : 'en-US'
   const [trips, setTrips] = useState([])
   const [message, setMessage] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [permitKey, setPermitKey] = useState(0)
   const [regions, setRegions] = useState([])
@@ -332,6 +338,8 @@ function SchoolTrips() {
     : computedStats
 
   const handleCreate = async () => {
+    if (isSubmitting) return
+
     setMessage('')
     const todayDate = getTodayDateValue()
 
@@ -361,6 +369,7 @@ function SchoolTrips() {
       return
     }
 
+    setIsSubmitting(true)
     try {
       const fd = new FormData()
       fd.append('title', form.title.trim())
@@ -381,49 +390,65 @@ function SchoolTrips() {
       fd.append('meeting_point', form.meetingPoint.trim())
       if (form.permitFile) fd.append('permitFile', form.permitFile)
 
-      const createdTrip = await apiRequest('/api/school-trips', {
+      const payload = await apiRequest('/api/school-trips', {
         method: 'POST',
         body: fd,
       })
+      const createdTrip =
+        payload?.trip ?? payload?.schoolTrip ?? payload?.data ?? payload
+      const successMessage = payload?.message || successFallbackMessage
 
-      const newTrip = toUiTrip(
-        createdTrip,
-        locale,
-        form.time,
-        form.permitFileName,
-        t,
-      )
+      if (createdTrip && typeof createdTrip === 'object' && createdTrip.id != null) {
+        const newTrip = toUiTrip(
+          createdTrip,
+          locale,
+          form.time,
+          form.permitFileName,
+          t,
+        )
 
-      const end = createdTrip.end_date ? new Date(createdTrip.end_date) : null
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const isPast = end ? end < today : false
-      const approval =
-        createdTrip.status === 'open' ||
-        createdTrip.status === 'full' ||
-        createdTrip.status === 'completed'
-          ? 'approved'
-          : createdTrip.status === 'cancelled'
-            ? 'rejected'
-            : 'pending'
+        const end = createdTrip.end_date ? new Date(createdTrip.end_date) : null
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const isPast = end ? end < today : false
+        const approval =
+          createdTrip.status === 'open' ||
+          createdTrip.status === 'full' ||
+          createdTrip.status === 'completed'
+            ? 'approved'
+            : createdTrip.status === 'cancelled'
+              ? 'rejected'
+              : 'pending'
 
-      setTrips((prev) => [
-        {
-          ...newTrip,
-          status: isPast ? 'past' : 'upcoming',
-          approval,
-          dbStatus: createdTrip.status,
-          reportReady: createdTrip.status === 'completed',
-        },
-        ...prev,
-      ])
-      setApprovalTripId(createdTrip.id)
-      setSelectedReportId(createdTrip.id)
+        setTrips((prev) => [
+          {
+            ...newTrip,
+            status: isPast ? 'past' : 'upcoming',
+            approval,
+            dbStatus: createdTrip.status,
+            reportReady: createdTrip.status === 'completed',
+          },
+          ...prev,
+        ])
+        setApprovalTripId(createdTrip.id)
+        setSelectedReportId(createdTrip.id)
+      }
+
       setForm(emptyForm)
       setPermitKey((prev) => prev + 1)
-      setMessage(t('schoolTrips.form.messages.created'))
+      setMessage(successMessage)
     } catch (error) {
-      setMessage(error?.message || t('schoolTrips.form.messages.requestFailed'))
+      const errorMessage = error?.message || ''
+      const isDuplicateSubmission =
+        error?.status === 409 || duplicateSubmissionPattern.test(errorMessage)
+
+      setMessage(
+        isDuplicateSubmission
+          ? duplicateSubmissionMessage
+          : errorMessage || t('schoolTrips.form.messages.requestFailed'),
+      )
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -491,6 +516,7 @@ function SchoolTrips() {
           onCreate={handleCreate}
           onReset={handleReset}
           message={message}
+          isSubmitting={isSubmitting}
           approvalTripId={approvalTripId}
           onApprovalsChanged={() => setReportRefreshKey((prev) => prev + 1)}
           permitKey={permitKey}
